@@ -1,7 +1,7 @@
+ import { NavLink } from "react-router-dom"
 import { LayoutDashboard, WalletCards, NotebookTabs, ListChecks, ShoppingBasket, UsersRound, } from "lucide-react"
-const menuItems = [ { label: "Dashboard", icon: LayoutDashboard, }, { label: "Expenses", icon: WalletCards, }, { label: "Bills", icon: NotebookTabs, }, { label: "Chores", icon: ListChecks, }, { label: "Shopping", icon: ShoppingBasket, }, { label: "Members", icon: UsersRound, }, ]
+const menuItems = [ { label: "Dashboard", icon: LayoutDashboard, path: "/dashboard", }, { label: "Expenses", icon: WalletCards, path: "/expenses", }, { label: "Bills", icon: NotebookTabs, path: "/bills", }, { label: "Chores", icon: ListChecks, path: "/chores", }, { label: "Shopping", icon: ShoppingBasket, path: "/shopping", }, { label: "Members", icon: UsersRound, path: "/members", }, ]
 function Sidebar() { return ( <aside className="fixed left-0 top-0 h-screen w-64 overflow-hidden bg-[#9F9183] text-[#FFF9F2]">
-
   {/* ================= BACKGROUND ================= */}
 
   <div className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-[#E9DDD0]/25 blur-3xl" />
@@ -12,7 +12,6 @@ function Sidebar() { return ( <aside className="fixed left-0 top-0 h-screen w-64
 
 
   <div className="relative flex h-full flex-col border-r border-white/35 bg-[#B8AA9D]/10 backdrop-blur-2xl">
-
 
     {/* ================= BRAND ================= */}
 
@@ -39,7 +38,8 @@ function Sidebar() { return ( <aside className="fixed left-0 top-0 h-screen w-64
 
         <h1 className="relative font-sans text-[36px] font-semibold tracking-[-0.055em] text-[#FFFDF9] drop-shadow-[0_2px_8px_rgba(60,45,35,0.2)]">
           Roomie
-         
+
+          
         </h1>
 
       </div>
@@ -71,87 +71,95 @@ function Sidebar() { return ( <aside className="fixed left-0 top-0 h-screen w-64
 
       <div className="space-y-2">
 
-        {menuItems.map((item, index) => {
+        {menuItems.map((item) => {
           const Icon = item.icon
-          const active = index === 0
 
           return (
-            <button
+            <NavLink
               key={item.label}
-              className={`group relative flex w-full items-center gap-3 overflow-hidden rounded-2xl px-3 py-3 transition-all duration-300 ease-out ${
-                active
-                  ? "border border-white/70 bg-[#F5EBDD]/90 text-[#4A3930] shadow-[0_10px_28px_rgba(67,52,42,0.18)] backdrop-blur-xl"
-                  : "border border-transparent text-[#FFF8F0] hover:-translate-y-[1px] hover:border-white/35 hover:bg-white/20 hover:shadow-[0_8px_25px_rgba(67,52,42,0.14)]"
-              }`}
+              to={item.path}
+              className={({ isActive }) =>
+                `group relative flex w-full items-center gap-3 overflow-hidden rounded-2xl px-3 py-3 transition-all duration-300 ease-out ${
+                  isActive
+                    ? "border border-white/70 bg-[#F5EBDD]/90 text-[#4A3930] shadow-[0_10px_28px_rgba(67,52,42,0.18)] backdrop-blur-xl"
+                    : "border border-transparent text-[#FFF8F0] hover:-translate-y-[1px] hover:border-white/35 hover:bg-white/20 hover:shadow-[0_8px_25px_rgba(67,52,42,0.14)]"
+                }`
+              }
             >
 
-              {/* Glass shine */}
+              {({ isActive }) => (
+                <>
 
-              <span
-                className={`pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 ${
-                  !active
-                    ? "group-hover:translate-x-full"
-                    : ""
-                }`}
-              />
+                  {/* Glass shine */}
 
-
-              {/* Left indicator */}
-
-              <span
-                className={`absolute left-0 top-1/2 h-7 w-[3px] -translate-y-1/2 rounded-r-full bg-[#FFF8EF] transition-all duration-300 ${
-                  active
-                    ? "opacity-100"
-                    : "opacity-0 group-hover:opacity-80"
-                }`}
-              />
+                  <span
+                    className={`pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 ${
+                      !isActive
+                        ? "group-hover:translate-x-full"
+                        : ""
+                    }`}
+                  />
 
 
-              {/* Icon */}
+                  {/* Left indicator */}
 
-              <div
-                className={`relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border transition-all duration-300 ${
-                  active
-? "border-white/70 bg-white/45 shadow-inner"
-                    : "border-white/25 bg-white/18 group-hover:scale-105 group-hover:border-white/50 group-hover:bg-white/30"
-                }`}
-              >
-
-                <Icon
-                  size={20}
-                  strokeWidth={1.9}
-                  className={`transition-all duration-300 ${
-                    active
-                      ? "text-[#685146]"
-                      : "text-[#FFF8F0] group-hover:scale-110 group-hover:text-white"
-                  }`}
-                />
-
-              </div>
+                  <span
+                    className={`absolute left-0 top-1/2 h-7 w-[3px] -translate-y-1/2 rounded-r-full bg-[#FFF8EF] transition-all duration-300 ${
+                      isActive
+                        ? "opacity-100"
+ : "opacity-0 group-hover:opacity-80"
+                    }`}
+                  />
 
 
-              {/* Label */}
+                  {/* Icon */}
 
-              <span
-                className={`relative text-sm font-semibold tracking-[0.01em] transition-all duration-300 ${
-                  active
-                    ? "text-[#49382F]"
-                    : "text-[#FFF8F0] group-hover:translate-x-1 group-hover:text-white"
-                }`}
-              >
-                {item.label}
-              </span>
+                  <div
+                    className={`relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border transition-all duration-300 ${
+                      isActive
+                        ? "border-white/70 bg-white/45 shadow-inner"
+                        : "border-white/25 bg-white/18 group-hover:scale-105 group-hover:border-white/50 group-hover:bg-white/30"
+                    }`}
+                  >
+
+                    <Icon
+                      size={20}
+                      strokeWidth={1.9}
+                      className={`transition-all duration-300 ${
+                        isActive
+                          ? "text-[#685146]"
+                          : "text-[#FFF8F0] group-hover:scale-110 group-hover:text-white"
+                      }`}
+                    />
+
+                  </div>
 
 
-              {/* Active star */}
+                  {/* Label */}
 
-              {active && (
-                <span className="ml-auto text-[10px] text-[#A47750] drop-shadow-sm">
-                  ✦
-                </span>
+                  <span
+                    className={`relative text-sm font-semibold tracking-[0.01em] transition-all duration-300 ${
+                      isActive
+                        ? "text-[#49382F]"
+                        : "text-[#FFF8F0] group-hover:translate-x-1 group-hover:text-white"
+                    }`}
+                  >
+                    {item.label}
+                  </span>
+
+
+                  {/* Active star */}
+
+                  {isActive && (
+                    <span className="ml-auto text-[10px] text-[#A47750] drop-shadow-sm">
+                      ✦
+                    </span>
+                  )}
+
+                </>
               )}
 
-            </button>
+            </NavLink>
           )
         })}
 
@@ -165,6 +173,7 @@ function Sidebar() { return ( <aside className="fixed left-0 top-0 h-screen w-64
     <div className="px-6 pb-7">
 
       <div className="mb-5 h-px bg-white/30" />
+
 
       <div className="rounded-2xl border border-white/30 bg-white/18 px-4 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.25)] backdrop-blur-xl transition-all duration-300 hover:bg-white/25">
 

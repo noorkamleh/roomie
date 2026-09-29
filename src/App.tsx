@@ -1,17 +1,64 @@
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
 import Sidebar from "./components/Sidebar"
-function App() { return ( <div className="min-h-screen bg-slate-50">
-  <Sidebar />
+import Dashboard from "./pages/Dashboard" 
 
-  <main className="ml-64 p-8">
-    <h1 className="text-3xl font-bold text-slate-900">
-      Dashboard
-    </h1>
+import Expenses from "./pages/Expenses"
+ import Bills from "./pages/Bills"
+  import Chores from "./pages/Chores"
+  import Shopping from "./pages/Shopping" 
+  import Members from "./pages/Members"
+function App() { return ( <BrowserRouter> <div className="min-h-screen bg-[#F4EFE9]">
+    <Sidebar />
 
-    <p className="mt-2 text-slate-500">
-      Welcome back, Noor 👋
-    </p>
-  </main>
+    <main className="ml-64 min-h-screen p-8">
 
-</div>
+      <Routes>
+
+        <Route
+          path="/dashboard"
+          element={<Dashboard />}
+        />
+
+        <Route
+          path="/expenses"
+          element={<Expenses />}
+        />
+
+        <Route
+          path="/bills"
+          element={<Bills />}
+        />
+
+        <Route
+          path="/chores"
+          element={<Chores />}
+        />
+
+        <Route
+          path="/shopping"
+          element={<Shopping />}
+        />
+
+        <Route
+          path="/members"
+          element={<Members />}
+        />
+
+        <Route
+          path="*"
+          element={
+            <Navigate
+              to="/dashboard"
+              replace
+            />
+          }
+        />
+
+      </Routes>
+
+    </main>
+
+  </div>
+</BrowserRouter>
 ) }
 export default App
