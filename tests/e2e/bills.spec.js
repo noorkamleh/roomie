@@ -1,5 +1,68 @@
 import { test, expect } from "@playwright/test";
 
+test("bill payment records the selected payer, payment date and shares", async ({
+  page,
+}) => {
+  const errors = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  await page.clock.install({ time: new Date("2026-10-02T09:00:00Z") });
+  await page.goto("/bills");
+  const card = page
+    .locator("article")
+    .filter({
+      has: page.getByRole("heading", { name: "Internet", exact: true }),
+    });
+  await card.getByRole("button", { name: "Mark as paid" }).click();
+  const dialog = page.getByRole("dialog");
+  await expect(dialog.getByLabel("Bill details")).toContainText("Internet");
+  await expect(dialog.getByLabel("Bill details")).toContainText("SAR 80.00");
+  for (const label of ["Title", "Amount (SAR)", "Category"]) {
+    await expect(dialog.getByLabel(label, { exact: true })).toHaveCount(0);
+  }
+  await dialog.getByLabel("Paid by").selectOption("Reem");
+  await dialog.getByLabel("Payment date").fill("2026-10-01");
+  for (const member of ["Noor", "Sara", "Reem"]) {
+    await dialog.getByRole("checkbox", { name: member, exact: true }).uncheck();
+  }
+  const confirm = dialog.getByRole("button", { name: "Confirm payment" });
+  await expect(confirm).toBeDisabled();
+  await expect(dialog.getByRole("alert")).toContainText(
+    "Choose at least one member",
+  );
+  await dialog.getByRole("checkbox", { name: "Noor", exact: true }).check();
+  await dialog.getByRole("checkbox", { name: "Sara", exact: true }).check();
+  await expect(confirm).toBeEnabled();
+  await expect(dialog.getByRole("alert")).toHaveCount(0);
+  await expect(dialog.getByText("SAR 40.00", { exact: true })).toHaveCount(2);
+  await page.screenshot({ path: "test-results/bill-payment-desktop.png" });
+  await page.setViewportSize({ width: 390, height: 844 });
+  expect(
+    await dialog.evaluate(
+      (element) => element.scrollWidth <= element.clientWidth,
+    ),
+  ).toBe(true);
+  await page.screenshot({ path: "test-results/bill-payment-mobile.png" });
+  await confirm.click();
+  await expect(dialog).toHaveCount(0);
+  await expect(card.getByText("paid", { exact: true })).toBeVisible();
+  await page.reload();
+  const stored = await page.evaluate(() =>
+    JSON.parse(localStorage.getItem("roomie.household.v1")),
+  );
+  const payments = stored.expenses.filter((expense) => expense.id === "bill-2");
+  expect(payments).toHaveLength(1);
+  expect(payments[0]).toMatchObject({
+    title: "Internet",
+    amount: 80,
+    category: "Bills",
+    paidBy: "Reem",
+    date: "2026-10-01",
+    participants: ["Noor", "Sara"],
+  });
+  expect(stored.bills.find((bill) => bill.id === "2").status).toBe("paid");
+  expect(errors).toEqual([]);
+});
+
 test("bill filters, adding, and persistence work on desktop and mobile", async ({
   page,
 }) => {
@@ -25,14 +88,12 @@ test("bill filters, adding, and persistence work on desktop and mobile", async (
     if (count === 0)
       await expect(page.getByText("No bills in this view.")).toBeVisible();
   }
-  const paid = page
-    .locator("article")
-    .filter({
-      has: page.getByRole("heading", {
-        name: "Electricity - Previous",
-        exact: true,
-      }),
-    });
+  const paid = page.locator("article").filter({
+    has: page.getByRole("heading", {
+      name: "Electricity - Previous",
+      exact: true,
+    }),
+  });
   await expect(paid.getByRole("button", { name: "Mark as paid" })).toHaveCount(
     0,
   );

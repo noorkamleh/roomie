@@ -5,7 +5,7 @@ import Modal from "../../../shared/components/Modal";
 import BillForm from "../components/BillForm";
 import BillCard from "../components/BillCard";
 import BillFilters from "../components/BillFilters";
-import ExpenseForm from "../../expenses/components/ExpenseForm";
+import BillPaymentForm from "../components/BillPaymentForm";
 import { useBillList } from "../hooks/useBillList";
 
 function Bills() {
@@ -43,7 +43,7 @@ function Bills() {
       )}
       {paying && (
         <Modal title={`Pay ${paying.title}`} onClose={closePayment}>
-          <ExpenseForm bill={paying} onSaved={closePayment} />
+          <BillPaymentForm bill={paying} onSaved={closePayment} />
         </Modal>
       )}
     </div>
