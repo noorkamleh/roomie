@@ -1,0 +1,37 @@
+.dashboard-header > * {
+  position: relative;
+  z-index: 1;
+}
+
+.dashboard-header h1 span {
+  color: #a278ff;
+  display: inline-block;
+  margin-left: 4px;
+}
+
+.summary-card::before,
+.summary-card::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  background: var(--card-tint);
+}
+
+.summary-card::before {
+  width: 125px;
+  height: 100px;
+  right: -35px;
+  bottom: -35px;
+  border-radius: 42% 55% 0 0;
+  transform: rotate(-35deg);
+}
+
+.summary-card::after {
+  width: 110px;
+  height: 70px;
+  right: 28px;
+  bottom: -42px;
+  border-radius: 55% 50% 0 0;
+  transform: rotate(-35deg);
+  opacity: 0.65;
+}

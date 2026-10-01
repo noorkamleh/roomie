@@ -1,0 +1,5 @@
+Generated with the built-in image_gen tool.
+
+Header prompt: Wide landscape website header background, 3:1 composition. Soft polished pastel 3D clay/paper illustration for a shared household dashboard. Pale lavender and icy blue flowing curved wall shapes dominate the left 55%, with quiet space for readable UI text. On the right: a cozy purple-framed window, lavender trees, pink peach sunset sky with tiny white stars, graceful teal houseplants in lavender pots and soft cushions. Soft diffused light, gentle depth. Bottom blends into pale blue #F3F5FF. No text, UI, people or watermark.
+
+Sidebar prompt: Square decorative household background. A tiny ivory house with lavender gabled roof, glowing peach windows and purple door, surrounded by teal plants, round lavender trees and soft stones. House in top two thirds; lower third pale lilac flowing waves for the existing caption. Pastel clay/paper 3D style, soft diffused lighting, lavender, violet, icy blue and mint teal. Almost-white lavender background #FAF8FF. No text, UI, people or watermark.
