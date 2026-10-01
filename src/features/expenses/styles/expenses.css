@@ -445,21 +445,29 @@
   border-radius: 8px;
   min-height: 36px;
   padding: 8px 10px;
-  border: 1px solid #e7dbf6;
+  border: 2px solid #b493d6;
   background: #f6f1fd;
-  color: #8764ad;
+  color: #754c9f;
   font-size: 12px;
-  transition: background 180ms;
+  transition:
+    background 180ms,
+    border-color 180ms;
 }
 .expense-card-actions button:hover {
+  border-color: #9468bf;
   background: #eee3fb;
 }
+.expense-card-actions button:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
 .expense-card-actions .expense-delete {
-  border-color: #f4dce4;
+  border-color: #df9ab1;
   background: #fff3f6;
-  color: #b76d87;
+  color: #a24768;
 }
 .expense-card-actions .expense-delete:hover {
+  border-color: #c97491;
   background: #ffe7ee;
 }
 
