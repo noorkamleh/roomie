@@ -68,7 +68,7 @@ export const expenses: Expense[] = [
   {
     id: "5",
     title: "Cleaning Supplies",
-    amount: 45,
+    amount:100,
     paidBy: "Sara",
     participants: ["Noor", "Sara", "Reem"],
     category: "Household",
