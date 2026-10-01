@@ -14,7 +14,11 @@ export function useChoreList() {
   const [filter, setFilter] = useState<ChoreFilter>("all");
   const { error, perform } = useAction();
   const entries = [...state.chores]
-    .sort((a, b) => a.dueDate.localeCompare(b.dueDate))
+    .sort(
+      (a, b) =>
+        Number(a.status === "completed") - Number(b.status === "completed") ||
+        a.dueDate.localeCompare(b.dueDate),
+    )
     .filter((chore) => filter === "all" || chore.status === filter);
 
   function changeStatus(chore: Chore, status: Chore["status"]) {

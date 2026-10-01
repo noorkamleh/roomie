@@ -10,6 +10,9 @@ test("chore filters, status changes and assigned tasks persist across screen siz
   await expect(
     page.getByRole("heading", { name: "Chores", exact: true }),
   ).toBeVisible();
+  const rows = page
+    .getByRole("list", { name: "Household chores" })
+    .getByRole("listitem");
   const filters = page.getByRole("group", { name: "Filter chores" });
   for (const [status, count] of [
     ["pending", 3],
@@ -20,17 +23,30 @@ test("chore filters, status changes and assigned tasks persist across screen siz
     const button = filters.getByRole("button", { name: status, exact: true });
     await button.click();
     await expect(button).toHaveAttribute("aria-pressed", "true");
-    await expect(page.locator("article")).toHaveCount(count);
+    await expect(rows).toHaveCount(count);
   }
-  const completed = page
-    .locator("article")
-    .filter({
-      has: page.getByRole("heading", { name: "Wash Dishes", exact: true }),
-    });
+  const completed = rows.filter({
+    has: page.getByRole("heading", { name: "Wash Dishes", exact: true }),
+  });
   await expect(
     completed.getByText("Task completed", { exact: true }),
   ).toBeVisible();
   await expect(completed).not.toContainText("overdue");
+  await expect(rows.last()).toContainText("Wash Dishes");
+  await page
+    .getByRole("checkbox", { name: "Complete Clean Kitchen", exact: true })
+    .check();
+  await expect(page.getByLabel("Status of Clean Kitchen")).toHaveValue(
+    "completed",
+  );
+  await expect(rows.last()).toContainText("Clean Kitchen");
+  await page
+    .getByRole("checkbox", { name: "Complete Clean Kitchen", exact: true })
+    .uncheck();
+  await expect(page.getByLabel("Status of Clean Kitchen")).toHaveValue(
+    "pending",
+  );
+  await expect(rows.first()).toContainText("Clean Kitchen");
   await page.waitForLoadState("networkidle");
   await page.screenshot({
     path: "test-results/chores-desktop.png",
@@ -54,7 +70,7 @@ test("chore filters, status changes and assigned tasks persist across screen siz
   await filters
     .getByRole("button", { name: "in progress", exact: true })
     .click();
-  await expect(page.locator("article")).toHaveCount(2);
+  await expect(rows).toHaveCount(2);
   await page.getByLabel("Status of Clean Kitchen").selectOption("completed");
   await page.getByLabel("Status of Take Out Trash").selectOption("completed");
   await expect(page.getByText("No chores in this view.")).toBeVisible();
@@ -72,9 +88,9 @@ test("chore filters, status changes and assigned tasks persist across screen siz
     .getByRole("button", { name: "Add chore", exact: true })
     .click();
   await filters.getByRole("button", { name: "pending", exact: true }).click();
-  const added = page
-    .locator("article")
-    .filter({ has: page.getByRole("heading", { name: title, exact: true }) });
+  const added = rows.filter({
+    has: page.getByRole("heading", { name: title, exact: true }),
+  });
   await expect(added).toContainText("Reem");
   await expect(added).toContainText("Due tomorrow");
   expect(
