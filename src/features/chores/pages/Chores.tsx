@@ -9,6 +9,8 @@ import { useChoreList } from "../hooks/useChoreList";
 function Chores() {
   const {
     entries,
+    personalEntries,
+    currentUser,
     today,
     filter,
     setFilter,
@@ -28,6 +30,14 @@ function Chores() {
         </p>
       )}
       <ChoreList
+        variant="personal"
+        owner={currentUser}
+        entries={personalEntries}
+        today={today}
+        onStatusChange={changeStatus}
+      />
+      <ChoreList
+        variant="household"
         entries={entries}
         today={today}
         onStatusChange={changeStatus}

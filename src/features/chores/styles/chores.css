@@ -108,6 +108,7 @@
 }
 
 .chore-list {
+  --chore-columns: minmax(0, 1fr) 130px 155px 135px;
   overflow: hidden;
   min-width: 0;
   border: 1px solid #d6c3eb;
@@ -115,9 +116,30 @@
   background: #ffffff;
   box-shadow: 0 6px 24px #6d5bb40c;
 }
+.chore-list--personal {
+  --chore-columns: minmax(0, 1fr) 155px 135px;
+  border-color: #bc9cde;
+}
+.chore-list--personal .chore-list-heading {
+  background: linear-gradient(110deg, #faf6ff, #f2eaff);
+}
+.chore-list-owner {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  margin-left: auto;
+  color: #8b69ac;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+.chore-list-owner svg {
+  flex-shrink: 0;
+}
 .chore-list-heading {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 10px;
   padding: 22px 24px;
 }
@@ -138,7 +160,7 @@
 .chore-list-columns,
 .chore-row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 130px 155px 135px;
+  grid-template-columns: var(--chore-columns);
   align-items: center;
   gap: 20px;
   padding: 16px 24px;
@@ -343,8 +365,17 @@
     grid-column: 2;
     grid-row: 1;
   }
+  .chore-list--personal .chore-row-date {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    padding-left: 45px;
+  }
 }
 @media (max-width: 600px) {
+  .chore-list-owner {
+    width: 100%;
+    margin-left: 0;
+  }
   .chores-page {
     gap: 22px;
   }
@@ -387,6 +418,15 @@
     flex-wrap: wrap;
     align-items: center;
     gap: 6px 12px;
+  }
+  .chore-list--personal .chore-row-date {
+    grid-column: 1;
+    grid-row: 2;
+    display: block;
+    padding-left: 0;
+  }
+  .chore-list--personal .chore-timing {
+    margin-top: 5px;
   }
   .chore-status-control {
     grid-column: 2;

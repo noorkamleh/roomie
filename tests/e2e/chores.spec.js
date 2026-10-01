@@ -1,5 +1,63 @@
 import { test, expect } from "@playwright/test";
 
+test("personal chores follow the current member and synchronize with household chores", async ({
+  page,
+}) => {
+  const errors = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  await page.goto("/chores");
+  const mine = page.getByRole("list", { name: "My chores" });
+  const household = page.getByRole("list", { name: "Household chores" });
+  await expect(mine.getByRole("listitem")).toHaveCount(2);
+  await expect(mine).toContainText("Take Out Trash");
+  await expect(mine).toContainText("Clean Bathroom");
+  await expect(mine).not.toContainText("Clean Kitchen");
+  await expect(household.getByRole("listitem")).toHaveCount(5);
+  await mine
+    .getByRole("checkbox", { name: "Complete Clean Bathroom", exact: true })
+    .check();
+  await expect(household.getByLabel("Status of Clean Bathroom")).toHaveValue(
+    "completed",
+  );
+  await household
+    .getByLabel("Status of Clean Bathroom")
+    .selectOption("in-progress");
+  await expect(mine.getByLabel("Status of Clean Bathroom")).toHaveValue(
+    "in-progress",
+  );
+  await expect(
+    mine.getByRole("checkbox", {
+      name: "Complete Clean Bathroom",
+      exact: true,
+    }),
+  ).not.toBeChecked();
+  await page.goto("/members");
+  await page.getByLabel("View as").selectOption("Sara");
+  await page.getByRole("button", { name: "Save", exact: true }).click();
+  await page.goto("/chores");
+  await expect(
+    page.getByRole("region", { name: "My chores", exact: true }),
+  ).toContainText("Sara");
+  await expect(mine.getByRole("listitem")).toHaveCount(2);
+  await expect(mine).toContainText("Clean Kitchen");
+  await expect(mine).toContainText("Wash Dishes");
+  await expect(mine).not.toContainText("Take Out Trash");
+  await page.reload();
+  await expect(mine).toContainText("Clean Kitchen");
+  await page.goto("/members");
+  await page.getByLabel("New member name").fill("Lina");
+  await page.getByRole("button", { name: "Add member" }).click();
+  await page.getByLabel("View as").selectOption("Lina");
+  await page.getByRole("button", { name: "Save", exact: true }).click();
+  await page.goto("/chores");
+  await expect(mine.getByRole("listitem")).toHaveCount(0);
+  await expect(
+    page.getByText("No chores assigned to you in this view."),
+  ).toBeVisible();
+  await expect(household.getByRole("listitem")).toHaveCount(5);
+  expect(errors).toEqual([]);
+});
+
 test("chore filters, status changes and assigned tasks persist across screen sizes", async ({
   page,
 }) => {
@@ -10,9 +68,8 @@ test("chore filters, status changes and assigned tasks persist across screen siz
   await expect(
     page.getByRole("heading", { name: "Chores", exact: true }),
   ).toBeVisible();
-  const rows = page
-    .getByRole("list", { name: "Household chores" })
-    .getByRole("listitem");
+  const household = page.getByRole("list", { name: "Household chores" });
+  const rows = household.getByRole("listitem");
   const filters = page.getByRole("group", { name: "Filter chores" });
   for (const [status, count] of [
     ["pending", 3],
@@ -33,21 +90,22 @@ test("chore filters, status changes and assigned tasks persist across screen siz
   ).toBeVisible();
   await expect(completed).not.toContainText("overdue");
   await expect(rows.last()).toContainText("Wash Dishes");
-  await page
+  await household
     .getByRole("checkbox", { name: "Complete Clean Kitchen", exact: true })
     .check();
-  await expect(page.getByLabel("Status of Clean Kitchen")).toHaveValue(
+  await expect(household.getByLabel("Status of Clean Kitchen")).toHaveValue(
     "completed",
   );
   await expect(rows.last()).toContainText("Clean Kitchen");
-  await page
+  await household
     .getByRole("checkbox", { name: "Complete Clean Kitchen", exact: true })
     .uncheck();
-  await expect(page.getByLabel("Status of Clean Kitchen")).toHaveValue(
+  await expect(household.getByLabel("Status of Clean Kitchen")).toHaveValue(
     "pending",
   );
   await expect(rows.first()).toContainText("Clean Kitchen");
   await page.waitForLoadState("networkidle");
+  await page.evaluate(() => window.scrollTo(0, 0));
   await page.screenshot({
     path: "test-results/chores-desktop.png",
     fullPage: true,
@@ -63,7 +121,9 @@ test("chore filters, status changes and assigned tasks persist across screen siz
     fullPage: true,
   });
   await filters.getByRole("button", { name: "pending", exact: true }).click();
-  await page.getByLabel("Status of Clean Kitchen").selectOption("in-progress");
+  await household
+    .getByLabel("Status of Clean Kitchen")
+    .selectOption("in-progress");
   await expect(
     page.getByRole("heading", { name: "Clean Kitchen", exact: true }),
   ).toHaveCount(0);
@@ -71,8 +131,12 @@ test("chore filters, status changes and assigned tasks persist across screen siz
     .getByRole("button", { name: "in progress", exact: true })
     .click();
   await expect(rows).toHaveCount(2);
-  await page.getByLabel("Status of Clean Kitchen").selectOption("completed");
-  await page.getByLabel("Status of Take Out Trash").selectOption("completed");
+  await household
+    .getByLabel("Status of Clean Kitchen")
+    .selectOption("completed");
+  await household
+    .getByLabel("Status of Take Out Trash")
+    .selectOption("completed");
   await expect(page.getByText("No chores in this view.")).toBeVisible();
   await page.getByRole("button", { name: "Add chore", exact: true }).click();
   await page.keyboard.press("Escape");

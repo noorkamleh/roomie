@@ -4,12 +4,18 @@ import { daysUntil, dueLabel } from "../../../shared/utils/dates";
 import { choreStatuses, formatChoreDate } from "../utils/presentation";
 
 interface ChoreRowProps {
+  showAssignee: boolean;
   chore: Chore;
   today: string;
   onStatusChange: (chore: Chore, status: Chore["status"]) => void;
 }
 
-function ChoreRow({ chore, today, onStatusChange }: ChoreRowProps) {
+function ChoreRow({
+  chore,
+  today,
+  showAssignee,
+  onStatusChange,
+}: ChoreRowProps) {
   const completed = chore.status === "completed";
   const days = daysUntil(chore.dueDate, today);
   const overdue = !completed && days < 0;
@@ -39,15 +45,17 @@ function ChoreRow({ chore, today, onStatusChange }: ChoreRowProps) {
         </label>
         <h3>{chore.title}</h3>
       </div>
-      <div className="chore-row-assignee">
-        <span className="chore-cell-label">Assigned to</span>
-        <span className="chore-person">
-          <span className="chore-assignee-avatar" aria-hidden="true">
-            {chore.assignedTo.slice(0, 1).toUpperCase()}
+      {showAssignee && (
+        <div className="chore-row-assignee">
+          <span className="chore-cell-label">Assigned to</span>
+          <span className="chore-person">
+            <span className="chore-assignee-avatar" aria-hidden="true">
+              {chore.assignedTo.slice(0, 1).toUpperCase()}
+            </span>
+            <span>{chore.assignedTo}</span>
           </span>
-          <span>{chore.assignedTo}</span>
-        </span>
-      </div>
+        </div>
+      )}
       <div className="chore-row-date">
         <span className="chore-cell-label">Due date</span>
         <time dateTime={chore.dueDate}>{formatChoreDate(chore.dueDate)}</time>

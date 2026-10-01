@@ -20,6 +20,9 @@ export function useChoreList() {
         a.dueDate.localeCompare(b.dueDate),
     )
     .filter((chore) => filter === "all" || chore.status === filter);
+  const personalEntries = entries.filter(
+    (chore) => chore.assignedTo === state.currentUser,
+  );
 
   function changeStatus(chore: Chore, status: Chore["status"]) {
     perform(() => commit({ type: "chore.status", id: chore.id, status }));
@@ -27,6 +30,8 @@ export function useChoreList() {
 
   return {
     entries,
+    personalEntries,
+    currentUser: state.currentUser,
     today,
     filter,
     setFilter,
