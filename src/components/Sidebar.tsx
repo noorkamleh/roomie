@@ -1,17 +1,21 @@
- import { NavLink } from "react-router-dom"
+import { NavLink } from "react-router-dom" 
 import { LayoutDashboard, WalletCards, NotebookTabs, ListChecks, ShoppingBasket, UsersRound, } from "lucide-react"
 const menuItems = [ { label: "Dashboard", icon: LayoutDashboard, path: "/dashboard", }, { label: "Expenses", icon: WalletCards, path: "/expenses", }, { label: "Bills", icon: NotebookTabs, path: "/bills", }, { label: "Chores", icon: ListChecks, path: "/chores", }, { label: "Shopping", icon: ShoppingBasket, path: "/shopping", }, { label: "Members", icon: UsersRound, path: "/members", }, ]
-function Sidebar() { return ( <aside className="fixed left-0 top-0 h-screen w-64 overflow-hidden bg-[#9F9183] text-[#FFF9F2]">
+function Sidebar() { return ( <aside className="fixed left-0 top-0 h-screen w-64 overflow-hidden bg-[#CFC2B2] text-[#3F372F]">
   {/* ================= BACKGROUND ================= */}
 
-  <div className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-[#E9DDD0]/25 blur-3xl" />
+  <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-[#F2D9A6]/35 blur-3xl" />
 
-  <div className="pointer-events-none absolute -bottom-24 -left-20 h-64 w-64 rounded-full bg-[#75665A]/20 blur-3xl" />
+  <div className="pointer-events-none absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-[#A99379]/30 blur-3xl" />
 
-  <div className="pointer-events-none absolute right-[-80px] top-[42%] h-64 w-64 rounded-full bg-[#D8C6B4]/15 blur-3xl" />
+  <div className="pointer-events-none absolute -right-24 top-[42%] h-72 w-72 rounded-full bg-[#E5C98F]/25 blur-3xl" />
+
+  <div className="pointer-events-none absolute left-[-100px] top-[25%] h-64 w-64 rounded-full bg-[#F5E8D3]/25 blur-3xl" />
 
 
-  <div className="relative flex h-full flex-col border-r border-white/35 bg-[#B8AA9D]/10 backdrop-blur-2xl">
+  {/* ================= MAIN ================= */}
+
+  <div className="relative flex h-full flex-col border-r border-white/45 bg-[#CFC2B2]/85 backdrop-blur-2xl">
 
     {/* ================= BRAND ================= */}
 
@@ -21,11 +25,11 @@ function Sidebar() { return ( <aside className="fixed left-0 top-0 h-screen w-64
 
       <div className="mb-5 flex items-center gap-2">
 
-        <span className="text-[15px] leading-none text-[#FFF8EF] drop-shadow-[0_1px_4px_rgba(60,45,35,0.25)]">
+        <span className="text-[15px] leading-none text-[#B68A3A] drop-shadow-sm">
           ✦
         </span>
 
-        <span className="h-px w-9 bg-[#FFF8EF]/65" />
+        <span className="h-px w-9 bg-[#F4E4C3]/75" />
 
       </div>
 
@@ -34,12 +38,10 @@ function Sidebar() { return ( <aside className="fixed left-0 top-0 h-screen w-64
 
       <div className="relative inline-block">
 
-        <div className="absolute -inset-3 rounded-full bg-white/15 blur-xl" />
+        <div className="absolute -inset-3 rounded-full bg-[#F0D49A]/25 blur-xl" />
 
-        <h1 className="relative font-sans text-[36px] font-semibold tracking-[-0.055em] text-[#FFFDF9] drop-shadow-[0_2px_8px_rgba(60,45,35,0.2)]">
+        <h1 className="relative font-sans text-[36px] font-semibold tracking-[-0.055em] text-[#332D28] drop-shadow-[0_2px_5px_rgba(80,65,45,0.12)]">
           Roomie
-
-          
         </h1>
 
       </div>
@@ -49,9 +51,9 @@ function Sidebar() { return ( <aside className="fixed left-0 top-0 h-screen w-64
 
       <div className="mt-2 flex items-center gap-2">
 
-        <span className="h-px w-5 bg-[#FFF8EF]/65" />
+        <span className="h-px w-5 bg-[#F4E4C3]/75" />
 
-        <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-[#FFF8EF]/90">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-[#62584E]">
           Shared Home
         </p>
 
@@ -64,7 +66,7 @@ function Sidebar() { return ( <aside className="fixed left-0 top-0 h-screen w-64
 
     <nav className="flex-1 px-4">
 
-      <p className="mb-4 px-4 text-[10px] font-bold uppercase tracking-[0.2em] text-[#FFF8EF]/75">
+      <p className="mb-4 px-4 text-[10px] font-bold uppercase tracking-[0.2em] text-[#756A5E]">
         Workspace
       </p>
 
@@ -79,10 +81,10 @@ function Sidebar() { return ( <aside className="fixed left-0 top-0 h-screen w-64
               key={item.label}
               to={item.path}
               className={({ isActive }) =>
-                `group relative flex w-full items-center gap-3 overflow-hidden rounded-2xl px-3 py-3 transition-all duration-300 ease-out ${
+                `group relative flex w-full items-center gap-3 overflow-hidden rounded-[18px] px-3 py-3 transition-all duration-300 ease-out ${
                   isActive
-                    ? "border border-white/70 bg-[#F5EBDD]/90 text-[#4A3930] shadow-[0_10px_28px_rgba(67,52,42,0.18)] backdrop-blur-xl"
-                    : "border border-transparent text-[#FFF8F0] hover:-translate-y-[1px] hover:border-white/35 hover:bg-white/20 hover:shadow-[0_8px_25px_rgba(67,52,42,0.14)]"
+                    ? "border border-[#E9D5A9] bg-[#F7F1E7] text-[#3C332A] shadow-[0_12px_30px_rgba(91,70,39,0.18),0_3px_8px_rgba(91,70,39,0.08)]"
+                    : "border border-transparent text-[#574D43] hover:-translate-y-[1px] hover:border-white/45 hover:bg-[#E8DCCB]/55 hover:text-[#302A25] hover:shadow-[0_8px_24px_rgba(91,70,39,0.10)]"
                 }`
               }
             >
@@ -93,7 +95,7 @@ function Sidebar() { return ( <aside className="fixed left-0 top-0 h-screen w-64
                   {/* Glass shine */}
 
                   <span
-                    className={`pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 ${
+                    className={`pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 ${
                       !isActive
                         ? "group-hover:translate-x-full"
                         : ""
@@ -101,13 +103,12 @@ function Sidebar() { return ( <aside className="fixed left-0 top-0 h-screen w-64
                   />
 
 
-                  {/* Left indicator */}
+                  {/* Left gold indicator */}
 
                   <span
-                    className={`absolute left-0 top-1/2 h-7 w-[3px] -translate-y-1/2 rounded-r-full bg-[#FFF8EF] transition-all duration-300 ${
-                      isActive
+                    className={`absolute left-0 top-1/2 h-7 w-[3px] -translate-y-1/2 rounded-r-full bg-[#B68A3A] transition-all duration-300 ${isActive
                         ? "opacity-100"
- : "opacity-0 group-hover:opacity-80"
+                        : "opacity-0 group-hover:opacity-70"
                     }`}
                   />
 
@@ -115,10 +116,10 @@ function Sidebar() { return ( <aside className="fixed left-0 top-0 h-screen w-64
                   {/* Icon */}
 
                   <div
-                    className={`relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border transition-all duration-300 ${
+                    className={`relative flex h-10 w-10 shrink-0 items-center justify-center rounded-[13px] border transition-all duration-300 ${
                       isActive
-                        ? "border-white/70 bg-white/45 shadow-inner"
-                        : "border-white/25 bg-white/18 group-hover:scale-105 group-hover:border-white/50 group-hover:bg-white/30"
+                        ? "border-[#E4CA96] bg-gradient-to-br from-[#F1DDAF] via-[#F7EBD0] to-[#E3C88E] shadow-[0_7px_18px_rgba(170,130,55,0.20),inset_0_1px_2px_rgba(255,255,255,0.95)]"
+                        : "border-white/40 bg-[#E7DCCB]/45 group-hover:scale-105 group-hover:border-[#E7C98F]/70 group-hover:bg-[#EBDDC4]/70] group-hover:shadow-[0_5px_14px_rgba(120,90,40,0.10)]"
                     }`}
                   >
 
@@ -127,8 +128,8 @@ function Sidebar() { return ( <aside className="fixed left-0 top-0 h-screen w-64
                       strokeWidth={1.9}
                       className={`transition-all duration-300 ${
                         isActive
-                          ? "text-[#685146]"
-                          : "text-[#FFF8F0] group-hover:scale-110 group-hover:text-white"
+                          ? "text-[#9A7027]"
+                          : "text-[#685D51] group-hover:scale-110 group-hover:text-[#9A7027]"
                       }`}
                     />
 
@@ -140,18 +141,18 @@ function Sidebar() { return ( <aside className="fixed left-0 top-0 h-screen w-64
                   <span
                     className={`relative text-sm font-semibold tracking-[0.01em] transition-all duration-300 ${
                       isActive
-                        ? "text-[#49382F]"
-                        : "text-[#FFF8F0] group-hover:translate-x-1 group-hover:text-white"
+                        ? "text-[#40362C]"
+                        : "text-[#5C5146] group-hover:translate-x-1 group-hover:text-[#302A25]"
                     }`}
                   >
                     {item.label}
                   </span>
 
 
-                  {/* Active star */}
+                  {/* Active gold star */}
 
                   {isActive && (
-                    <span className="ml-auto text-[10px] text-[#A47750] drop-shadow-sm">
+                    <span className="ml-auto text-[11px] text-[#B68A3A] drop-shadow-sm">
                       ✦
                     </span>
                   )}
@@ -172,18 +173,18 @@ function Sidebar() { return ( <aside className="fixed left-0 top-0 h-screen w-64
 
     <div className="px-6 pb-7">
 
-      <div className="mb-5 h-px bg-white/30" />
+      <div className="mb-5 h-px bg-white/40" />
 
 
-      <div className="rounded-2xl border border-white/30 bg-white/18 px-4 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.25)] backdrop-blur-xl transition-all duration-300 hover:bg-white/25">
+      <div className="rounded-[18px] border border-[#E7D6B7]/70 bg-[#E9DDCA]/45 px-4 py-3 shadow-[0_8px_24px_rgba(91,70,39,0.10),inset_0_1px_2px_rgba(255,255,255,0.4)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-[1px] hover:bg-[#EFE2CE]/60">
 
         <div className="flex items-center gap-2">
 
-          <span className="text-[11px] text-[#FFF8EF] drop-shadow-sm">
+          <span className="text-[11px] text-[#B68A3A] drop-shadow-sm">
             ✦
           </span>
 
-          <p className="text-[9px] font-semibold uppercase tracking-[0.16em] text-[#FFF8EF]/90">
+          <p className="text-[9px] font-semibold uppercase tracking-[0.16em] text-[#665B4E]">
             YOUR HOME, ORGANIZED
           </p>
 
@@ -194,6 +195,7 @@ function Sidebar() { return ( <aside className="fixed left-0 top-0 h-screen w-64
     </div>
 
   </div>
+
 </aside>
 ) }
 export default Sidebar

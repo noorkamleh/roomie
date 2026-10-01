@@ -1,64 +1,78 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
-import Sidebar from "./components/Sidebar"
-import Dashboard from "./pages/Dashboard" 
+ import Sidebar from "./components/Sidebar" 
+ import Dashboard from "./pages/Dashboard" 
+ import Expenses from "./pages/Expenses" 
+ import Bills from "./pages/Bills" 
+ import Chores from "./pages/Chores" 
+ import Shopping from "./pages/Shopping" 
+ import Members from "./pages/Members"
+function App() { return ( <BrowserRouter>
+  <div className="relative min-h-screen overflow-hidden bg-[#F2F1F4]">
 
-import Expenses from "./pages/Expenses"
- import Bills from "./pages/Bills"
-  import Chores from "./pages/Chores"
-  import Shopping from "./pages/Shopping" 
-  import Members from "./pages/Members"
-function App() { return ( <BrowserRouter> <div className="min-h-screen bg-[#F4EFE9]">
-    <Sidebar />
+    {/* Page background */}
 
-    <main className="ml-64 min-h-screen p-8">
+    <div className="pointer-events-none absolute -left-32 top-20 h-96 w-96 rounded-full bg-[#E5D7FF]/30 blur-3xl" />
 
-      <Routes>
+    <div className="pointer-events-none absolute right-[-120px] top-[-80px] h-96 w-96 rounded-full bg-[#CDEBFF]/35 blur-3xl" />
 
-        <Route
-          path="/dashboard"
-          element={<Dashboard />}
-        />
+    <div className="pointer-events-none absolute bottom-[-150px] left-[40%] h-96 w-96 rounded-full bg-[#F9E8ED]/40 blur-3xl" />
 
-        <Route
-          path="/expenses"
-          element={<Expenses />}
-        />
+    <div className="relative z-10">
 
-        <Route
-          path="/bills"
-          element={<Bills />}
-        />
+      <Sidebar />
 
-        <Route
-          path="/chores"
-          element={<Chores />}
-        />
+      <main className="ml-64 min-h-screen p-8">
 
-        <Route
-          path="/shopping"
-          element={<Shopping />}
-        />
+        <Routes>
 
-        <Route
-          path="/members"
-          element={<Members />}
-        />
+          <Route
+            path="/dashboard"
+            element={<Dashboard />}
+          />
 
-        <Route
-          path="*"
-          element={
-            <Navigate
-              to="/dashboard"
-              replace
-            />
-          }
-        />
+          <Route
+            path="/expenses"
+            element={<Expenses />}
+          />
 
-      </Routes>
+          <Route
+            path="/bills"
+            element={<Bills />}
+          />
 
-    </main>
+          <Route
+            path="/chores"
+            element={<Chores />}
+          />
+
+          <Route
+            path="/shopping"
+            element={<Shopping />}
+          />
+
+          <Route
+            path="/members"
+            element={<Members />}
+          />
+
+          <Route
+            path="*"
+            element={
+              <Navigate
+                to="/dashboard"
+                replace
+              />
+            }
+          />
+
+        </Routes>
+
+      </main>
+
+    </div>
 
   </div>
+
 </BrowserRouter>
 ) }
 export default App
