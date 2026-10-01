@@ -1,10 +1,4 @@
-import type {
-  Expense,
-  Bill,
-  Chore,
-  ShoppingItem,
-  Member,
-} from "../types"
+import type { Expense, Bill, Chore, ShoppingItem, Member } from "../types";
 
 export const members: Member[] = [
   {
@@ -22,7 +16,7 @@ export const members: Member[] = [
     name: "Reem",
     avatar: "",
   },
-]
+];
 
 export const expenses: Expense[] = [
   {
@@ -62,19 +56,19 @@ export const expenses: Expense[] = [
     paidBy: "Noor",
     participants: ["Noor", "Sara", "Reem"],
     category: "Food",
-    date: "2026-09-25",
+    date: "2026-09-01",
   },
 
   {
     id: "5",
     title: "Cleaning Supplies",
-    amount:100,
+    amount: 100,
     paidBy: "Sara",
     participants: ["Noor", "Sara", "Reem"],
     category: "Household",
     date: "2026-09-24",
   },
-]
+];
 
 export const bills: Bill[] = [
   {
@@ -108,7 +102,7 @@ export const bills: Bill[] = [
     dueDate: "2026-09-05",
     status: "paid",
   },
-]
+];
 
 export const chores: Chore[] = [
   {
@@ -150,7 +144,7 @@ export const chores: Chore[] = [
     dueDate: "2026-10-01",
     status: "pending",
   },
-]
+];
 
 export const shoppingItems: ShoppingItem[] = [
   {
@@ -187,4 +181,4 @@ export const shoppingItems: ShoppingItem[] = [
     quantity: 1,
     completed: true,
   },
-]
+];
