@@ -1,5 +1,5 @@
-import { Plus } from "lucide-react";
-import PageHeader from "../../../shared/components/PageHeader";
+import "../styles/bills.css";
+import BillsHeader from "../components/BillsHeader";
 import EmptyState from "../../../shared/components/EmptyState";
 import Modal from "../../../shared/components/Modal";
 import BillForm from "../components/BillForm";
@@ -22,19 +22,10 @@ function Bills() {
     closePayment,
   } = useBillList();
   return (
-    <div className="space-y-6">
-      <PageHeader
-        title="Bills"
-        description="Stay ahead of due dates. Record a payment to update expenses and balances."
-        action={
-          <button className="primary-button" onClick={openAdd}>
-            <Plus size={18} />
-            Add bill
-          </button>
-        }
-      />
+    <div className="bills-page">
+      <BillsHeader onAdd={openAdd} />
       <BillFilters filter={filter} onChange={setFilter} />
-      <div className="grid gap-4 lg:grid-cols-2">
+      <div className="bill-card-grid">
         {entries.map((bill) => (
           <BillCard
             key={bill.id}
