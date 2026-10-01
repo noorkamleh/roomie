@@ -11,7 +11,7 @@ function ChoreForm({ onSaved }: { onSaved: () => void }) {
   const { error, perform } = useAction();
   return (
     <form
-      className="space-y-4"
+      className="chore-form"
       onSubmit={(event) => {
         event.preventDefault();
         if (
@@ -35,6 +35,7 @@ function ChoreForm({ onSaved }: { onSaved: () => void }) {
         <input
           required
           maxLength={200}
+          placeholder="e.g. Clean the kitchen"
           value={title}
           onChange={(event) => setTitle(event.target.value)}
         />

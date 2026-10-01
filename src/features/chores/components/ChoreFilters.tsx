@@ -1,6 +1,7 @@
 import type { ChoreFilter } from "../hooks/useChoreList";
+import { choreStatuses } from "../utils/presentation";
 
-const filters: ChoreFilter[] = ["all", "pending", "in-progress", "completed"];
+const filters: ChoreFilter[] = ["all", ...choreStatuses];
 
 function ChoreFilters({
   filter,
@@ -10,19 +11,16 @@ function ChoreFilters({
   onChange: (filter: ChoreFilter) => void;
 }) {
   return (
-    <div
-      className="flex flex-wrap gap-2"
-      role="group"
-      aria-label="Filter chores"
-    >
+    <div className="chore-filters" role="group" aria-label="Filter chores">
       {filters.map((status) => (
         <button
           key={status}
           type="button"
-          className={`filter-button ${filter === status ? "is-active" : ""}`}
+          className={`chore-filter chore-filter--${status} ${filter === status ? "is-active" : ""}`}
           aria-pressed={filter === status}
           onClick={() => onChange(status)}
         >
+          <span className="chore-filter-dot" aria-hidden="true" />
           {status.replaceAll("-", " ")}
         </button>
       ))}

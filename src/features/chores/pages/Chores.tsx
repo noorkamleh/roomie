@@ -1,5 +1,5 @@
-import { Plus } from "lucide-react";
-import PageHeader from "../../../shared/components/PageHeader";
+import "../styles/chores.css";
+import ChoresHeader from "../components/ChoresHeader";
 import Modal from "../../../shared/components/Modal";
 import EmptyState from "../../../shared/components/EmptyState";
 import ChoreForm from "../components/ChoreForm";
@@ -20,24 +20,15 @@ function Chores() {
     changeStatus,
   } = useChoreList();
   return (
-    <div className="space-y-6">
-      <PageHeader
-        title="Chores"
-        description="Share the work, assign responsibilities, and keep your home running smoothly."
-        action={
-          <button className="primary-button" onClick={openAdd}>
-            <Plus size={18} />
-            Add chore
-          </button>
-        }
-      />
+    <div className="chores-page">
+      <ChoresHeader onAdd={openAdd} />
       <ChoreFilters filter={filter} onChange={setFilter} />
       {error && (
         <p role="alert" className="form-error">
           {error}
         </p>
       )}
-      <div className="grid gap-4 lg:grid-cols-2">
+      <div className="chore-card-grid">
         {entries.map((chore) => (
           <ChoreCard
             key={chore.id}
