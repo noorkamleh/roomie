@@ -1,3 +1,4 @@
+import DashboardActions from "../components/DashboardActions";
 import DashboardHeader from "../components/DashboardHeader";
 import DashboardSummary from "../components/DashboardSummary";
 import SpendingOverview from "../components/SpendingOverview";
@@ -9,6 +10,7 @@ function Dashboard() {
   return (
     <div className="space-y-6">
       <DashboardHeader />
+      <DashboardActions />
       <DashboardSummary />
       <div className="grid gap-5 xl:grid-cols-[1.6fr_1fr]">
         <SpendingOverview />
