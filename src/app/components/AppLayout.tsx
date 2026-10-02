@@ -20,7 +20,7 @@ function AppLayout({ children }: { children: ReactNode }) {
       />
       <div className="relative z-10">
         <Sidebar />
-        <main className="roomie-main relative ml-64 min-h-screen p-8">
+        <main className="roomie-main relative min-h-screen p-8">
           {storageError && (
             <p role="alert" className="form-error mb-4">
               {storageError}

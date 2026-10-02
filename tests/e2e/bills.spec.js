@@ -128,7 +128,7 @@ test("bill filters, adding, and persistence work on desktop and mobile", async (
   await expect(page.getByRole("dialog")).toHaveCount(0);
   await filters.getByRole("button", { name: /^Overdue 1$/i }).click();
   await expect(page.locator("article")).toHaveCount(1);
-  await expect(page.getByText("1 days overdue")).toBeVisible();
+  await expect(page.getByText("1 day overdue")).toBeVisible();
   await page.reload();
   await expect(
     page.getByRole("heading", { name: "House rent", exact: true }),

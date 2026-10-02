@@ -14,12 +14,14 @@ function Dashboard() {
       <DashboardSummary />
       <div className="grid items-start gap-5 xl:grid-cols-[1.65fr_1fr]">
         <SpendingOverview />
-        <div className="grid gap-4">
+        <div className="grid gap-4 xl:col-start-2 xl:row-span-2">
           <UpcomingBills />
           <AttentionChores />
         </div>
+        <div className="min-w-0 xl:col-start-1 xl:row-start-2">
+          <RecentExpenses />
+        </div>
       </div>
-      <RecentExpenses />
     </div>
   );
 }

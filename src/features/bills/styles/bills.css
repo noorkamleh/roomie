@@ -17,7 +17,7 @@
   display: flex;
   align-items: center;
   gap: 7px;
-  color: #8c78b6;
+  color: #776194;
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.15em;
@@ -40,7 +40,7 @@
 .bills-page-description {
   max-width: 540px;
   margin-top: 8px;
-  color: #7b729e;
+  color: #62567e;
   font-size: 13px;
   line-height: 1.6;
 }
@@ -109,7 +109,7 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  color: #8b729f;
+  color: #715781;
   font-size: 11px;
   font-weight: 500;
 }
@@ -156,7 +156,7 @@
   border-top: 1px solid #e9def4;
 }
 .bill-card-amount p {
-  color: #897599;
+  color: #716080;
   font-size: 11px;
 }
 .bill-card-amount strong {

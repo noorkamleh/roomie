@@ -1,3 +1,5 @@
+export type UtilityKind = "electricity" | "internet" | "water";
+
 export interface Expense {
   id: string;
   title: string;
@@ -5,6 +7,7 @@ export interface Expense {
   paidBy: string;
   participants: string[];
   category: string;
+  utilityKind?: UtilityKind;
   date: string;
 }
 
@@ -14,6 +17,7 @@ export interface Bill {
   amount: number;
   dueDate: string;
   status: "pending" | "paid";
+  utilityKind?: UtilityKind;
 }
 
 export interface Chore {

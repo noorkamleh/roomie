@@ -2,6 +2,8 @@ import { defineConfig } from "@playwright/test";
 export default defineConfig({
   testDir: "./tests/e2e",
   fullyParallel: true,
+  // Keep local Chrome runs within the memory budget, including screenshot tests.
+  workers: 3,
   use: {
     baseURL: "http://127.0.0.1:4173",
     channel: "chrome",

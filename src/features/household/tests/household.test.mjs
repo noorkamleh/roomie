@@ -1,3 +1,4 @@
+import { classifyUtility } from "../../../shared/utils/classifyUtility.ts";
 import {
   prioritizeBills,
   countBillStatuses,
@@ -191,4 +192,49 @@ test("bill priority places overdue, due soon and unpaid before paid with accurat
   assert.equal(bills[0].id, "paid");
   assert.deepEqual(prioritizeBills([], "2026-10-02"), []);
   assert.equal(countBillStatuses(bills, "2026-10-06").overdue, 3);
+});
+
+test("utility kinds are classified at save boundaries and follow bill payments", () => {
+  assert.equal(classifyUtility("Monthly Internet"), "internet");
+  assert.equal(classifyUtility("Electricity payment"), "electricity");
+  assert.equal(classifyUtility("Water bill"), "water");
+  assert.equal(classifyUtility("Watercolor supplies"), undefined);
+  const state = initial();
+  const bill = {
+    id: "internet",
+    title: "Internet",
+    amount: 80,
+    dueDate: "2026-10-05",
+    status: "pending",
+  };
+  const added = householdReducer(state, { type: "bill.add", bill });
+  assert.equal(
+    added.bills.find((bill) => bill.id === "internet").utilityKind,
+    "internet",
+  );
+  const expense = {
+    id: "any",
+    title: "Any",
+    amount: 80,
+    paidBy: "Noor",
+    participants: ["Noor", "Sara"],
+    category: "Bills",
+    date: "2026-10-02",
+  };
+  const paid = householdReducer(added, {
+    type: "bill.pay",
+    id: "internet",
+    expense,
+  });
+  assert.equal(paid.expenses[0].utilityKind, "internet");
+  const saved = householdReducer(state, {
+    type: "expense.save",
+    expense: { ...expense, title: "Electricity" },
+  });
+  assert.equal(saved.expenses[0].utilityKind, "electricity");
+  const edited = householdReducer(saved, {
+    type: "expense.save",
+    expense: { ...saved.expenses[0], category: "Household" },
+  });
+  assert.equal(edited.expenses[0].utilityKind, undefined);
 });

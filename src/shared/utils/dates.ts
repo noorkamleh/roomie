@@ -14,7 +14,8 @@ export function daysUntil(date: string, today: string) {
 
 export function dueLabel(date: string, today: string) {
   const days = daysUntil(date, today);
-  if (days < 0) return `${Math.abs(days)} days overdue`;
+  if (days < 0)
+    return `${Math.abs(days)} ${days === -1 ? "day" : "days"} overdue`;
   if (days === 0) return "Due today";
   if (days === 1) return "Due tomorrow";
   return `Due in ${days} days`;

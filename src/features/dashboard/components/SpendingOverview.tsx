@@ -33,7 +33,7 @@ function SpendingOverview() {
             <ChartNoAxesColumnIncreasing size={23} strokeWidth={2.5} />
           </div>
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#85818F]">
+            <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#69608D]">
               Spending overview
             </p>
             <h2
@@ -55,7 +55,7 @@ function SpendingOverview() {
               type="button"
               aria-pressed={spendingPeriod === period}
               onClick={() => setSpendingPeriod(period)}
-              className={`rounded-lg px-3 py-2 text-[11px] font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#8246FF] ${spendingPeriod === period ? "bg-gradient-to-b from-[#AD7CFF] to-[#7938FF] text-white shadow-[0_4px_12px_rgba(130,70,255,0.22)]" : "text-[#85818F] hover:text-[#55496F]"}`}
+              className={`rounded-lg px-3 py-2 text-[11px] font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#8246FF] ${spendingPeriod === period ? "bg-gradient-to-b from-[#AD7CFF] to-[#7938FF] text-white shadow-[0_4px_12px_rgba(130,70,255,0.22)]" : "text-[#69608D] hover:text-[#55496F]"}`}
             >
               {period === "month"
                 ? "Monthly"
@@ -71,7 +71,7 @@ function SpendingOverview() {
           <p className="text-[34px] font-bold leading-none tracking-[-0.05em] text-[#25232E]">
             {formatCurrency(periodTotal)}
           </p>
-          <p className="mt-2 text-xs text-[#85818F]">
+          <p className="mt-2 text-xs text-[#69608D]">
             {spendingPeriod === "month"
               ? monthLabel
               : `${spendingData[0].date} \u2013 ${spendingData.at(-1)?.date}`}
@@ -86,7 +86,7 @@ function SpendingOverview() {
               aria-hidden="true"
               className="h-2 w-2 rounded-full bg-[#9A83E8]"
             />
-            Daily expenses
+            Daily expenses (SAR)
           </span>
           <span className="flex items-center gap-2">
             <span
@@ -106,7 +106,7 @@ function SpendingOverview() {
       </div>
       <div className="relative mt-3 grid grid-cols-2 gap-4 border-t border-[#EAE5EF] pt-3">
         <div>
-          <p className="text-[10px] font-semibold uppercase tracking-wider text-[#918A9B]">
+          <p className="text-[10px] font-semibold uppercase tracking-wider text-[#69608D]">
             {spendingPeriod === "month"
               ? "Daily average · month to date"
               : "Daily average · selected period"}
@@ -116,13 +116,13 @@ function SpendingOverview() {
           </p>
         </div>
         <div className="border-l border-[#EAE5EF] pl-4">
-          <p className="text-[10px] font-semibold uppercase tracking-wider text-[#918A9B]">
+          <p className="text-[10px] font-semibold uppercase tracking-wider text-[#69608D]">
             Highest spending day
           </p>
           <p className="mt-1 text-sm font-bold text-[#393341]">
             {periodTotal > 0 ? formatCurrency(highestDay.amount) : "\u2014"}
             {periodTotal > 0 && (
-              <span className="ml-2 text-[11px] font-normal text-[#918A9B]">
+              <span className="ml-2 text-[11px] font-normal text-[#69608D]">
                 {highestDay.date.split(",")[0]}
               </span>
             )}
@@ -130,7 +130,7 @@ function SpendingOverview() {
         </div>
       </div>
       {transactionCount === 0 && (
-        <p className="mt-3 text-xs text-[#85818F]">
+        <p className="mt-3 text-xs text-[#69608D]">
           No expenses recorded for this period.
         </p>
       )}

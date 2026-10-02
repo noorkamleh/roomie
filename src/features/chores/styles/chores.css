@@ -16,7 +16,7 @@
   display: flex;
   align-items: center;
   gap: 7px;
-  color: #8c78b6;
+  color: #776194;
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.15em;
@@ -39,7 +39,7 @@
 .chores-page-description {
   max-width: 540px;
   margin-top: 8px;
-  color: #7b729e;
+  color: #62567e;
   font-size: 13px;
   line-height: 1.6;
 }
@@ -78,7 +78,7 @@
   gap: 6px;
   min-width: 0;
   margin-left: auto;
-  color: #8b69ac;
+  color: #74518d;
   font-size: 12px;
   overflow-wrap: anywhere;
 }
@@ -103,7 +103,7 @@
   border: 1px solid #e6dcf5;
   border-radius: 7px;
   background: #faf7ff;
-  color: #8d72aa;
+  color: #72548a;
   font-size: 11px;
 }
 .chore-list-columns,
@@ -118,7 +118,7 @@
   border-top: 1px solid #eee6f6;
   border-bottom: 1px solid #e9def4;
   background: #faf7fe;
-  color: #897599;
+  color: #716080;
   font-size: 11px;
   font-weight: 600;
 }
@@ -160,7 +160,7 @@
   overflow-wrap: anywhere;
 }
 .chore-row--completed h3 {
-  color: #93849e;
+  color: #756681;
   text-decoration: line-through;
 }
 .chore-completion {
@@ -225,7 +225,7 @@
   flex-shrink: 0;
   border-radius: 50%;
   background: #eee3fa;
-  color: #a07ac6;
+  color: #76509a;
   font-size: 11px;
   font-weight: 600;
 }
@@ -285,7 +285,7 @@
   border-color: #d6c3eb;
 }
 .chore-form input::placeholder {
-  color: #a18bad;
+  color: #7a658a;
 }
 
 @media (max-width: 1150px) {

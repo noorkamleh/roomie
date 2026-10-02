@@ -1,4 +1,5 @@
-import { ArrowRight, WalletCards } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import { getExpenseAppearance } from "../../../shared/utils/expenseAppearance";
 import { useHousehold } from "../../household/hooks/HouseholdContext";
 import { useToday } from "../../../shared/hooks/useToday";
 import { dueLabel } from "../../../shared/utils/dates";
@@ -32,37 +33,43 @@ function UpcomingBills() {
       </div>
       <div className="relative mt-3 space-y-2">
         {!bills.some((bill) => bill.status === "pending") && (
-          <p className="text-sm text-[#8A809E]">All bills are paid.</p>
+          <p className="text-sm text-[#69608D]">All bills are paid.</p>
         )}
         {prioritizeBills(bills, today)
           .filter((bill) => bill.status === "pending")
           .slice(0, 3)
-          .map((bill) => (
-            <div
-              key={bill.id}
-              className="flex items-center justify-between rounded-2xl border border-[#F0EDFA] bg-white/75 p-3 transition-all duration-300 hover:bg-white hover:shadow-sm"
-            >
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#F0E9FF]">
-                  <WalletCards size={18} className="text-[#8246FF]" />
+          .map((bill) => {
+            const { icon: Icon } = getExpenseAppearance({
+              category: "Bills",
+              utilityKind: bill.utilityKind,
+            });
+            return (
+              <div
+                key={bill.id}
+                className="flex items-center justify-between rounded-2xl border border-[#F0EDFA] bg-white/75 p-3 transition-all duration-300 hover:bg-white hover:shadow-sm"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#F0E9FF]">
+                    <Icon size={18} className="text-[#8246FF]" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-[#282443]">
+                      {bill.title}
+                      <span className="ml-2">
+                        <StatusBadge status={billStatus(bill, today)} />
+                      </span>
+                    </p>
+                    <p className="mt-0.5 text-[11px] text-[#69608D]">
+                      {dueLabel(bill.dueDate, today)}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-sm font-semibold text-[#282443]">
-                    {bill.title}
-                    <span className="ml-2">
-                      <StatusBadge status={billStatus(bill, today)} />
-                    </span>
-                  </p>
-                  <p className="mt-0.5 text-[11px] text-[#69608D]">
-                    {dueLabel(bill.dueDate, today)}
-                  </p>
-                </div>
+                <p className="text-sm font-bold text-[#282443]">
+                  {formatCurrency(bill.amount)}
+                </p>
               </div>
-              <p className="text-sm font-bold text-[#282443]">
-                {formatCurrency(bill.amount)}
-              </p>
-            </div>
-          ))}
+            );
+          })}
       </div>
     </section>
   );

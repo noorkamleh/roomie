@@ -1,19 +1,18 @@
+import ExpenseParticipants from "./ExpenseParticipants";
 import { CalendarDays, Pencil, Trash2, UsersRound } from "lucide-react";
 import { useState } from "react";
 import Modal from "../../../shared/components/Modal";
 import ExpenseSplitDetails from "./ExpenseSplitDetails";
-import type { Expense } from "../../../shared/types";
+import type { Expense, Member } from "../../../shared/types";
 import { formatCurrency } from "../../../shared/utils/formatCurrency";
 import { splitExpense } from "../utils/calculations";
-import {
-  formatExpenseDate,
-  formatExpenseAmount,
-  getCategoryAppearance,
-} from "./expensePresentation";
+import { formatExpenseDate, formatExpenseAmount } from "./expensePresentation";
+import { getExpenseAppearance } from "../../../shared/utils/expenseAppearance";
 
 interface ExpenseCardProps {
   expense: Expense;
   currentUser: string;
+  members: Member[];
   linked: boolean;
   onEdit: (expense: Expense) => void;
   onDelete: (expense: Expense) => void;
@@ -21,12 +20,13 @@ interface ExpenseCardProps {
 function ExpenseCard({
   expense,
   currentUser,
+  members,
   linked,
   onEdit,
   onDelete,
 }: ExpenseCardProps) {
   const [showSplit, setShowSplit] = useState(false);
-  const { icon: Icon, tone } = getCategoryAppearance(expense.category);
+  const { icon: Icon, tone } = getExpenseAppearance(expense);
   const shares = splitExpense(expense);
   const ownShare = shares.find((share) => share.member === currentUser);
   return (
@@ -64,25 +64,10 @@ function ExpenseCard({
           <span>{ownShare ? "Your share" : "You're not in this split"}</span>
           <strong>{formatCurrency((ownShare?.cents ?? 0) / 100)}</strong>
         </p>
-        <div
-          className="expense-participants"
-          aria-label={`Participants: ${expense.participants.join(", ")}`}
-        >
-          {expense.participants.slice(0, 4).map((member, index) => (
-            <span
-              key={member}
-              title={member}
-              className={`expense-share-avatar expense-person-${index % 3}`}
-            >
-              {member.slice(0, 1).toUpperCase()}
-            </span>
-          ))}
-          {expense.participants.length > 4 && (
-            <span className="expense-share-avatar expense-person-0">
-              +{expense.participants.length - 4}
-            </span>
-          )}
-        </div>
+        <ExpenseParticipants
+          participants={expense.participants}
+          members={members}
+        />
       </div>
       <div className="expense-card-footer">
         <button

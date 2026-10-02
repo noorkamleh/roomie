@@ -60,12 +60,16 @@ export function isHousehold(value: unknown): value is HouseholdState {
     list.length > 0 &&
     new Set(list).size === list.length &&
     list.every((name) => names.includes(name));
+  const validUtilityKind = (kind: unknown) =>
+    kind === undefined ||
+    ["electricity", "internet", "water"].includes(String(kind));
   return (
     validList(
       value.expenses,
       (item) =>
         isText(item.title) &&
         isText(item.category) &&
+        validUtilityKind(item.utilityKind) &&
         isMoney(item.amount) &&
         isDate(item.date) &&
         names.includes(item.paidBy) &&
@@ -75,6 +79,7 @@ export function isHousehold(value: unknown): value is HouseholdState {
       value.bills,
       (item) =>
         isText(item.title) &&
+        validUtilityKind(item.utilityKind) &&
         isMoney(item.amount) &&
         isDate(item.dueDate) &&
         ["paid", "pending"].includes(String(item.status)),

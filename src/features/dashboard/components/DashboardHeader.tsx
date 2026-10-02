@@ -19,7 +19,7 @@ function DashboardHeader() {
         <CalendarDays size={17} strokeWidth={1.8} aria-hidden="true" />
         <div>
           <p>{todayLabel}</p>
-          <p className="mt-1 text-xs font-medium text-[#8C85B0]">{timeLabel}</p>
+          <p className="mt-1 text-xs font-medium text-[#69608D]">{timeLabel}</p>
         </div>
       </div>
     </div>

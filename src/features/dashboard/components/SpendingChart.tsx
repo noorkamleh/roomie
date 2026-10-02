@@ -12,6 +12,11 @@ import {
 import type { SpendingDay, SpendingPeriod } from "../utils/spending";
 import SpendingTooltip from "./SpendingTooltip";
 
+const axisAmount = new Intl.NumberFormat("en-US", {
+  notation: "compact",
+  maximumFractionDigits: 1,
+});
+
 interface SpendingChartProps {
   data: SpendingDay[];
   period: SpendingPeriod;
@@ -24,7 +29,7 @@ function SpendingChart({ data, period }: SpendingChartProps) {
     <ResponsiveContainer width="100%" height="100%" minWidth={0}>
       <ComposedChart
         data={data}
-        margin={{ top: 8, right: 4, left: -12, bottom: 0 }}
+        margin={{ top: 8, right: 4, left: 0, bottom: 0 }}
         accessibilityLayer
       >
         <defs>
@@ -47,9 +52,9 @@ function SpendingChart({ data, period }: SpendingChartProps) {
           axisLine={false}
           tickLine={false}
           tick={{ fill: "#716A97", fontSize: 10 }}
-          tickFormatter={(value: number) => `SAR ${value}`}
+          tickFormatter={(value: number) => axisAmount.format(value)}
           tickCount={4}
-          width={54}
+          width={36}
           domain={[0, "auto"]}
         />
         <Tooltip
@@ -57,6 +62,7 @@ function SpendingChart({ data, period }: SpendingChartProps) {
           content={SpendingTooltip}
         />
         <Bar
+          isAnimationActive={false}
           dataKey="amount"
           name="Daily expenses"
           fill={`url(#${gradientId})`}
@@ -65,6 +71,7 @@ function SpendingChart({ data, period }: SpendingChartProps) {
           activeBar={{ fill: "#8246FF" }}
         />
         <Line
+          isAnimationActive={false}
           type="monotone"
           dataKey="average"
           name="7-day average"

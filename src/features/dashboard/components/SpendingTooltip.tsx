@@ -19,7 +19,7 @@ function SpendingTooltip({
         {formatCurrency(day.amount)}
       </p>
       <p className="mt-1 pl-4 text-[11px] text-[#69608D]">{day.date}</p>
-      <p className="mt-1 text-[11px] text-[#85818F]">
+      <p className="mt-1 text-[11px] text-[#69608D]">
         {day.transactions}{" "}
         {day.transactions === 1 ? "transaction" : "transactions"}
       </p>

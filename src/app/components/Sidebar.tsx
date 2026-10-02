@@ -1,3 +1,4 @@
+import homeIllustration from "../../assets/roomie-home-cutout.png";
 import { NavLink } from "react-router-dom";
 import {
   Home,
@@ -20,8 +21,8 @@ const menuItems = [
 
 function Sidebar() {
   return (
-    <aside className="roomie-sidebar fixed left-0 top-0 z-20 flex h-dvh w-64 flex-col overflow-y-auto border-r border-[#ECEBFA] bg-white/90 text-[#222044]">
-      <div className="flex items-center gap-3 px-7 pb-9 pt-8">
+    <aside className="roomie-sidebar fixed left-0 top-0 z-20 flex h-dvh flex-col overflow-y-auto border-r border-[#ECEBFA] bg-white/90 text-[#222044]">
+      <div className="flex items-center gap-3 px-5 pb-9 pt-8">
         <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#F0E9FF]">
           <Home
             size={27}
@@ -55,8 +56,17 @@ function Sidebar() {
           ))}
         </div>
       </nav>
-      <div className="px-6 pb-7 pt-8">
-        <div className="roomie-home-background rounded-2xl border border-[#EEE8FF] bg-[#FAF8FF] px-4 py-4 text-center">
+      <div className="px-4 pb-7 pt-8">
+        <div className="roomie-home-art text-center">
+          <img
+            src={homeIllustration}
+            alt=""
+            className="roomie-home-illustration"
+            loading="lazy"
+            decoding="async"
+            width={1536}
+            height={1024}
+          />
           <p className="text-[9px] font-semibold uppercase tracking-[0.16em] text-[#8780B2]">
             YOUR HOME, ORGANIZED
           </p>

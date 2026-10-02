@@ -20,7 +20,10 @@ function DashboardSummary() {
   const { expenses, chores, currentUser, settlements } = state;
   const today = useToday();
   const totalExpenses = calculateTotalExpenses(
-    expenses.filter((expense) => expense.date.startsWith(today.slice(0, 7))),
+    expenses.filter(
+      (expense) =>
+        expense.date.startsWith(today.slice(0, 7)) && expense.date <= today,
+    ),
   );
   const pendingChores = calculatePendingChores(chores);
   const youAreOwed = calculateYouAreOwed(expenses, currentUser, settlements);

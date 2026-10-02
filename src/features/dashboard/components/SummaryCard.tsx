@@ -52,7 +52,7 @@ function SummaryCard({
             aria-hidden="true"
             className="h-2 w-2 shrink-0 rounded-full bg-[var(--card-accent)]"
           />
-          <p className="text-[11px] font-medium text-[#79729D]">
+          <p className="text-[11px] font-medium text-[#69608D]">
             {description}
           </p>
         </div>

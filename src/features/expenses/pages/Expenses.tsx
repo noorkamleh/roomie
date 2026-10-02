@@ -12,6 +12,7 @@ function Expenses() {
   const {
     entries,
     currentUser,
+    members,
     total,
     query,
     setQuery,
@@ -48,6 +49,7 @@ function Expenses() {
               key={expense.id}
               expense={expense}
               currentUser={currentUser}
+              members={members}
               linked={isBillExpense(expense)}
               onEdit={openEdit}
               onDelete={removeExpense}

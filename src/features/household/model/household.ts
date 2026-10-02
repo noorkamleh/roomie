@@ -8,6 +8,7 @@ import type {
   Settlement,
 } from "../../../shared/types";
 import { isHousehold } from "./validation.ts";
+import { classifyUtility } from "../../../shared/utils/classifyUtility.ts";
 import { suggestSettlements } from "../../expenses/utils/calculations.ts";
 
 export type HouseholdAction =
@@ -39,7 +40,13 @@ export function householdReducer(
       next = {
         ...state,
         expenses: [
-          action.expense,
+          {
+            ...action.expense,
+            utilityKind:
+              action.expense.category === "Bills"
+                ? classifyUtility(action.expense.title)
+                : undefined,
+          },
           ...state.expenses.filter((item) => item.id !== action.expense.id),
         ],
       };
@@ -54,7 +61,13 @@ export function householdReducer(
       };
       break;
     case "bill.add":
-      next = { ...state, bills: [action.bill, ...state.bills] };
+      next = {
+        ...state,
+        bills: [
+          { ...action.bill, utilityKind: classifyUtility(action.bill.title) },
+          ...state.bills,
+        ],
+      };
       break;
     case "bill.pay": {
       const bill = state.bills.find((item) => item.id === action.id);
@@ -65,6 +78,7 @@ export function householdReducer(
         title: bill.title,
         amount: bill.amount,
         category: "Bills",
+        utilityKind: bill.utilityKind ?? classifyUtility(bill.title),
       };
       next = {
         ...state,
