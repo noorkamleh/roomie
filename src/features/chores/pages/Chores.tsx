@@ -9,6 +9,7 @@ import { useChoreList } from "../hooks/useChoreList";
 function Chores() {
   const {
     entries,
+    counts,
     personalEntries,
     currentUser,
     today,
@@ -23,13 +24,15 @@ function Chores() {
   return (
     <div className="chores-page">
       <ChoresHeader onAdd={openAdd} />
-      <ChoreFilters filter={filter} onChange={setFilter} />
+      <ChoreFilters filter={filter} counts={counts} onChange={setFilter} />
       {error && (
         <p role="alert" className="form-error">
           {error}
         </p>
       )}
       <ChoreList
+        key={`personal-${filter}`}
+        showCompleted={filter === "completed"}
         variant="personal"
         owner={currentUser}
         entries={personalEntries}
@@ -37,6 +40,8 @@ function Chores() {
         onStatusChange={changeStatus}
       />
       <ChoreList
+        key={`household-${filter}`}
+        showCompleted={filter === "completed"}
         variant="household"
         entries={entries}
         today={today}

@@ -29,6 +29,16 @@ export function useChoreList() {
   }
 
   return {
+    counts: {
+      all: state.chores.length,
+      pending: state.chores.filter((chore) => chore.status === "pending")
+        .length,
+      "in-progress": state.chores.filter(
+        (chore) => chore.status === "in-progress",
+      ).length,
+      completed: state.chores.filter((chore) => chore.status === "completed")
+        .length,
+    },
     entries,
     personalEntries,
     currentUser: state.currentUser,

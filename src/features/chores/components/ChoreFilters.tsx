@@ -1,30 +1,28 @@
 import type { ChoreFilter } from "../hooks/useChoreList";
-import { choreStatuses } from "../utils/presentation";
-
-const filters: ChoreFilter[] = ["all", ...choreStatuses];
-
+import StatusFilters from "../../../shared/components/StatusFilters";
+const options = [
+  { value: "all", label: "All", tone: "purple" },
+  { value: "pending", label: "Pending", tone: "purple" },
+  { value: "in-progress", label: "In progress", tone: "blue" },
+  { value: "completed", label: "Completed", tone: "mint" },
+] as const;
 function ChoreFilters({
   filter,
+  counts,
   onChange,
 }: {
   filter: ChoreFilter;
+  counts: Record<ChoreFilter, number>;
   onChange: (filter: ChoreFilter) => void;
 }) {
   return (
-    <div className="chore-filters" role="group" aria-label="Filter chores">
-      {filters.map((status) => (
-        <button
-          key={status}
-          type="button"
-          className={`chore-filter chore-filter--${status} ${filter === status ? "is-active" : ""}`}
-          aria-pressed={filter === status}
-          onClick={() => onChange(status)}
-        >
-          <span className="chore-filter-dot" aria-hidden="true" />
-          {status.replaceAll("-", " ")}
-        </button>
-      ))}
-    </div>
+    <StatusFilters
+      label="Filter chores"
+      options={options}
+      value={filter}
+      counts={counts}
+      onChange={onChange}
+    />
   );
 }
 export default ChoreFilters;
