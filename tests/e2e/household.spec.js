@@ -154,7 +154,11 @@ test("local clock changes the greeting at noon and the dashboard shows today's m
   await expect(page.getByRole("heading", { level: 1 })).toContainText(
     "Good morning",
   );
-  await expect(page.getByText("Friday, October 2, 2026")).toBeVisible();
+  const header = page.locator(".dashboard-header");
+  await expect(header.getByText("Friday", { exact: true })).toBeVisible();
+  await expect(header.getByText("11:59 AM", { exact: true })).toBeVisible();
+  await expect(header).not.toContainText("October");
+  await expect(header).not.toContainText("2026");
   await expect(
     page.locator("section[aria-labelledby=spending-heading]"),
   ).toContainText("October 2026");
@@ -162,6 +166,7 @@ test("local clock changes the greeting at noon and the dashboard shows today's m
   await expect(page.getByRole("heading", { level: 1 })).toContainText(
     "Good afternoon",
   );
+  await expect(header.getByText("12:00 PM", { exact: true })).toBeVisible();
   await page.waitForLoadState("networkidle");
   await page.screenshot({
     path: "test-results/dashboard-desktop.png",

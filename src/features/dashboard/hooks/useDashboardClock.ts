@@ -19,11 +19,8 @@ export function useDashboardClock() {
   const hour = now.getHours();
   const greeting =
     hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
-  const todayLabel = now.toLocaleDateString("en-US", {
+  const dayLabel = now.toLocaleDateString("en-US", {
     weekday: "long",
-    month: "long",
-    day: "numeric",
-    year: "numeric",
   });
   const timeLabel = now.toLocaleTimeString("en-US", {
     hour: "2-digit",
@@ -31,5 +28,5 @@ export function useDashboardClock() {
     hour12: true,
   });
 
-  return { greeting, todayLabel, timeLabel };
+  return { greeting, dayLabel, timeLabel };
 }

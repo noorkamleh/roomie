@@ -35,7 +35,7 @@ function SummaryCard({
   return (
     <div
       style={style}
-      className="summary-card group relative overflow-hidden rounded-[24px] border border-white bg-white/90 p-5 shadow-[0_8px_30px_rgba(110,93,180,0.04)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_32px_rgba(110,93,180,0.09)]"
+      className="summary-card group relative overflow-hidden rounded-[24px] border border-[var(--roomie-card-border)] bg-white/90 p-5 shadow-[0_8px_30px_rgba(110,93,180,0.04)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_32px_rgba(110,93,180,0.09)]"
     >
       <div className="relative z-10">
         <div className="flex items-center gap-3">

@@ -4,6 +4,7 @@
 @import "./features/dashboard/styles/dashboard.css";
 
 :root {
+  --roomie-card-border: #d7c2ee;
   font-family: "Segoe UI", Arial, sans-serif;
   color: #222044;
   background: #f3f5ff;

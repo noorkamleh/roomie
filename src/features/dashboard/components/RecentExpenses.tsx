@@ -8,7 +8,7 @@ function RecentExpenses() {
   const { state } = useHousehold();
   const { expenses } = state;
   return (
-    <section className="relative overflow-hidden rounded-[28px] border border-white bg-white/90 p-6 shadow-[0_8px_32px_rgba(109,91,180,0.04)]">
+    <section className="relative overflow-hidden rounded-[28px] border border-[var(--roomie-card-border)] bg-white/90 p-6 shadow-[0_8px_32px_rgba(109,91,180,0.04)]">
       <div className="flex items-start justify-between">
         <div>
           <p className="text-[13px] font-semibold text-[#7973A5]">
@@ -38,7 +38,7 @@ function RecentExpenses() {
             return (
               <div
                 key={expense.id}
-                className="flex items-center justify-between rounded-2xl border border-[#F0EDFA] bg-white/75 p-3.5 transition-all duration-300 hover:bg-white hover:shadow-sm"
+                className="flex items-center justify-between rounded-2xl border border-[var(--roomie-card-border)] bg-white/75 p-3.5 transition-all duration-300 hover:bg-white hover:shadow-sm"
               >
                 <div className="flex items-center gap-3">
                   <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#F0E9FF]">

@@ -33,9 +33,6 @@
   letter-spacing: -0.045em;
   line-height: 1.2;
 }
-.chores-page-header h1 svg {
-  color: #ab81f3;
-}
 .chores-page-description {
   max-width: 540px;
   margin-top: 8px;
@@ -60,14 +57,14 @@
   --chore-columns: minmax(0, 1fr) 130px 155px 135px;
   overflow: hidden;
   min-width: 0;
-  border: 1px solid #e4ddec;
+  border: 1px solid var(--roomie-card-border);
   border-radius: 20px;
   background: #ffffff;
   box-shadow: 0 6px 24px #6d5bb40c;
 }
 .chore-list--personal {
   --chore-columns: minmax(0, 1fr) 155px 135px;
-  border-color: #d6c4e9;
+  border-color: var(--roomie-card-border);
 }
 .chore-list--personal .chore-list-heading {
   background: linear-gradient(110deg, #faf6ff, #f2eaff);

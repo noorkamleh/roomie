@@ -1,6 +1,6 @@
 .panel {
   position: relative;
-  border: 1px solid #fff;
+  border: 1px solid var(--roomie-card-border);
   border-radius: 24px;
   background: #ffffffed;
   padding: 24px;
@@ -155,7 +155,7 @@ select:focus-visible {
   overflow: auto;
   margin: auto;
   padding: 0;
-  border: 1px solid #eee5fa;
+  border: 1px solid var(--roomie-card-border);
   border-radius: 24px;
   background: #fdfbff;
   color: #352d4c;
@@ -171,7 +171,7 @@ select:focus-visible {
   flex-wrap: wrap;
   gap: 8px;
   padding: 8px;
-  border: 1px solid #e6dff0;
+  border: 1px solid var(--roomie-card-border);
   border-radius: 16px;
   background: #ffffffc9;
 }

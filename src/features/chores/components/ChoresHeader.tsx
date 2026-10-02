@@ -1,4 +1,4 @@
-import { ListChecks, Plus, Sparkles } from "lucide-react";
+import { ListChecks, Plus } from "lucide-react";
 
 function ChoresHeader({ onAdd }: { onAdd: () => void }) {
   return (
@@ -8,9 +8,7 @@ function ChoresHeader({ onAdd }: { onAdd: () => void }) {
           <ListChecks size={14} aria-hidden="true" />
           Household tasks
         </p>
-        <h1>
-          Chores <Sparkles size={25} aria-hidden="true" />
-        </h1>
+        <h1>Chores</h1>
         <p className="chores-page-description">
           Share the work, assign responsibilities, and keep your home running
           smoothly.

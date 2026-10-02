@@ -15,7 +15,7 @@ function AttentionChores() {
   return (
     <section
       aria-labelledby="attention-heading"
-      className="relative overflow-hidden rounded-[28px] border border-white bg-white/90 p-4 shadow-[0_8px_32px_rgba(109,91,180,0.04)]"
+      className="relative overflow-hidden rounded-[28px] border border-[var(--roomie-card-border)] bg-white/90 p-4 shadow-[0_8px_32px_rgba(109,91,180,0.04)]"
     >
       <div className="pointer-events-none absolute -left-16 -top-16 h-40 w-40 rounded-full bg-[#CDEBFF]/40 blur-3xl" />
       <div className="relative flex items-center justify-between">
@@ -50,7 +50,7 @@ function AttentionChores() {
         {entries.map((chore) => (
           <div
             key={chore.id}
-            className="group flex items-center gap-3 rounded-2xl border border-[#F0EDFA] bg-white/75 p-2.5 transition-all duration-300 hover:bg-white hover:shadow-sm"
+            className="group flex items-center gap-3 rounded-2xl border border-[var(--roomie-card-border)] bg-white/75 p-2.5 transition-all duration-300 hover:bg-white hover:shadow-sm"
           >
             <button
               type="button"

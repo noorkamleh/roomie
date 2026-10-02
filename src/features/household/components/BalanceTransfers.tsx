@@ -21,7 +21,7 @@ function BalanceTransfers() {
       <div className="mt-5 space-y-3">
         {transfers.map((transfer) => (
           <div
-            className="flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-[#F9F6FF] p-4"
+            className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[var(--roomie-card-border)] bg-[#F9F6FF] p-4"
             key={`${transfer.from}-${transfer.to}`}
           >
             <p className="flex items-center gap-2 text-sm">

@@ -1,4 +1,4 @@
-import { CalendarDays, Plus, Sparkles } from "lucide-react";
+import { CalendarDays, Plus } from "lucide-react";
 
 function BillsHeader({ onAdd }: { onAdd: () => void }) {
   return (
@@ -8,9 +8,7 @@ function BillsHeader({ onAdd }: { onAdd: () => void }) {
           <CalendarDays size={14} aria-hidden="true" />
           Household finances
         </p>
-        <h1>
-          Bills <Sparkles size={25} aria-hidden="true" />
-        </h1>
+        <h1>Bills</h1>
         <p className="bills-page-description">
           Stay ahead of due dates. Record a payment to update expenses and
           balances.

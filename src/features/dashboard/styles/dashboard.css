@@ -3,12 +3,6 @@
   z-index: 1;
 }
 
-.dashboard-header h1 span {
-  color: #a278ff;
-  display: inline-block;
-  margin-left: 4px;
-}
-
 .summary-card::before,
 .summary-card::after {
   content: "";

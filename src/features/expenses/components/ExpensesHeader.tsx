@@ -1,4 +1,4 @@
-import { Plus, ReceiptText, Sparkles } from "lucide-react";
+import { Plus, ReceiptText } from "lucide-react";
 function ExpensesHeader({ onAdd }: { onAdd: () => void }) {
   return (
     <header className="expense-page-header">
@@ -7,9 +7,7 @@ function ExpensesHeader({ onAdd }: { onAdd: () => void }) {
           <ReceiptText size={14} aria-hidden="true" />
           Household finances
         </p>
-        <h1>
-          Expenses <Sparkles size={25} aria-hidden="true" />
-        </h1>
+        <h1>Expenses</h1>
         <p className="expense-page-description">
           Track what was paid, who paid it, and everyone's share.
         </p>

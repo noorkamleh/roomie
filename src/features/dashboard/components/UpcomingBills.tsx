@@ -13,7 +13,7 @@ function UpcomingBills() {
   const { bills } = state;
   const today = useToday();
   return (
-    <section className="relative overflow-hidden rounded-[28px] border border-white bg-white/90 p-4 shadow-[0_8px_32px_rgba(109,91,180,0.04)]">
+    <section className="relative overflow-hidden rounded-[28px] border border-[var(--roomie-card-border)] bg-white/90 p-4 shadow-[0_8px_32px_rgba(109,91,180,0.04)]">
       <div className="relative flex items-start justify-between">
         <div>
           <p className="text-[13px] font-semibold text-[#7973A5]">
@@ -46,7 +46,7 @@ function UpcomingBills() {
             return (
               <div
                 key={bill.id}
-                className="flex items-center justify-between rounded-2xl border border-[#F0EDFA] bg-white/75 p-3 transition-all duration-300 hover:bg-white hover:shadow-sm"
+                className="flex items-center justify-between rounded-2xl border border-[var(--roomie-card-border)] bg-white/75 p-3 transition-all duration-300 hover:bg-white hover:shadow-sm"
               >
                 <div className="flex items-center gap-3">
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#F0E9FF]">

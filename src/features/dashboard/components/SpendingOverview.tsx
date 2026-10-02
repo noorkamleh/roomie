@@ -21,7 +21,7 @@ function SpendingOverview() {
   return (
     <section
       aria-labelledby="spending-heading"
-      className="relative min-w-0 overflow-hidden rounded-[28px] border border-white bg-white/90 p-5 shadow-[0_8px_32px_rgba(109,91,180,0.04)] sm:p-6"
+      className="relative min-w-0 overflow-hidden rounded-[28px] border border-[var(--roomie-card-border)] bg-white/90 p-5 shadow-[0_8px_32px_rgba(109,91,180,0.04)] sm:p-6"
     >
       <div
         aria-hidden="true"

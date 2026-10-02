@@ -36,9 +36,6 @@
   letter-spacing: -0.045em;
   line-height: 1.2;
 }
-.expense-page-header h1 svg {
-  color: #ab81f3;
-}
 .expense-page-description {
   margin-top: 8px;
   color: #62567e;
@@ -63,7 +60,7 @@
   align-items: center;
   gap: 18px;
   overflow: hidden;
-  border: 1px solid #ddd0ef;
+  border: 1px solid var(--roomie-card-border);
   border-radius: 20px;
   padding: 20px 24px;
   background: linear-gradient(110deg, #ffffffed 10%, #faf6ff 60%, #efe6ff 100%);
@@ -216,7 +213,7 @@
   min-width: 0;
   overflow: hidden;
   padding: 18px;
-  border: 1px solid #e4ddec;
+  border: 1px solid var(--roomie-card-border);
   border-radius: 20px;
   background: #ffffff;
   box-shadow: 0 4px 18px #6d5bb40c;
@@ -225,7 +222,7 @@
     box-shadow 180ms;
 }
 .expense-card:hover {
-  border-color: #cbb8e3;
+  border-color: var(--roomie-card-border);
   box-shadow: 0 10px 32px #6d5bb412;
 }
 .expense-tone-purple {
@@ -420,7 +417,7 @@
   gap: 0;
   margin-top: 12px;
   padding: 0 12px;
-  border: 1px solid #e9def4;
+  border: 1px solid var(--roomie-card-border);
   border-radius: 12px;
   background: #faf7fe;
 }
