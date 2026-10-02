@@ -1,4 +1,7 @@
-import { CalendarDays, Check, Pencil, Trash2, UsersRound } from "lucide-react";
+import { CalendarDays, Pencil, Trash2, UsersRound } from "lucide-react";
+import { useState } from "react";
+import Modal from "../../../shared/components/Modal";
+import ExpenseSplitDetails from "./ExpenseSplitDetails";
 import type { Expense } from "../../../shared/types";
 import { formatCurrency } from "../../../shared/utils/formatCurrency";
 import { splitExpense } from "../utils/calculations";
@@ -10,13 +13,22 @@ import {
 
 interface ExpenseCardProps {
   expense: Expense;
+  currentUser: string;
   linked: boolean;
   onEdit: (expense: Expense) => void;
   onDelete: (expense: Expense) => void;
 }
-function ExpenseCard({ expense, linked, onEdit, onDelete }: ExpenseCardProps) {
+function ExpenseCard({
+  expense,
+  currentUser,
+  linked,
+  onEdit,
+  onDelete,
+}: ExpenseCardProps) {
+  const [showSplit, setShowSplit] = useState(false);
   const { icon: Icon, tone } = getCategoryAppearance(expense.category);
   const shares = splitExpense(expense);
+  const ownShare = shares.find((share) => share.member === currentUser);
   return (
     <article className={`expense-card expense-tone-${tone}`}>
       <div className="expense-card-topline">
@@ -47,33 +59,42 @@ function ExpenseCard({ expense, linked, onEdit, onDelete }: ExpenseCardProps) {
           {formatExpenseAmount(expense.amount)}
         </p>
       </div>
-      <div className="expense-shares">
-        <p className="expense-shares-label">
-          <UsersRound size={14} aria-hidden="true" />
-          Shared between
+      <div className="expense-share-summary">
+        <p className="expense-own-share">
+          <span>{ownShare ? "Your share" : "You're not in this split"}</span>
+          <strong>{formatCurrency((ownShare?.cents ?? 0) / 100)}</strong>
         </p>
-        <div className="expense-share-grid">
-          {shares.map((share, index) => (
-            <div key={share.member} className="expense-share">
-              <span
-                className={`expense-share-avatar expense-person-${index % 3}`}
-                aria-hidden="true"
-              >
-                {share.member.slice(0, 1).toUpperCase()}
-              </span>
-              <div>
-                <p>{share.member}'s share</p>
-                <strong>{formatCurrency(share.cents / 100)}</strong>
-              </div>
-            </div>
+        <div
+          className="expense-participants"
+          aria-label={`Participants: ${expense.participants.join(", ")}`}
+        >
+          {expense.participants.slice(0, 4).map((member, index) => (
+            <span
+              key={member}
+              title={member}
+              className={`expense-share-avatar expense-person-${index % 3}`}
+            >
+              {member.slice(0, 1).toUpperCase()}
+            </span>
           ))}
+          {expense.participants.length > 4 && (
+            <span className="expense-share-avatar expense-person-0">
+              +{expense.participants.length - 4}
+            </span>
+          )}
         </div>
       </div>
       <div className="expense-card-footer">
-        <span className="expense-recorded">
-          <Check size={12} aria-hidden="true" />
-          Recorded expense
-        </span>
+        <button
+          type="button"
+          className="expense-view-split"
+          aria-label={`View split for ${expense.title}`}
+          aria-haspopup="dialog"
+          onClick={() => setShowSplit(true)}
+        >
+          <UsersRound size={14} aria-hidden="true" />
+          View split
+        </button>
         {linked ? (
           <span className="expense-linked">Created from a paid bill</span>
         ) : (
@@ -98,6 +119,14 @@ function ExpenseCard({ expense, linked, onEdit, onDelete }: ExpenseCardProps) {
           </div>
         )}
       </div>
+      {showSplit && (
+        <Modal
+          title={`Split for ${expense.title}`}
+          onClose={() => setShowSplit(false)}
+        >
+          <ExpenseSplitDetails expense={expense} currentUser={currentUser} />
+        </Modal>
+      )}
     </article>
   );
 }

@@ -34,6 +34,7 @@ export function useExpenseList() {
   }
 
   return {
+    currentUser: state.currentUser,
     entries,
     total: calculateTotalExpenses(state.expenses),
     query,

@@ -11,6 +11,7 @@ import { useExpenseList } from "../hooks/useExpenseList";
 function Expenses() {
   const {
     entries,
+    currentUser,
     total,
     query,
     setQuery,
@@ -46,6 +47,7 @@ function Expenses() {
             <ExpenseCard
               key={expense.id}
               expense={expense}
+              currentUser={currentUser}
               linked={isBillExpense(expense)}
               onEdit={openEdit}
               onDelete={removeExpense}

@@ -215,8 +215,8 @@
   flex-direction: column;
   min-width: 0;
   overflow: hidden;
-  padding: 22px;
-  border: 1px solid #d6c3eb;
+  padding: 18px;
+  border: 1px solid #e4ddec;
   border-radius: 20px;
   background: #ffffff;
   box-shadow: 0 4px 18px #6d5bb40c;
@@ -225,7 +225,7 @@
     box-shadow 180ms;
 }
 .expense-card:hover {
-  border-color: #b998de;
+  border-color: #cbb8e3;
   box-shadow: 0 10px 32px #6d5bb412;
 }
 .expense-tone-purple {
@@ -274,7 +274,7 @@
   grid-template-columns: 46px minmax(0, 1fr) auto;
   align-items: center;
   gap: 12px;
-  margin-top: 20px;
+  margin-top: 16px;
 }
 .expense-category-icon {
   display: grid;
@@ -338,10 +338,69 @@
   font-weight: 500;
   letter-spacing: 0;
 }
-.expense-shares {
-  margin-top: 20px;
-  padding-top: 14px;
-  border-top: 1px solid #e9def4;
+.expense-share-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 16px;
+  padding: 12px 0;
+  border-top: 1px solid #eee8f5;
+  border-bottom: 1px solid #eee8f5;
+}
+.expense-own-share {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  color: #716080;
+  font-size: 12px;
+}
+.expense-own-share strong {
+  color: #544168;
+  font-size: 14px;
+}
+.expense-participants {
+  display: flex;
+  padding-left: 5px;
+}
+.expense-participants .expense-share-avatar {
+  margin-left: -5px;
+  border: 2px solid white;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+}
+.expense-view-split {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 36px;
+  padding: 6px 2px;
+  color: #7445ad;
+  font-size: 12px;
+  font-weight: 600;
+}
+.expense-view-split:hover {
+  color: #582697;
+}
+.expense-view-split:focus-visible {
+  outline: 2px solid #8246ff;
+  outline-offset: 3px;
+  border-radius: 5px;
+}
+.expense-split-total {
+  margin-bottom: 18px;
+  color: #30233f;
+  font-size: 24px;
+  font-weight: 700;
+}
+.expense-split-total span {
+  display: block;
+  margin-top: 5px;
+  color: #716080;
+  font-size: 13px;
+  font-weight: 400;
 }
 .expense-shares-label {
   display: flex;
@@ -419,16 +478,6 @@
   gap: 12px;
   margin-top: auto;
   padding-top: 18px;
-}
-.expense-recorded {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  color: #897599;
-  font-size: 11px;
-}
-.expense-recorded svg {
-  color: #86b5a2;
 }
 .expense-linked {
   color: #897599;

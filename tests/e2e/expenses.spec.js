@@ -10,6 +10,15 @@ test("expense design preserves search and fits desktop and mobile screens", asyn
     page.getByRole("heading", { name: "Expenses", exact: true }),
   ).toBeVisible();
   await expect(page.locator("article")).toHaveCount(5);
+  const groceries = page.locator("article").filter({ has: page.getByRole("heading", { name: "Groceries", exact: true }) });
+  await expect(groceries).toContainText("Your share");
+  await expect(groceries).toContainText("SAR 40.00");
+  await expect(groceries.getByText("Sara's share")).toHaveCount(0);
+  await groceries.getByRole("button", { name: "View split for Groceries" }).click();
+  const split = page.getByRole("dialog", { name: "Split for Groceries" });
+  await expect(split.getByText("SAR 40.00", { exact: true })).toHaveCount(3);
+  await page.keyboard.press("Escape");
+  await expect(groceries.getByRole("button", { name: "View split for Groceries" })).toBeFocused();
   const search = page.getByRole("searchbox", { name: "Search expenses" });
   await search.fill("groceries");
   await expect(page.locator("article")).toHaveCount(1);
@@ -40,4 +49,16 @@ test("expense design preserves search and fits desktop and mobile screens", asyn
   await page.keyboard.press("Escape");
   await expect(page.getByRole("dialog")).toHaveCount(0);
   expect(errors).toEqual([]);
+});
+
+test("expense shares follow the active member and exclude nonparticipants", async ({ page }) => {
+  await page.goto("/members");
+  await page.getByLabel("View as").selectOption("Reem");
+  await page.getByRole("button", { name: "Save", exact: true }).click();
+  await page.goto("/expenses");
+  const internet = page.locator("article").filter({ has: page.getByRole("heading", { name: "Internet", exact: true }) });
+  await expect(internet).toContainText("You're not in this split");
+  await expect(internet).toContainText("SAR 0.00");
+  await internet.getByRole("button", { name: "View split for Internet" }).click();
+  await expect(page.getByRole("dialog").getByText("SAR 40.00", { exact: true })).toHaveCount(2);
 });
