@@ -1,27 +1,22 @@
-import { useState } from "react";
-import { useHousehold } from "../hooks/HouseholdContext";
-import { useAction } from "../../../shared/hooks/useAction";
 import Field from "../../../shared/components/Field";
+import { useHouseholdSettings } from "../hooks/useHouseholdSettings";
 function HouseholdSettings() {
-  const { state, commit } = useHousehold();
-  const [name, setName] = useState(state.name);
-  const [currentUser, setCurrentUser] = useState(state.currentUser);
-  const [saved, setSaved] = useState(false);
-  const { error, perform } = useAction();
+  const {
+    name,
+    currentUser,
+    members,
+    saved,
+    error,
+    save,
+    changeName,
+    changeUser,
+  } = useHouseholdSettings();
   return (
     <form
       className="panel space-y-4"
       onSubmit={(event) => {
         event.preventDefault();
-        setSaved(
-          perform(() =>
-            commit({
-              type: "household.settings",
-              name: name.trim(),
-              currentUser,
-            }),
-          ),
-        );
+        save();
       }}
     >
       <h2 className="font-semibold">Household settings</h2>
@@ -31,21 +26,15 @@ function HouseholdSettings() {
             required
             maxLength={200}
             value={name}
-            onChange={(event) => {
-              setSaved(false);
-              setName(event.target.value);
-            }}
+            onChange={(event) => changeName(event.target.value)}
           />
         </Field>
         <Field label="View as">
           <select
             value={currentUser}
-            onChange={(event) => {
-              setSaved(false);
-              setCurrentUser(event.target.value);
-            }}
+            onChange={(event) => changeUser(event.target.value)}
           >
-            {state.members.map((member) => (
+            {members.map((member) => (
               <option key={member.id}>{member.name}</option>
             ))}
           </select>

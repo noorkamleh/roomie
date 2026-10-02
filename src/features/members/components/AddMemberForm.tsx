@@ -1,30 +1,14 @@
-import { useState } from "react";
 import { Plus } from "lucide-react";
-import { useHousehold } from "../hooks/HouseholdContext";
-import { useAction } from "../../../shared/hooks/useAction";
 import Field from "../../../shared/components/Field";
+import { useAddMember } from "../hooks/useAddMember";
 function AddMemberForm() {
-  const { commit } = useHousehold();
-  const [name, setName] = useState("");
-  const { error, perform } = useAction();
+  const { name, setName, error, add } = useAddMember();
   return (
     <form
       className="panel"
       onSubmit={(event) => {
         event.preventDefault();
-        if (
-          perform(() =>
-            commit({
-              type: "member.add",
-              member: {
-                id: crypto.randomUUID(),
-                name: name.trim(),
-                avatar: "",
-              },
-            }),
-          )
-        )
-          setName("");
+        add();
       }}
     >
       <div className="flex flex-wrap items-end gap-4">
