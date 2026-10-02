@@ -1,3 +1,4 @@
+import { Check, House, Save } from "lucide-react";
 import Field from "../../../shared/components/Field";
 import { useHouseholdSettings } from "../hooks/useHouseholdSettings";
 function HouseholdSettings() {
@@ -13,14 +14,23 @@ function HouseholdSettings() {
   } = useHouseholdSettings();
   return (
     <form
-      className="panel space-y-4"
+      className="members-panel members-settings"
+      aria-labelledby="household-settings-heading"
       onSubmit={(event) => {
         event.preventDefault();
         save();
       }}
     >
-      <h2 className="font-semibold">Household settings</h2>
-      <div className="grid items-end gap-4 sm:grid-cols-[1fr_1fr_auto]">
+      <div className="members-section-heading">
+        <span className="members-section-icon">
+          <House size={19} aria-hidden="true" />
+        </span>
+        <div>
+          <h2 id="household-settings-heading">Household settings</h2>
+          <p>Make this space yours.</p>
+        </div>
+      </div>
+      <div className="members-form-fields">
         <Field label="Household name">
           <input
             required
@@ -39,23 +49,27 @@ function HouseholdSettings() {
             ))}
           </select>
         </Field>
-        <button className="secondary-button" type="submit">
-          Save
-        </button>
       </div>
-      <p className="text-xs text-[#8A809E]">
-        View as selects whose balance appears on the dashboard.
+      <p className="members-field-hint">
+        Choose whose balance and chores you see.
       </p>
       {error && (
         <p role="alert" className="form-error">
           {error}
         </p>
       )}
-      {saved && (
-        <p role="status" className="text-sm text-[#268466]">
-          Settings saved.
-        </p>
-      )}
+      <div className="members-settings-footer">
+        <button className="secondary-button members-save-button" type="submit">
+          <Save size={15} aria-hidden="true" />
+          Save
+        </button>
+        {saved && (
+          <p role="status" className="members-save-status">
+            <Check size={14} aria-hidden="true" />
+            Settings saved.
+          </p>
+        )}
+      </div>
     </form>
   );
 }

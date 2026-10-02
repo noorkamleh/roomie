@@ -1,56 +1,71 @@
-import { ArrowRight } from "lucide-react";
+import { ArrowLeftRight, ArrowRight, Check, CircleCheck } from "lucide-react";
 import { formatCurrency } from "../../../shared/utils/formatCurrency";
 import { useBalanceTransfers } from "../hooks/useBalanceTransfers";
+import MemberAvatar from "./MemberAvatar";
+import RepaymentHistory from "./RepaymentHistory";
 function BalanceTransfers() {
   const { transfers, settlements, error, record } = useBalanceTransfers();
   return (
-    <section className="panel">
-      <h2 className="text-lg font-semibold">Who pays whom?</h2>
-      <p className="mt-1 text-sm text-[#8A809E]">
-        Suggested transfers settle the household's net balances.
-      </p>
-      <div className="mt-5 space-y-3">
+    <section
+      className="members-panel members-transfers"
+      aria-labelledby="members-transfers-heading"
+    >
+      <div className="members-section-heading">
+        <span className="members-section-icon">
+          <ArrowLeftRight size={19} aria-hidden="true" />
+        </span>
+        <div>
+          <h2 id="members-transfers-heading">Who pays whom?</h2>
+          <p>Suggested transfers to settle your shared balances.</p>
+        </div>
+      </div>
+      <ul className="members-transfer-list" aria-label="Suggested repayments">
         {transfers.map((transfer) => (
-          <div
-            className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[var(--roomie-card-border)] bg-[#F9F6FF] p-4"
-            key={`${transfer.from}-${transfer.to}`}
-          >
-            <p className="flex items-center gap-2 text-sm">
-              <span>{transfer.from}</span>
-              <ArrowRight size={16} className="text-[#9F7FD0]" />
-              <span>{transfer.to}</span>
-              <strong className="ml-2">
-                {formatCurrency(transfer.amount)}
-              </strong>
-            </p>
+          <li key={`${transfer.from}-${transfer.to}`}>
+            <div className="members-transfer-route">
+              <div className="members-transfer-person">
+                <MemberAvatar name={transfer.from} size="small" tone="rose" />
+                <span>{transfer.from}</span>
+              </div>
+              <ArrowRight
+                size={17}
+                aria-hidden="true"
+                className="members-transfer-arrow"
+              />
+              <div className="members-transfer-person">
+                <MemberAvatar name={transfer.to} size="small" tone="mint" />
+                <span>{transfer.to}</span>
+              </div>
+            </div>
+            <strong className="members-transfer-amount">
+              {formatCurrency(transfer.amount)}
+            </strong>
             <button
-              className="secondary-button"
+              type="button"
+              className="members-record-button"
               onClick={() => record(transfer)}
             >
+              <Check size={14} aria-hidden="true" />
               Record repayment
             </button>
-          </div>
+          </li>
         ))}
-        {transfers.length === 0 && (
-          <p className="text-sm text-[#288469]">All balances are settled.</p>
-        )}
-      </div>
+      </ul>
+      {transfers.length === 0 && (
+        <div className="members-settled-state">
+          <span>
+            <CircleCheck size={24} aria-hidden="true" />
+          </span>
+          <h3>All balances are settled.</h3>
+          <p>Everyone is up to date with their share.</p>
+        </div>
+      )}
       {error && (
-        <p role="alert" className="form-error mt-3">
+        <p role="alert" className="form-error">
           {error}
         </p>
       )}
-      {settlements.length > 0 && (
-        <div className="mt-6 border-t border-[#EFE9F8] pt-4">
-          <h3 className="mb-3 text-sm font-semibold">Repayment history</h3>
-          {[...settlements].reverse().map((payment) => (
-            <p key={payment.id} className="mb-2 text-xs text-[#8A809E]">
-              {payment.from} paid {payment.to} {formatCurrency(payment.amount)}{" "}
-              on {payment.date}
-            </p>
-          ))}
-        </div>
-      )}
+      {settlements.length > 0 && <RepaymentHistory payments={settlements} />}
     </section>
   );
 }

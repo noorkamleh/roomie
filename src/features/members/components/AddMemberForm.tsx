@@ -1,38 +1,44 @@
-import { Plus } from "lucide-react";
+import { Plus, UserPlus } from "lucide-react";
 import Field from "../../../shared/components/Field";
 import { useAddMember } from "../hooks/useAddMember";
 function AddMemberForm() {
   const { name, setName, error, add } = useAddMember();
   return (
     <form
-      className="panel"
+      className="members-panel members-add-form"
+      aria-labelledby="add-member-heading"
       onSubmit={(event) => {
         event.preventDefault();
         add();
       }}
     >
-      <div className="flex flex-wrap items-end gap-4">
-        <div className="min-w-0 flex-1">
-          <Field label="New member name">
-            <input
-              required
-              maxLength={200}
-              value={name}
-              onChange={(event) => setName(event.target.value)}
-              placeholder="Who is joining your home?"
-            />
-          </Field>
+      <div className="members-section-heading">
+        <span className="members-section-icon members-section-icon--mint">
+          <UserPlus size={19} aria-hidden="true" />
+        </span>
+        <div>
+          <h2 id="add-member-heading">Add a housemate</h2>
+          <p>Keep everyone in the loop.</p>
         </div>
-        <button className="primary-button" type="submit">
-          <Plus size={18} />
-          Add member
-        </button>
       </div>
+      <Field label="New member name">
+        <input
+          required
+          maxLength={200}
+          value={name}
+          onChange={(event) => setName(event.target.value)}
+          placeholder="Who is joining your home?"
+        />
+      </Field>
       {error && (
-        <p role="alert" className="form-error mt-3">
+        <p role="alert" className="form-error">
           {error}
         </p>
       )}
+      <button className="primary-button members-add-button" type="submit">
+        <Plus size={17} aria-hidden="true" />
+        Add member
+      </button>
     </form>
   );
 }

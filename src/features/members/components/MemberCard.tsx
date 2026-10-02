@@ -1,5 +1,9 @@
+import { UserRound } from "lucide-react";
 import type { Member } from "../../../shared/types";
 import { formatCurrency } from "../../../shared/utils/formatCurrency";
+import { balanceAppearance } from "../utils/presentation";
+import type { MemberTone } from "../utils/presentation";
+import MemberAvatar from "./MemberAvatar";
 function MemberCard({
   member,
   balance,
@@ -9,34 +13,40 @@ function MemberCard({
   member: Member;
   balance: number;
   current: boolean;
-  tone: number;
+  tone: MemberTone;
 }) {
+  const { status, label, description, icon: Icon } = balanceAppearance(balance);
   return (
-    <article className="panel">
-      <div className="flex items-center gap-3">
-        <div className={`member-avatar member-tone-${tone}`}>
-          {member.name.slice(0, 1).toUpperCase()}
+    <article
+      className={`member-card member-card--${status} ${current ? "member-card--current" : ""}`}
+    >
+      <div className="member-card-heading">
+        <MemberAvatar name={member.name} avatar={member.avatar} tone={tone} />
+        <div className="member-card-person">
+          <h3>{member.name}</h3>
+          <p>{current ? "Current view" : "Household member"}</p>
         </div>
-        <div>
-          <h2 className="font-semibold">{member.name}</h2>
-          <p className="text-xs text-[#8A809E]">
-            {current ? "Current view" : "Household member"}
-          </p>
-        </div>
+        {current && (
+          <span className="member-current-badge">
+            <UserRound size={11} aria-hidden="true" />
+            You
+          </span>
+        )}
       </div>
-      <p
-        className={`mt-5 text-2xl font-bold ${balance > 0 ? "text-[#169A76]" : balance < 0 ? "text-[#E35888]" : "text-[#8C7FA4]"}`}
-      >
-        {balance > 0 ? "+" : ""}
-        {formatCurrency(balance)}
-      </p>
-      <p className="mt-1 text-xs text-[#8A809E]">
-        {balance > 0
-          ? "Receivable from the household"
-          : balance < 0
-            ? "Owed to the household"
-            : "All settled"}
-      </p>
+      <div className="member-card-balance">
+        <p>Net balance</p>
+        <strong>
+          {balance > 0 ? "+" : ""}
+          {formatCurrency(balance)}
+        </strong>
+      </div>
+      <div className="member-card-footer">
+        <span className="member-balance-status">
+          <Icon size={13} aria-hidden="true" />
+          {label}
+        </span>
+        <p>{description}</p>
+      </div>
     </article>
   );
 }
