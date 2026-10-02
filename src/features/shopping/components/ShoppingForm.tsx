@@ -1,34 +1,15 @@
-import { useState } from "react";
 import { Plus } from "lucide-react";
-import { useHousehold } from "../../household/hooks/HouseholdContext";
-import { useAction } from "../../../shared/hooks/useAction";
+import { useShoppingForm } from "../hooks/useShoppingForm";
 import Field from "../../../shared/components/Field";
 function ShoppingForm() {
-  const { commit } = useHousehold();
-  const [name, setName] = useState("");
-  const [quantity, setQuantity] = useState("1");
-  const { error, perform } = useAction();
+  const { name, setName, quantity, setQuantity, error, addItem } =
+    useShoppingForm();
   return (
     <form
       className="panel"
       onSubmit={(event) => {
         event.preventDefault();
-        if (
-          perform(() =>
-            commit({
-              type: "shopping.add",
-              item: {
-                id: crypto.randomUUID(),
-                name: name.trim(),
-                quantity: Number(quantity),
-                completed: false,
-              },
-            }),
-          )
-        ) {
-          setName("");
-          setQuantity("1");
-        }
+        addItem();
       }}
     >
       <div className="grid items-end gap-4 sm:grid-cols-[1fr_110px_auto]">
