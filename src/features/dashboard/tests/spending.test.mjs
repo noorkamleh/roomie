@@ -1,3 +1,4 @@
+import { selectAttentionChores } from "../utils/attentionChores.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { calculateSpendingOverview } from "../utils/spending.ts";
@@ -69,4 +70,57 @@ test("February includes leap day", () => {
 
   assert.equal(overview.dayCount, 29);
   assert.equal(overview.spendingData[28].amount, 100);
+});
+
+test("month-to-date average uses elapsed days and excludes future expenses", () => {
+  const overview = calculateSpendingOverview(
+    [expense("2026-10-01", 240), expense("2026-10-03", 600)],
+    "month",
+    fallback,
+  );
+  assert.equal(overview.elapsedDays, 2);
+  assert.equal(overview.periodTotal, 240);
+  assert.equal(overview.dailyAverage, 120);
+  assert.equal(overview.transactionCount, 1);
+  assert.equal(overview.spendingData[0].average, 240);
+  assert.equal(overview.spendingData[1].average, 120);
+  assert.equal(overview.spendingData[2].average, null);
+});
+
+test("thirty-day range crosses months and includes zero-spend days in averages", () => {
+  const overview = calculateSpendingOverview(
+    [
+      expense("2026-09-02", 900),
+      expense("2026-09-03", 30),
+      expense("2026-10-02", 270),
+    ],
+    "thirty-days",
+    fallback,
+  );
+  assert.equal(overview.spendingData.length, 30);
+  assert.equal(overview.periodTotal, 300);
+  assert.equal(overview.dailyAverage, 10);
+  assert.equal(overview.spendingData[1].average, 15);
+  assert.equal(overview.spendingData[29].average, 270 / 7);
+});
+
+test("attention chores include overdue first, then today, excluding completed and future", () => {
+  const chore = (id, dueDate, status = "pending") => ({
+    id,
+    dueDate,
+    status,
+    title: id,
+    assignedTo: "Sara",
+  });
+  const chores = [
+    chore("today", "2026-10-02"),
+    chore("future", "2026-10-03"),
+    chore("done", "2026-09-28", "completed"),
+    chore("overdue", "2026-09-29", "in-progress"),
+  ];
+  assert.deepEqual(
+    selectAttentionChores(chores, "2026-10-02").map((chore) => chore.id),
+    ["overdue", "today"],
+  );
+  assert.equal(chores[0].id, "today");
 });

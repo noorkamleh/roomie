@@ -4,22 +4,22 @@ import DashboardSummary from "../components/DashboardSummary";
 import SpendingOverview from "../components/SpendingOverview";
 import UpcomingBills from "../components/UpcomingBills";
 import RecentExpenses from "../components/RecentExpenses";
-import TodaysChores from "../components/TodaysChores";
+import AttentionChores from "../components/AttentionChores";
 
 function Dashboard() {
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       <DashboardHeader />
       <DashboardActions />
       <DashboardSummary />
-      <div className="grid gap-5 xl:grid-cols-[1.6fr_1fr]">
+      <div className="grid items-start gap-5 xl:grid-cols-[1.65fr_1fr]">
         <SpendingOverview />
-        <UpcomingBills />
+        <div className="grid gap-4">
+          <UpcomingBills />
+          <AttentionChores />
+        </div>
       </div>
-      <div className="grid gap-5 xl:grid-cols-[1.35fr_1fr]">
-        <RecentExpenses />
-        <TodaysChores />
-      </div>
+      <RecentExpenses />
     </div>
   );
 }

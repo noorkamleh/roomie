@@ -1,12 +1,13 @@
 import type { Expense } from "../../../shared/types";
 
-export type SpendingPeriod = "month" | "week";
+export type SpendingPeriod = "month" | "week" | "thirty-days";
 
 export interface SpendingDay {
   day: string;
   date: string;
   amount: number;
   transactions: number;
+  average: number | null;
 }
 
 export function calculateSpendingOverview(
@@ -25,43 +26,59 @@ export function calculateSpendingOverview(
   const dayCount =
     period === "month"
       ? new Date(Date.UTC(year, month + 1, 0)).getUTCDate()
-      : 7;
+      : period === "week"
+        ? 7
+        : 30;
+  const elapsedDays = period === "month" ? endDate.getUTCDate() : dayCount;
   const startDate =
     period === "month"
       ? new Date(Date.UTC(year, month, 1))
-      : new Date(Date.UTC(year, month, endDate.getUTCDate() - 6));
+      : new Date(Date.UTC(year, month, endDate.getUTCDate() - dayCount + 1));
   const spendingData = Array.from({ length: dayCount }, (_, index) => {
     const date = new Date(startDate);
     date.setUTCDate(date.getUTCDate() + index);
     const dateKey = date.toISOString().slice(0, 10);
     const dailyExpenses = expenses.filter(
-      (expense) => expense.date === dateKey,
+      (expense) => expense.date === dateKey && index < elapsedDays,
     );
     return {
-      day:
-        period === "month"
-          ? String(date.getUTCDate())
-          : date.toLocaleDateString("en-US", {
-              weekday: "short",
-              timeZone: "UTC",
-            }),
+      day: date.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        timeZone: "UTC",
+      }),
       date: date.toLocaleDateString("en-US", {
         month: "short",
         day: "numeric",
         year: "numeric",
         timeZone: "UTC",
       }),
-      amount: dailyExpenses.reduce(
-        (total, expense) => total + expense.amount,
-        0,
-      ),
+      amount:
+        dailyExpenses.reduce(
+          (total, expense) => total + Math.round(expense.amount * 100),
+          0,
+        ) / 100,
       transactions: dailyExpenses.length,
+      average: null as number | null,
     };
   });
-  const periodTotal = spendingData.reduce(
-    (total, day) => total + day.amount,
-    0,
-  );
+  // The dashed trend is a real seven-day moving average, including zero-spend days.
+  spendingData.forEach((day, index) => {
+    if (index >= elapsedDays) return;
+    const window = spendingData.slice(Math.max(0, index - 6), index + 1);
+    day.average =
+      window.reduce(
+        (total, entry) => total + Math.round(entry.amount * 100),
+        0,
+      ) /
+      100 /
+      window.length;
+  });
+  const periodTotal =
+    spendingData.reduce(
+      (total, day) => total + Math.round(day.amount * 100),
+      0,
+    ) / 100;
   const transactionCount = spendingData.reduce(
     (total, day) => total + day.transactions,
     0,
@@ -74,6 +91,8 @@ export function calculateSpendingOverview(
     spendingData,
     monthLabel,
     dayCount,
+    elapsedDays,
+    dailyAverage: periodTotal / elapsedDays,
     periodTotal,
     transactionCount,
     highestDay,

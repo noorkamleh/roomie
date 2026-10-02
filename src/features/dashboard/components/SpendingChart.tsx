@@ -1,7 +1,8 @@
 import { useId } from "react";
 import {
   Bar,
-  BarChart,
+  ComposedChart,
+  Line,
   CartesianGrid,
   ResponsiveContainer,
   Tooltip,
@@ -21,7 +22,7 @@ function SpendingChart({ data, period }: SpendingChartProps) {
 
   return (
     <ResponsiveContainer width="100%" height="100%" minWidth={0}>
-      <BarChart
+      <ComposedChart
         data={data}
         margin={{ top: 8, right: 4, left: -12, bottom: 0 }}
         accessibilityLayer
@@ -32,24 +33,20 @@ function SpendingChart({ data, period }: SpendingChartProps) {
             <stop offset="100%" stopColor="#8246FF" />
           </linearGradient>
         </defs>
-        <CartesianGrid
-          vertical={false}
-          stroke="#E8E3EF"
-          strokeDasharray="3 5"
-        />
+        <CartesianGrid vertical stroke="#E8E3EF" strokeDasharray="3 5" />
         <XAxis
           dataKey="day"
           axisLine={false}
           tickLine={false}
-          tick={{ fill: "#918A9B", fontSize: 10 }}
+          tick={{ fill: "#716A97", fontSize: 10 }}
           tickMargin={12}
           minTickGap={12}
-          interval={period === "month" ? 4 : 0}
+          interval={period === "week" ? 0 : 4}
         />
         <YAxis
           axisLine={false}
           tickLine={false}
-          tick={{ fill: "#918A9B", fontSize: 10 }}
+          tick={{ fill: "#716A97", fontSize: 10 }}
           tickFormatter={(value: number) => `SAR ${value}`}
           tickCount={4}
           width={54}
@@ -67,7 +64,17 @@ function SpendingChart({ data, period }: SpendingChartProps) {
           maxBarSize={36}
           activeBar={{ fill: "#8246FF" }}
         />
-      </BarChart>
+        <Line
+          type="monotone"
+          dataKey="average"
+          name="7-day average"
+          stroke="#9D78FF"
+          strokeWidth={1.5}
+          strokeDasharray="4 3"
+          dot={false}
+          activeDot={false}
+        />
+      </ComposedChart>
     </ResponsiveContainer>
   );
 }

@@ -12,24 +12,25 @@ function UpcomingBills() {
   const { bills } = state;
   const today = useToday();
   return (
-    <section className="relative overflow-hidden rounded-[28px] border border-white bg-white/90 p-6 shadow-[0_8px_32px_rgba(109,91,180,0.04)]">
+    <section className="relative overflow-hidden rounded-[28px] border border-white bg-white/90 p-4 shadow-[0_8px_32px_rgba(109,91,180,0.04)]">
       <div className="relative flex items-start justify-between">
         <div>
           <p className="text-[13px] font-semibold text-[#7973A5]">
             Upcoming Bills
           </p>
-          <h2 className="mt-1 text-xl font-bold text-[#141326]">
+          <h2 className="mt-1 text-base font-bold text-[#141326]">
             Next payments
           </h2>
         </div>
         <Link
           to="/bills"
+          aria-label="View all bills"
           className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#F1E8FF] text-[#8246FF] transition-all duration-300 hover:scale-105"
         >
           <ArrowRight size={17} />
         </Link>
       </div>
-      <div className="relative mt-6 space-y-3">
+      <div className="relative mt-3 space-y-2">
         {!bills.some((bill) => bill.status === "pending") && (
           <p className="text-sm text-[#8A809E]">All bills are paid.</p>
         )}
@@ -53,7 +54,7 @@ function UpcomingBills() {
                       <StatusBadge status={billStatus(bill, today)} />
                     </span>
                   </p>
-                  <p className="mt-0.5 text-[11px] text-[#8D86AF]">
+                  <p className="mt-0.5 text-[11px] text-[#69608D]">
                     {dueLabel(bill.dueDate, today)}
                   </p>
                 </div>
