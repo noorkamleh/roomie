@@ -165,3 +165,83 @@ select:focus-visible {
   background: #2b20454d;
   backdrop-filter: blur(5px);
 }
+
+.status-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px;
+  border: 1px solid #e6dff0;
+  border-radius: 16px;
+  background: #ffffffc9;
+}
+.status-filter {
+  --filter-dot: #9470c1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 8px 12px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  color: #67527f;
+  font-size: 12px;
+  font-weight: 600;
+  transition:
+    background 180ms,
+    border-color 180ms;
+}
+.status-filter--blue {
+  --filter-dot: #527ab5;
+}
+.status-filter--amber {
+  --filter-dot: #ab7c2a;
+}
+.status-filter--rose {
+  --filter-dot: #b44c71;
+}
+.status-filter--mint {
+  --filter-dot: #358167;
+}
+.status-filter-dot {
+  width: 6px;
+  height: 6px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--filter-dot);
+}
+.status-filter-count {
+  min-width: 20px;
+  padding: 2px 5px;
+  border-radius: 6px;
+  background: #eee8f6;
+  color: #67527f;
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+}
+.status-filter:hover {
+  background: #f3edfb;
+}
+.status-filter.is-active {
+  border-color: #a57cdb;
+  background: linear-gradient(180deg, #a774f7, #8246ec);
+  color: white;
+  box-shadow: 0 3px 10px #8246ff26;
+}
+.status-filter.is-active .status-filter-dot {
+  background: white;
+}
+.status-filter.is-active .status-filter-count {
+  background: #ffffff26;
+  color: white;
+}
+.status-filter:focus-visible {
+  outline: 2px solid #8246ff;
+  outline-offset: 2px;
+}
+@media (max-width: 600px) {
+  .status-filter {
+    flex: 1 1 auto;
+  }
+}

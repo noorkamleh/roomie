@@ -1,28 +1,29 @@
 import type { BillFilter } from "../hooks/useBillList";
-
-const filters: BillFilter[] = ["all", "pending", "due-soon", "overdue", "paid"];
-
-interface BillFiltersProps {
+import StatusFilters from "../../../shared/components/StatusFilters";
+const options = [
+  { value: "all", label: "All", tone: "purple" },
+  { value: "pending", label: "Pending", tone: "purple" },
+  { value: "due-soon", label: "Due soon", tone: "amber" },
+  { value: "overdue", label: "Overdue", tone: "rose" },
+  { value: "paid", label: "Paid", tone: "mint" },
+] as const;
+function BillFilters({
+  filter,
+  counts,
+  onChange,
+}: {
   filter: BillFilter;
+  counts: Record<BillFilter, number>;
   onChange: (filter: BillFilter) => void;
-}
-
-function BillFilters({ filter, onChange }: BillFiltersProps) {
+}) {
   return (
-    <div className="bill-filters" role="group" aria-label="Filter bills">
-      {filters.map((status) => (
-        <button
-          key={status}
-          type="button"
-          className={`bill-filter bill-filter--${status} ${filter === status ? "is-active" : ""}`}
-          aria-pressed={filter === status}
-          onClick={() => onChange(status)}
-        >
-          <span className="bill-filter-dot" aria-hidden="true" />
-          {status.replaceAll("-", " ")}
-        </button>
-      ))}
-    </div>
+    <StatusFilters
+      label="Filter bills"
+      options={options}
+      value={filter}
+      counts={counts}
+      onChange={onChange}
+    />
   );
 }
 export default BillFilters;

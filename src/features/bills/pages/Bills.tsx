@@ -11,6 +11,7 @@ import { useBillList } from "../hooks/useBillList";
 function Bills() {
   const {
     entries,
+    counts,
     today,
     filter,
     setFilter,
@@ -24,7 +25,7 @@ function Bills() {
   return (
     <div className="bills-page">
       <BillsHeader onAdd={openAdd} />
-      <BillFilters filter={filter} onChange={setFilter} />
+      <BillFilters filter={filter} counts={counts} onChange={setFilter} />
       <div className="bill-card-grid">
         {entries.map((bill) => (
           <BillCard

@@ -2,7 +2,7 @@ import { ArrowRight, WalletCards } from "lucide-react";
 import { useHousehold } from "../../household/hooks/HouseholdContext";
 import { useToday } from "../../../shared/hooks/useToday";
 import { dueLabel } from "../../../shared/utils/dates";
-import { billStatus } from "../../bills/utils/status";
+import { billStatus, prioritizeBills } from "../../bills/utils/status";
 import StatusBadge from "../../../shared/components/StatusBadge";
 import { Link } from "react-router-dom";
 import { formatCurrency } from "../../../shared/utils/formatCurrency";
@@ -34,8 +34,7 @@ function UpcomingBills() {
         {!bills.some((bill) => bill.status === "pending") && (
           <p className="text-sm text-[#8A809E]">All bills are paid.</p>
         )}
-        {[...bills]
-          .sort((a, b) => a.dueDate.localeCompare(b.dueDate))
+        {prioritizeBills(bills, today)
           .filter((bill) => bill.status === "pending")
           .slice(0, 3)
           .map((bill) => (

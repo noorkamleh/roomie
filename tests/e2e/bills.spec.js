@@ -73,6 +73,8 @@ test("bill filters, adding, and persistence work on desktop and mobile", async (
   await expect(
     page.getByRole("heading", { name: "Bills", exact: true }),
   ).toBeVisible();
+  await expect(page.locator("article").first()).toContainText("Electricity");
+  await expect(page.locator("article").last()).toContainText("Electricity - Previous");
   const filters = page.getByRole("group", { name: "Filter bills" });
   for (const [status, count] of [
     ["pending", 2],
@@ -81,7 +83,7 @@ test("bill filters, adding, and persistence work on desktop and mobile", async (
     ["paid", 1],
     ["all", 4],
   ]) {
-    const button = filters.getByRole("button", { name: status, exact: true });
+    const button = filters.getByRole("button", { name: new RegExp(`^${status} ${count}$`, "i") });
     await button.click();
     await expect(button).toHaveAttribute("aria-pressed", "true");
     await expect(page.locator("article")).toHaveCount(count);
@@ -124,7 +126,7 @@ test("bill filters, adding, and persistence work on desktop and mobile", async (
     .getByRole("button", { name: "Add bill", exact: true })
     .click();
   await expect(page.getByRole("dialog")).toHaveCount(0);
-  await filters.getByRole("button", { name: "overdue", exact: true }).click();
+  await filters.getByRole("button", { name: /^Overdue 1$/i }).click();
   await expect(page.locator("article")).toHaveCount(1);
   await expect(page.getByText("1 days overdue")).toBeVisible();
   await page.reload();
@@ -132,6 +134,8 @@ test("bill filters, adding, and persistence work on desktop and mobile", async (
     page.getByRole("heading", { name: "House rent", exact: true }),
   ).toBeVisible();
   await expect(page.locator("article")).toHaveCount(5);
+  await expect(page.locator("article").first()).toContainText("House rent");
+  await expect(page.locator("article").last()).toContainText("Electricity - Previous");
   const stored = await page.evaluate(() =>
     JSON.parse(localStorage.getItem("roomie.household.v1")),
   );

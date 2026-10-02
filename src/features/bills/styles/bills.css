@@ -58,65 +58,6 @@
   background: #ffffff20;
 }
 
-.bill-filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  padding: 14px;
-  border: 1px solid #ddd0ef;
-  border-radius: 18px;
-  background: #ffffffd9;
-  box-shadow: 0 4px 18px #6d5bb408;
-}
-.bill-filter {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  min-height: 42px;
-  padding: 10px 18px;
-  border: 1px solid #ddceed;
-  border-radius: 11px;
-  background: #fdfbff;
-  color: #79668f;
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: capitalize;
-  transition:
-    background 180ms,
-    border-color 180ms,
-    color 180ms;
-}
-.bill-filter-dot {
-  width: 6px;
-  height: 6px;
-  flex-shrink: 0;
-  border-radius: 50%;
-  background: #a98cc7;
-}
-.bill-filter--due-soon .bill-filter-dot {
-  background: #d5a348;
-}
-.bill-filter--overdue .bill-filter-dot {
-  background: #d7839b;
-}
-.bill-filter--paid .bill-filter-dot {
-  background: #62b69b;
-}
-.bill-filter:hover {
-  border-color: #b493d6;
-  background: #f4ecff;
-}
-.bill-filter.is-active {
-  border-color: #ac7de8;
-  background: linear-gradient(180deg, #ac7cff, #8750e8);
-  color: #ffffff;
-  box-shadow: 0 3px 10px #8246ff26;
-}
-.bill-filter.is-active .bill-filter-dot {
-  background: #ffffff;
-}
-
 .bill-card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr));
@@ -130,7 +71,7 @@
   flex-direction: column;
   min-width: 0;
   padding: 22px;
-  border: 1px solid #d6c3eb;
+  border: 1px solid #e4ddec;
   border-radius: 20px;
   background: #ffffff;
   box-shadow: 0 4px 18px #6d5bb40c;
@@ -139,7 +80,7 @@
     box-shadow 180ms;
 }
 .bill-card:hover {
-  border-color: #b998de;
+  border-color: #cbb8e3;
   box-shadow: 0 10px 32px #6d5bb412;
 }
 .bill-card--due-soon {
@@ -286,7 +227,7 @@
   align-items: center;
   gap: 12px;
   padding: 16px;
-  border: 1px solid #d6c3eb;
+  border: 1px solid #e4ddec;
   border-radius: 16px;
   background: linear-gradient(120deg, #faf7ff, #f1e8ff);
 }
@@ -340,14 +281,6 @@
   }
   .bills-page-description {
     font-size: 12px;
-  }
-  .bill-filters {
-    gap: 8px;
-    padding: 12px;
-  }
-  .bill-filter {
-    flex: 1 1 auto;
-    padding: 9px 12px;
   }
   .bill-card {
     padding: 18px;

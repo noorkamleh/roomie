@@ -1,3 +1,7 @@
+import {
+  prioritizeBills,
+  countBillStatuses,
+} from "../../bills/utils/status.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { householdReducer } from "../model/household.ts";
@@ -156,4 +160,35 @@ test("bill statuses are derived from local calendar day, including overdue", () 
   assert.equal(billStatus(bill, "2026-10-02"), "due-soon");
   assert.equal(billStatus(bill, "2026-10-06"), "overdue");
   assert.equal(billStatus({ ...bill, status: "paid" }, "2026-10-06"), "paid");
+});
+
+test("bill priority places overdue, due soon and unpaid before paid with accurate filter counts", () => {
+  const bill = (id, dueDate, status = "pending") => ({
+    id,
+    title: id,
+    amount: 80,
+    dueDate,
+    status,
+  });
+  const bills = [
+    bill("paid", "2026-09-01", "paid"),
+    bill("later", "2026-10-10"),
+    bill("soon", "2026-10-05"),
+    bill("late", "2026-10-01"),
+    bill("oldest", "2026-09-28"),
+  ];
+  assert.deepEqual(
+    prioritizeBills(bills, "2026-10-02").map((bill) => bill.id),
+    ["oldest", "late", "soon", "later", "paid"],
+  );
+  assert.deepEqual(countBillStatuses(bills, "2026-10-02"), {
+    all: 5,
+    pending: 1,
+    "due-soon": 1,
+    overdue: 2,
+    paid: 1,
+  });
+  assert.equal(bills[0].id, "paid");
+  assert.deepEqual(prioritizeBills([], "2026-10-02"), []);
+  assert.equal(countBillStatuses(bills, "2026-10-06").overdue, 3);
 });
