@@ -1,4 +1,5 @@
-import PageHeader from "../../../shared/components/PageHeader";
+import "../styles/shopping.css";
+import ShoppingHeader from "../components/ShoppingHeader";
 import ShoppingForm from "../components/ShoppingForm";
 import ShoppingFilters from "../components/ShoppingFilters";
 import ShoppingList from "../components/ShoppingList";
@@ -8,11 +9,8 @@ function Shopping() {
   const { entries, filter, setFilter, error, toggleItem, removeItem } =
     useShoppingList();
   return (
-    <div className="space-y-6">
-      <PageHeader
-        title="Shopping"
-        description="One list for everyone. Add quantities and check items off when purchased."
-      />
+    <div className="shopping-page">
+      <ShoppingHeader />
       <ShoppingForm />
       <ShoppingFilters filter={filter} onChange={setFilter} />
       {error && (

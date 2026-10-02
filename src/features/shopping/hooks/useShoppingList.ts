@@ -9,11 +9,13 @@ export function useShoppingList() {
   const { state, commit } = useHousehold();
   const [filter, setFilter] = useState<ShoppingFilter>("all");
   const { error, perform } = useAction();
-  const entries = state.shoppingItems.filter(
-    (item) =>
-      filter === "all" ||
-      (filter === "bought" ? item.completed : !item.completed),
-  );
+  const entries = [...state.shoppingItems]
+    .sort((a, b) => Number(a.completed) - Number(b.completed))
+    .filter(
+      (item) =>
+        filter === "all" ||
+        (filter === "bought" ? item.completed : !item.completed),
+    );
 
   function toggleItem(item: ShoppingItem) {
     perform(() => commit({ type: "shopping.toggle", id: item.id }));

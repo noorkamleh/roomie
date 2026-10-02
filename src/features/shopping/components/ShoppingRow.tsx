@@ -1,4 +1,4 @@
-import { Trash2 } from "lucide-react";
+import { Check, Trash2 } from "lucide-react";
 import type { ShoppingItem } from "../../../shared/types";
 
 interface ShoppingRowProps {
@@ -9,33 +9,41 @@ interface ShoppingRowProps {
 
 function ShoppingRow({ item, onToggle, onRemove }: ShoppingRowProps) {
   return (
-    <div className="flex items-center justify-between gap-4 rounded-2xl border border-[#F0EAF8] bg-[#FDFBFF] p-4">
-      <label className="flex flex-1 cursor-pointer items-center gap-3">
-        <input
-          type="checkbox"
-          checked={item.completed}
-          onChange={() => onToggle(item)}
-        />
-        <span
-          className={
-            item.completed ? "text-[#9C90AC] line-through" : "font-medium"
-          }
-        >
-          {item.name}
+    <li
+      className={`shopping-row ${item.completed ? "shopping-row--bought" : ""}`}
+    >
+      <label className="shopping-item-name">
+        <span className="shopping-completion">
+          <input
+            type="checkbox"
+            aria-label={`Mark ${item.name} as bought`}
+            checked={item.completed}
+            onChange={() => onToggle(item)}
+          />
+          <span aria-hidden="true">
+            {item.completed && <Check size={15} strokeWidth={2.5} />}
+          </span>
         </span>
-        <span className="rounded-lg bg-[#F0E9FF] px-2 py-1 text-xs text-[#8659BE]">
-          Qty {item.quantity}
-        </span>
+        <span className="shopping-item-title">{item.name}</span>
       </label>
+      <span className="shopping-quantity">
+        <span>Qty</span>
+        {item.quantity}
+      </span>
+      <span className="shopping-item-status">
+        <span aria-hidden="true" />
+        {item.completed ? "Bought" : "Needed"}
+      </span>
       <button
         type="button"
-        className="icon-button"
+        className="shopping-delete-button"
         aria-label={`Delete ${item.name}`}
         onClick={() => onRemove(item)}
       >
-        <Trash2 size={17} aria-hidden="true" />
+        <Trash2 size={15} aria-hidden="true" />
+        <span>Delete</span>
       </button>
-    </div>
+    </li>
   );
 }
 export default ShoppingRow;

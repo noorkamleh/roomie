@@ -6,13 +6,15 @@ function ShoppingForm() {
     useShoppingForm();
   return (
     <form
-      className="panel"
+      className="shopping-add-form"
+      aria-labelledby="shopping-add-heading"
       onSubmit={(event) => {
         event.preventDefault();
         addItem();
       }}
     >
-      <div className="grid items-end gap-4 sm:grid-cols-[1fr_110px_auto]">
+      <h2 id="shopping-add-heading">Add to your list</h2>
+      <div className="shopping-add-fields">
         <Field label="Shopping item">
           <input
             required
@@ -34,7 +36,7 @@ function ShoppingForm() {
           />
         </Field>
         <button className="primary-button" type="submit">
-          <Plus size={18} />
+          <Plus size={18} aria-hidden="true" />
           Add item
         </button>
       </div>
