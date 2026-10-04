@@ -9,9 +9,10 @@
     "lint": "oxlint",
     "format": "prettier --write src",
     "format:check": "prettier --check src",
-    "test": "node --test src/features/dashboard/tests/spending.test.mjs src/features/expenses/tests/calculations.test.mjs src/features/household/tests/household.test.mjs",
+    "test": "node --test src/features/dashboard/tests/*.test.mjs src/features/expenses/tests/*.test.mjs src/features/household/tests/*.test.mjs src/features/chores/tests/*.test.mjs src/features/members/tests/*.test.mjs src/shared/preferences/tests/*.test.mjs",
     "preview": "vite preview",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "test:e2e:production": "npm run build && playwright test --config playwright.production.config.js"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",

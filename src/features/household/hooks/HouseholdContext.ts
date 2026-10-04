@@ -5,6 +5,8 @@ import type { HouseholdAction } from "../model/household";
 export interface HouseholdContextValue {
   state: HouseholdState;
   commit: (action: HouseholdAction) => void;
+  undo: () => void;
+  lastAction: string | null;
   storageError: string | null;
 }
 export const HouseholdContext = createContext<HouseholdContextValue | null>(

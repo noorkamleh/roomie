@@ -47,6 +47,201 @@ const expense = (amount = 240) => ({
   date: "2026-10-02",
 });
 
+const assertMemberDeletionRejected = (state, id, message) => {
+  const before = structuredClone(state);
+  assert.throws(() => householdReducer(state, { type: "member.delete", id }), {
+    message,
+  });
+  assert.deepEqual(state, before);
+  assert.equal(isHousehold(state), true);
+};
+
+test("deleting an unused member preserves other records and the original state", () => {
+  const state = {
+    ...initial(),
+    expenses: [{ ...expense(), participants: ["Noor", "Sara"] }],
+    chores: [
+      {
+        id: "clean",
+        title: "Clean kitchen",
+        assignedTo: "Sara",
+        dueDate: "2026-10-05",
+        status: "pending",
+      },
+    ],
+    shoppingItems: [
+      { id: "milk", name: "Milk", quantity: 2, completed: false },
+    ],
+    settlements: [
+      {
+        id: "repay",
+        from: "Sara",
+        to: "Noor",
+        amount: 120,
+        date: "2026-10-02",
+      },
+    ],
+  };
+  const before = structuredClone(state);
+  const result = householdReducer(state, { type: "member.delete", id: "3" });
+
+  assert.deepEqual(result.members, state.members.slice(0, 2));
+  assert.notEqual(result.members, state.members);
+  assert.equal(result.currentUser, "Noor");
+  for (const key of [
+    "expenses",
+    "bills",
+    "chores",
+    "shoppingItems",
+    "settlements",
+  ])
+    assert.equal(result[key], state[key]);
+  assert.deepEqual(state, before);
+  assert.equal(isHousehold(result), true);
+});
+
+test("deleting the current member selects the first remaining member", () => {
+  const state = initial();
+  const before = structuredClone(state);
+  const result = householdReducer(state, { type: "member.delete", id: "1" });
+
+  assert.equal(result.currentUser, "Sara");
+  assert.deepEqual(result.members, state.members.slice(1));
+  assert.deepEqual(state, before);
+  assert.equal(isHousehold(result), true);
+});
+
+test("deleting an unknown member leaves the state unchanged", () => {
+  const state = { ...initial(), members: initial().members.slice(0, 1) };
+  const before = structuredClone(state);
+
+  assert.equal(
+    householdReducer(state, { type: "member.delete", id: "missing" }),
+    state,
+  );
+  assert.deepEqual(state, before);
+});
+
+test("the last household member cannot be deleted", () => {
+  const state = { ...initial(), members: initial().members.slice(0, 1) };
+  assertMemberDeletionRejected(
+    state,
+    "1",
+    "Add another member before deleting the last household member.",
+  );
+});
+
+for (const { label, records, message } of [
+  {
+    label: "an expense they paid for",
+    records: {
+      expenses: [
+        { ...expense(), paidBy: "Reem", participants: ["Noor", "Sara"] },
+      ],
+    },
+    message: "Update expenses paid by this member before deleting them.",
+  },
+  {
+    label: "an expense they participate in",
+    records: { expenses: [{ ...expense(), participants: ["Sara", "Reem"] }] },
+    message:
+      "Remove this member from expense participants before deleting them.",
+  },
+  {
+    label: "a payment they sent",
+    records: {
+      settlements: [
+        {
+          id: "repay",
+          from: "Reem",
+          to: "Noor",
+          amount: 80,
+          date: "2026-10-02",
+        },
+      ],
+    },
+    message:
+      "This member has recorded payments. Keep them to preserve payment history.",
+  },
+  {
+    label: "a payment they received",
+    records: {
+      settlements: [
+        {
+          id: "repay",
+          from: "Noor",
+          to: "Reem",
+          amount: 80,
+          date: "2026-10-02",
+        },
+      ],
+    },
+    message:
+      "This member has recorded payments. Keep them to preserve payment history.",
+  },
+  {
+    label: "an assigned chore",
+    records: {
+      chores: [
+        {
+          id: "clean",
+          title: "Clean kitchen",
+          assignedTo: "Reem",
+          dueDate: "2026-10-05",
+          status: "pending",
+        },
+      ],
+    },
+    message: "This member has assigned chores and cannot be deleted.",
+  },
+  {
+    label: "a completed chore",
+    records: {
+      chores: [
+        {
+          id: "clean",
+          title: "Clean kitchen",
+          assignedTo: "Reem",
+          dueDate: "2026-10-05",
+          status: "completed",
+        },
+      ],
+    },
+    message: "This member has assigned chores and cannot be deleted.",
+  },
+])
+  test(`a member referenced by ${label} cannot be deleted`, () => {
+    assertMemberDeletionRejected({ ...initial(), ...records }, "3", message);
+  });
+
+test("settled balances still preserve historical member references", () => {
+  const state = {
+    ...initial(),
+    expenses: [{ ...expense(120), participants: ["Sara"] }],
+    settlements: [
+      {
+        id: "repay",
+        from: "Sara",
+        to: "Noor",
+        amount: 120,
+        date: "2026-10-02",
+      },
+    ],
+  };
+  assert.equal(calculateBalance(state.expenses, "Noor", state.settlements), 0);
+  assert.equal(calculateBalance(state.expenses, "Sara", state.settlements), 0);
+  assertMemberDeletionRejected(
+    state,
+    "1",
+    "Update expenses paid by this member before deleting them.",
+  );
+  assertMemberDeletionRejected(
+    state,
+    "2",
+    "Remove this member from expense participants before deleting them.",
+  );
+});
+
 test("240 SAR paid by Noor creates +160, -80, -80 balances", () => {
   const state = householdReducer(initial(), {
     type: "expense.save",

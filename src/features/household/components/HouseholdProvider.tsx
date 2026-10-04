@@ -1,53 +1,55 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { HouseholdContext } from "../hooks/HouseholdContext";
-import { householdReducer } from "../model/household";
+import { createHouseholdSession } from "../model/persistence";
 import type { HouseholdAction } from "../model/household";
-import { loadHousehold, STORAGE_KEY } from "../model/storage";
-import { isHousehold } from "../model/validation";
+import { readHouseholdSnapshot, STORAGE_KEY } from "../model/storage";
 
 function HouseholdProvider({ children }: { children: ReactNode }) {
-  const [loaded] = useState(loadHousehold);
-  const [state, setState] = useState(loaded.state);
-  const [storageError, setStorageError] = useState(loaded.error);
-  const current = useRef(state);
+  const [session] = useState(() =>
+    createHouseholdSession(readHouseholdSnapshot()),
+  );
+  const [state, setState] = useState(session.state);
+  const [storageError, setStorageError] = useState(session.error);
+  const [lastAction, setLastAction] = useState<string | null>(null);
+  const publish = useCallback(() => {
+    setState(session.state);
+    setStorageError(session.error);
+    setLastAction(session.lastAction);
+  }, [session]);
   const commit = useCallback(
     (action: HouseholdAction) => {
-      if (loaded.error) throw new Error(loaded.error);
-      const next = householdReducer(current.current, action);
       try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-      } catch {
-        const message =
-          "Could not save changes. Your browser storage may be full or disabled.";
-        setStorageError(message);
-        throw new Error(message);
+        session.commit(action);
+      } finally {
+        publish();
       }
-      current.current = next;
-      setStorageError(null);
-      setState(next);
     },
-    [loaded.error],
+    [session, publish],
   );
+  const undo = useCallback(() => {
+    try {
+      session.undo();
+    } finally {
+      publish();
+    }
+  }, [session, publish]);
 
   useEffect(() => {
     const sync = (event: StorageEvent) => {
-      if (event.key !== STORAGE_KEY || !event.newValue) return;
-      try {
-        const parsed: unknown = JSON.parse(event.newValue);
-        if (!isHousehold(parsed)) throw new Error("Invalid data");
-        current.current = parsed;
-        setState(parsed);
-      } catch {
-        setStorageError("Changes from another tab could not be read.");
-      }
+      if (event.key !== STORAGE_KEY && event.key !== null) return;
+      if (event.storageArea !== localStorage) return;
+      session.synchronize();
+      publish();
     };
     window.addEventListener("storage", sync);
     return () => window.removeEventListener("storage", sync);
-  }, []);
+  }, [session, publish]);
 
   return (
-    <HouseholdContext.Provider value={{ state, commit, storageError }}>
+    <HouseholdContext.Provider
+      value={{ state, commit, undo, lastAction, storageError }}
+    >
       {children}
     </HouseholdContext.Provider>
   );
