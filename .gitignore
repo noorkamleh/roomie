@@ -32,3 +32,6 @@ dist-ssr
 .env
 .env.*
 !.env.example
+
+# Local scratch work and commit verification checkouts
+/tmp/
