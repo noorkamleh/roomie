@@ -1,0 +1,48 @@
+/* Each token has its original light color as a fallback at its point of use. */
+:root[data-theme="dark"] {
+  --roomie-page: #141720;
+  --roomie-surface: #202430;
+  --roomie-surface-soft: #252938;
+  --roomie-ink: #f3effa;
+  --roomie-text: #dfd8ec;
+  --roomie-muted: #b5abc8;
+  --roomie-border: #3a3e50;
+  --roomie-tint-purple: #322644;
+  --roomie-tint-blue: #23334a;
+  --roomie-tint-mint: #213b33;
+  --roomie-tint-rose: #422838;
+  --roomie-tint-amber: #423722;
+  --roomie-accent-purple: #c49aff;
+  --roomie-accent-blue: #93bfff;
+  --roomie-accent-mint: #82d8b7;
+  --roomie-accent-rose: #f3a2bc;
+  --roomie-accent-amber: #e9c37b;
+  --roomie-border-purple: #66517e;
+  --roomie-border-blue: #466288;
+  --roomie-border-mint: #436e5c;
+  --roomie-border-rose: #80526a;
+  --roomie-border-amber: #7b6541;
+  color-scheme: dark;
+}
+:root[data-theme="dark"] .roomie-app {
+  background: linear-gradient(145deg, #191624, #151b28 52%, #141720);
+}
+:root[data-theme="dark"] .roomie-main::before {
+  opacity: 0.16;
+}
+:root[data-theme="dark"] .roomie-main--inner::before {
+  opacity: 0.1;
+}
+:root[data-theme="dark"] .roomie-dialog::backdrop {
+  background: #080a13b3;
+}
+:root[data-theme="dark"] .roomie-home-illustration {
+  opacity: 0.8;
+}
+.display-preference select option {
+  background: var(--roomie-surface, #fff);
+  color: var(--roomie-text, #352d4c);
+}
+[dir="rtl"] .recharts-tooltip-wrapper {
+  direction: rtl;
+}

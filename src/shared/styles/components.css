@@ -2,7 +2,7 @@
   position: relative;
   border: 1px solid var(--roomie-card-border);
   border-radius: 24px;
-  background: #ffffffed;
+  background: var(--roomie-surface, #ffffffed);
   padding: 24px;
   box-shadow: 0 8px 32px #6d5bb40a;
 }
@@ -26,7 +26,11 @@
 
 .primary-button {
   color: white;
-  background: linear-gradient(180deg, #ac7cff, #7938ff);
+  background: linear-gradient(
+    180deg,
+    var(--roomie-tint-purple, #ac7cff),
+    #7938ff
+  );
   box-shadow: 0 5px 14px #8246ff26;
 }
 .primary-button:hover {
@@ -34,26 +38,27 @@
 }
 .secondary-button,
 .icon-button {
-  background: #f2ecff;
-  color: #7c49d2;
+  border: 1px solid var(--roomie-card-border);
+  background: var(--roomie-surface, #fff);
+  color: var(--roomie-text, #514b5d);
 }
 .secondary-button:hover,
 .icon-button:hover {
-  background: #e9ddff;
+  background: var(--roomie-surface-soft, #f2f3f6);
 }
 .icon-button {
   padding: 9px;
 }
 .filter-button {
-  background: #ffffffb3;
-  color: #857696;
+  background: var(--roomie-surface, #ffffffb3);
+  color: var(--roomie-muted, #857696);
   text-transform: capitalize;
-  border: 1px solid #eee6f9;
+  border: 1px solid var(--roomie-border, #eee6f9);
 }
 .filter-button.is-active {
-  background: #efe5ff;
-  color: #7943c9;
-  border-color: #d9c3fc;
+  background: var(--roomie-tint-purple, #efe5ff);
+  color: var(--roomie-accent-purple, #7943c9);
+  border-color: var(--roomie-border-purple, #d9c3fc);
 }
 
 .roomie-field {
@@ -62,7 +67,7 @@
   gap: 7px;
   font-size: 12px;
   font-weight: 600;
-  color: #706083;
+  color: var(--roomie-text, #555160);
 }
 .roomie-field input,
 .roomie-field select,
@@ -71,10 +76,10 @@
   width: 100%;
   min-width: 0;
   padding: 11px 12px;
-  border: 1px solid #e6def0;
+  border: 1px solid var(--roomie-card-border);
   border-radius: 11px;
-  background: #fdfbff;
-  color: #352d4c;
+  background: var(--roomie-surface, #fff);
+  color: var(--roomie-text, #352d4c);
   font-size: 14px;
   font-weight: 400;
 }
@@ -86,7 +91,7 @@
   font-size: 12px;
 }
 .roomie-field input[readonly] {
-  background: #f5f0fb;
+  background: var(--roomie-surface-soft, #f5f0fb);
 }
 input[type="checkbox"] {
   width: 18px;
@@ -102,10 +107,10 @@ select:focus-visible {
   outline-offset: 3px;
 }
 .form-error {
-  border: 1px solid #f4d1de;
+  border: 1px solid var(--roomie-border, #f4d1de);
   border-radius: 12px;
-  background: #fff0f5;
-  color: #ae365e;
+  background: var(--roomie-surface-soft, #fff0f5);
+  color: var(--roomie-accent-rose, #ae365e);
   padding: 12px 16px;
   font-size: 13px;
 }
@@ -117,15 +122,15 @@ select:focus-visible {
   align-items: center;
   justify-content: center;
   border-radius: 14px;
-  background: #f0e8ff;
-  color: #8246ff;
+  background: var(--roomie-tint-purple, #f0e8ff);
+  color: var(--roomie-accent-purple, #8246ff);
 }
 .eyebrow {
   font-size: 10px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: #9585aa;
+  color: var(--roomie-muted, #9585aa);
 }
 .roomie-dialog {
   width: min(560px, calc(100% - 32px));
@@ -135,8 +140,8 @@ select:focus-visible {
   padding: 0;
   border: 1px solid var(--roomie-card-border);
   border-radius: 24px;
-  background: #fdfbff;
-  color: #352d4c;
+  background: var(--roomie-surface, #fdfbff);
+  color: var(--roomie-text, #352d4c);
   box-shadow: 0 24px 80px #40315e40;
 }
 .roomie-dialog::backdrop {
@@ -151,10 +156,10 @@ select:focus-visible {
   padding: 8px;
   border: 1px solid var(--roomie-card-border);
   border-radius: 16px;
-  background: #ffffffc9;
+  background: var(--roomie-surface, #ffffffc9);
 }
 .status-filter {
-  --filter-dot: #9470c1;
+  --filter-dot: var(--roomie-accent-purple, #9470c1);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -163,7 +168,7 @@ select:focus-visible {
   padding: 8px 12px;
   border: 1px solid transparent;
   border-radius: 10px;
-  color: #67527f;
+  color: var(--roomie-text, #555160);
   font-size: 12px;
   font-weight: 600;
   transition:
@@ -171,16 +176,16 @@ select:focus-visible {
     border-color 180ms;
 }
 .status-filter--blue {
-  --filter-dot: #527ab5;
+  --filter-dot: var(--roomie-accent-blue, #527ab5);
 }
 .status-filter--amber {
-  --filter-dot: #ab7c2a;
+  --filter-dot: var(--roomie-accent-amber, #ab7c2a);
 }
 .status-filter--rose {
-  --filter-dot: #b44c71;
+  --filter-dot: var(--roomie-accent-rose, #b44c71);
 }
 .status-filter--mint {
-  --filter-dot: #358167;
+  --filter-dot: var(--roomie-accent-mint, #358167);
 }
 .status-filter-dot {
   width: 6px;
@@ -193,16 +198,33 @@ select:focus-visible {
   min-width: 20px;
   padding: 2px 5px;
   border-radius: 6px;
-  background: #eee8f6;
-  color: #67527f;
+  background: var(--roomie-surface-soft, #f0f1f5);
+  color: var(--roomie-text, #555160);
   font-size: 10px;
   font-variant-numeric: tabular-nums;
 }
 .status-filter:hover {
-  background: #f3edfb;
+  background: var(--roomie-surface-soft, #f2f3f6);
+}
+
+[data-member-tone="purple"] {
+  --member-color: var(--roomie-muted, #8054a8);
+  --member-bg: var(--roomie-tint-purple, #eee3fa);
+}
+[data-member-tone="mint"] {
+  --member-color: var(--roomie-accent-mint, #327d61);
+  --member-bg: var(--roomie-surface-soft, #e1f3ec);
+}
+[data-member-tone="rose"] {
+  --member-color: var(--roomie-accent-rose, #a34b6c);
+  --member-bg: var(--roomie-surface-soft, #fbe7ef);
+}
+.member-identity {
+  color: var(--member-color);
+  background: var(--member-bg);
 }
 .status-filter.is-active {
-  border-color: #a57cdb;
+  border-color: var(--roomie-border-purple, #a57cdb);
   background: linear-gradient(180deg, #a774f7, #8246ec);
   color: white;
   box-shadow: 0 3px 10px #8246ff26;

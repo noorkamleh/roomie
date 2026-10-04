@@ -1,13 +1,14 @@
 @import "tailwindcss";
+@import "./shared/styles/theme.css";
 @import "./shared/styles/components.css";
 @import "./app/styles/layout.css";
 @import "./features/dashboard/styles/dashboard.css";
 
 :root {
-  --roomie-card-border: #d7c2ee;
+  --roomie-card-border: var(--roomie-border, #e0e2e9);
   font-family: "Segoe UI", Arial, sans-serif;
-  color: #222044;
-  background: #f3f5ff;
+  color: var(--roomie-ink, #222044);
+  background: var(--roomie-page, #f3f5ff);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -16,7 +17,7 @@
 
 body {
   margin: 0;
-  min-width: 360px;
+  min-width: 320px;
 }
 
 button,

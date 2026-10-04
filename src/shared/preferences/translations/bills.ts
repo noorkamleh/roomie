@@ -1,0 +1,32 @@
+export const billsTranslations: Record<string, string> = {
+  "Bill title": "عنوان الفاتورة",
+  "Due date": "تاريخ الاستحقاق",
+  "Repeat monthly": "تكرار شهري",
+  "Recording a payment adds next month's bill. Each payment stays in your history.":
+    "عند تسجيل الدفع تُضاف فاتورة الشهر المقبل، وتبقى كل دفعة في السجل.",
+  "Add bill": "إضافة فاتورة",
+  Monthly: "شهرياً",
+  "Household bill": "فاتورة المنزل",
+  "Bill amount": "مبلغ الفاتورة",
+  Due: "تستحق في",
+  "Payment recorded": "تم تسجيل الدفع",
+  "Mark as paid": "تسجيل الدفع",
+  on: "بتاريخ",
+  "View linked expense": "عرض المصروف المرتبط",
+  "Payment details were not recorded.": "لم تُسجل تفاصيل الدفع.",
+  All: "الكل",
+  Pending: "بانتظار الدفع",
+  "Due soon": "تستحق قريباً",
+  Overdue: "متأخرة",
+  Paid: "مدفوعة",
+  "Filter bills": "تصفية الفواتير",
+  "Stay ahead of due dates. Record a payment to update expenses and balances.":
+    "تابع تواريخ الاستحقاق، وسجّل الدفعات لتحديث المصروفات والأرصدة.",
+  "Bill details": "تفاصيل الفاتورة",
+  "Payment date": "تاريخ الدفع",
+  "Choose at least one member to split this bill.":
+    "اختر عضواً واحداً على الأقل لتقسيم هذه الفاتورة.",
+  "Confirm payment": "تأكيد الدفع",
+  "No bills in this view.": "لا توجد فواتير في هذا العرض.",
+  "Pay {title}": "دفع {title}",
+};

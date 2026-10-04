@@ -1,6 +1,7 @@
 import { useEffect, useId, useRef } from "react";
 import type { ReactNode } from "react";
 import { X } from "lucide-react";
+import { usePreferences } from "../preferences/PreferencesContext";
 function Modal({
   title,
   children,
@@ -10,6 +11,7 @@ function Modal({
   children: ReactNode;
   onClose: () => void;
 }) {
+  const { t } = usePreferences();
   const ref = useRef<HTMLDialogElement>(null);
   const headingId = useId();
   useEffect(() => {
@@ -36,14 +38,17 @@ function Modal({
     >
       <div className="p-6">
         <div className="mb-6 flex items-center justify-between gap-4">
-          <h2 id={headingId} className="text-xl font-bold text-[#242040]">
-            {title}
+          <h2
+            id={headingId}
+            className="text-xl font-bold text-[color:var(--roomie-ink,#242040)]"
+          >
+            {t(title)}
           </h2>
           <button
             type="button"
             className="icon-button"
             onClick={onClose}
-            aria-label="Close dialog"
+            aria-label={t("Close dialog")}
           >
             <X size={20} />
           </button>

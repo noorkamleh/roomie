@@ -1,3 +1,4 @@
+import { usePreferences } from "../preferences/PreferencesContext";
 interface StatusOption<T extends string> {
   value: T;
   label: string;
@@ -17,8 +18,9 @@ function StatusFilters<T extends string>({
   counts: Record<T, number>;
   onChange: (value: T) => void;
 }) {
+  const { t } = usePreferences();
   return (
-    <div className="status-filters" role="group" aria-label={label}>
+    <div className="status-filters" role="group" aria-label={t(label)}>
       {options.map((option) => (
         <button
           key={option.value}
@@ -28,7 +30,7 @@ function StatusFilters<T extends string>({
           onClick={() => onChange(option.value)}
         >
           <span className="status-filter-dot" aria-hidden="true" />
-          {option.label}
+          {t(option.label)}
           <span className="status-filter-count">{counts[option.value]}</span>
         </button>
       ))}

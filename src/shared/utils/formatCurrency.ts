@@ -1,7 +1,5 @@
-const currencyFormatter = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "SAR",
-});
+import { currencyText, getPreferences } from "../preferences/model.ts";
 export function formatCurrency(amount: number) {
-  return currencyFormatter.format(amount);
+  const { currency, language } = getPreferences();
+  return currencyText(amount, currency, language);
 }

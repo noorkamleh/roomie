@@ -4,7 +4,21 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>roomie</title>
+    <meta name="theme-color" content="#f3f5ff" />
+    <title>Roomie</title>
+    <script>
+      try {
+        const saved = JSON.parse(localStorage.getItem("roomie.preferences.v1"));
+        if (saved && saved.version === 1) {
+          const language = saved.language === "ar" ? "ar" : "en";
+          const theme = saved.theme === "dark" ? "dark" : "light";
+          document.documentElement.lang = language;
+          document.documentElement.dir = language === "ar" ? "rtl" : "ltr";
+          document.documentElement.dataset.theme = theme;
+          document.documentElement.style.colorScheme = theme;
+        }
+      } catch {}
+    </script>
   </head>
   <body>
     <div id="root"></div>
