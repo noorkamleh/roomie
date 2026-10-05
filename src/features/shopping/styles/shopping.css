@@ -1,7 +1,56 @@
+.shopping-purchase-action {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  color: var(--roomie-muted, #716080);
+  font-size: 12px;
+}
+.shopping-purchase-hint {
+  color: var(--roomie-muted, #716080);
+  font-size: 13px;
+  line-height: 1.6;
+}
+.shopping-purchase-items {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid var(--roomie-card-border);
+  border-radius: 12px;
+}
+.shopping-purchase-items legend {
+  padding: 0 6px;
+  color: var(--roomie-text, #57416d);
+  font-size: 13px;
+  font-weight: 600;
+}
+.shopping-purchase-items label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--roomie-text, #57416d);
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+.shopping-purchase-items input {
+  flex-shrink: 0;
+}
+.shopping-expense-link {
+  grid-column: 1 / -1;
+  grid-row: 3;
+  justify-self: start;
+  margin-inline-start: 41px;
+  color: var(--roomie-accent-purple, #754c9f);
+  font-size: 11px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  overflow-wrap: anywhere;
+}
 .shopping-page {
   position: relative;
   display: grid;
-  gap: 24px;
+  gap: 18px;
   min-width: 0;
 }
 .shopping-page-header {
@@ -11,7 +60,7 @@
   display: flex;
   align-items: center;
   gap: 7px;
-  color: #8c78b6;
+  color: var(--roomie-muted, #8c78b6);
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.15em;
@@ -22,7 +71,7 @@
   align-items: center;
   gap: 12px;
   margin-top: 8px;
-  color: #18162e;
+  color: var(--roomie-ink, #18162e);
   font-size: 36px;
   font-weight: 750;
   letter-spacing: -0.045em;
@@ -30,40 +79,41 @@
 }
 .shopping-page-description {
   margin-top: 8px;
-  color: #7b729e;
+  color: var(--roomie-muted, #7b729e);
   font-size: 13px;
   line-height: 1.6;
 }
 .shopping-add-form {
-  padding: 22px 24px;
+  padding: 18px 20px;
   border: 1px solid var(--roomie-card-border);
   border-radius: 20px;
-  background: linear-gradient(110deg, #ffffffed, #faf6ff);
+  background: var(--roomie-surface, #ffffffed);
   box-shadow: 0 6px 24px #6d5bb408;
 }
 .shopping-add-form h2 {
-  margin-bottom: 16px;
-  color: #57416d;
+  margin-bottom: 12px;
+  color: var(--roomie-text, #57416d);
   font-size: 15px;
   font-weight: 600;
 }
 .shopping-add-fields {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 100px auto;
+  grid-template-columns: minmax(0, 1fr) 85px 135px auto;
   align-items: end;
-  gap: 16px;
+  gap: 12px;
 }
-.shopping-add-fields .roomie-field input {
+.shopping-add-fields .roomie-field input,
+.shopping-add-fields .roomie-field select {
   min-height: 46px;
-  border: 1.5px solid #cdb4e8;
-  background: #fff;
+  border: 1px solid var(--roomie-card-border);
+  background: var(--roomie-surface, #fff);
 }
 .shopping-add-fields input::placeholder {
-  color: #a18bad;
+  color: var(--roomie-muted, #a18bad);
 }
 .shopping-add-fields .primary-button {
   min-height: 46px;
-  border: 1px solid #b893ec;
+  border: 1px solid var(--roomie-border-purple, #b893ec);
 }
 .shopping-filters {
   display: flex;
@@ -77,10 +127,10 @@
   gap: 8px;
   min-height: 42px;
   padding: 10px 18px;
-  border: 1px solid #ddceed;
+  border: 1px solid var(--roomie-border, #ddceed);
   border-radius: 11px;
-  background: #fdfbff;
-  color: #79668f;
+  background: var(--roomie-surface, #fdfbff);
+  color: var(--roomie-muted, #79668f);
   font-size: 12px;
   font-weight: 600;
   text-transform: capitalize;
@@ -98,24 +148,28 @@
   background: #62b69b;
 }
 .shopping-filter:hover {
-  border-color: #b493d6;
-  background: #f4ecff;
+  border-color: var(--roomie-border-purple, #b493d6);
+  background: var(--roomie-surface-soft, #f4ecff);
 }
 .shopping-filter.is-active {
-  border-color: #ac7de8;
-  background: linear-gradient(180deg, #ac7cff, #8750e8);
+  border-color: var(--roomie-border-purple, #ac7de8);
+  background: linear-gradient(
+    180deg,
+    var(--roomie-tint-purple, #ac7cff),
+    #8750e8
+  );
   color: #ffffff;
   box-shadow: 0 3px 10px #8246ff26;
 }
 .shopping-filter.is-active .shopping-filter-dot {
-  background: #ffffff;
+  background: var(--roomie-surface, #ffffff);
 }
 .shopping-list {
   overflow: hidden;
   min-width: 0;
   border: 1px solid var(--roomie-card-border);
   border-radius: 20px;
-  background: #ffffff;
+  background: var(--roomie-surface, #ffffff);
   box-shadow: 0 6px 24px #6d5bb40c;
 }
 .shopping-list-heading {
@@ -123,50 +177,50 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 10px;
-  padding: 22px 24px;
+  padding: 16px 20px;
 }
 .shopping-list-heading h2 {
-  color: #312841;
+  color: var(--roomie-ink, #312841);
   font-size: 17px;
   font-weight: 650;
   letter-spacing: -0.02em;
 }
 .shopping-list-heading > span {
   padding: 4px 9px;
-  border: 1px solid #e6dcf5;
+  border: 1px solid var(--roomie-border, #e6dcf5);
   border-radius: 7px;
-  background: #faf7ff;
-  color: #8d72aa;
+  background: var(--roomie-surface, #faf7ff);
+  color: var(--roomie-muted, #8d72aa);
   font-size: 11px;
 }
 .shopping-list-columns,
 .shopping-row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 100px 110px 85px;
+  grid-template-columns: minmax(0, 1fr) 120px 100px 44px;
   align-items: center;
-  gap: 24px;
-  padding: 16px 24px;
+  gap: 16px;
+  padding: 8px 20px;
 }
 .shopping-list-columns {
-  border-top: 1px solid #eee6f6;
-  border-bottom: 1px solid #e9def4;
-  background: #faf7fe;
-  color: #897599;
+  border-top: 1px solid var(--roomie-card-border);
+  border-bottom: 1px solid var(--roomie-card-border);
+  background: var(--roomie-surface, #f8f9fb);
+  color: var(--roomie-text, #625d6b);
   font-size: 11px;
   font-weight: 600;
 }
 .shopping-row {
-  min-height: 78px;
+  min-height: 58px;
   transition: background 180ms;
 }
 .shopping-row + .shopping-row {
-  border-top: 1px solid #eee6f6;
+  border-top: 1px solid var(--roomie-card-border);
 }
 .shopping-row:hover {
-  background: #fcfaff;
+  background: var(--roomie-surface, #fafbfc);
 }
 .shopping-row--bought {
-  background: #fcfefc;
+  background: var(--roomie-surface, #fcfefc);
 }
 .shopping-item-name {
   display: flex;
@@ -176,14 +230,14 @@
   cursor: pointer;
 }
 .shopping-item-title {
-  color: #312841;
+  color: var(--roomie-ink, #312841);
   font-size: 14px;
   font-weight: 600;
   line-height: 1.5;
   overflow-wrap: anywhere;
 }
 .shopping-row--bought .shopping-item-title {
-  color: #93849e;
+  color: var(--roomie-muted, #93849e);
   text-decoration: line-through;
 }
 .shopping-completion {
@@ -207,20 +261,20 @@
   place-items: center;
   width: 23px;
   height: 23px;
-  border: 2px solid #c5afe0;
+  border: 2px solid var(--roomie-border-purple, #c5afe0);
   border-radius: 7px;
-  background: #ffffff;
+  background: var(--roomie-surface, #ffffff);
   color: #ffffff;
   transition:
     background 180ms,
     border-color 180ms;
 }
 .shopping-item-name:hover .shopping-completion > span {
-  border-color: #a379ce;
-  background: #f6efff;
+  border-color: var(--roomie-border-purple, #a379ce);
+  background: var(--roomie-surface-soft, #f6efff);
 }
 .shopping-completion input:checked + span {
-  border-color: #68ad92;
+  border-color: var(--roomie-border-mint, #68ad92);
   background: #68ad92;
 }
 .shopping-completion input:focus-visible + span {
@@ -234,15 +288,15 @@
   gap: 7px;
   min-width: 57px;
   padding: 6px 9px;
-  border: 1px solid #e6daf4;
+  border: 1px solid var(--roomie-card-border);
   border-radius: 8px;
-  background: #faf7ff;
-  color: #7d599d;
+  background: var(--roomie-surface-soft, #f7f8fa);
+  color: var(--roomie-text, #555160);
   font-size: 12px;
   font-weight: 600;
 }
 .shopping-quantity > span {
-  color: #a08bb2;
+  color: var(--roomie-text, #625d6b);
   font-size: 10px;
   font-weight: 400;
 }
@@ -252,10 +306,10 @@
   gap: 6px;
   justify-self: start;
   padding: 5px 9px;
-  border: 1px solid #e5d5f4;
+  border: 1px solid var(--roomie-card-border);
   border-radius: 20px;
-  background: #f6f0ff;
-  color: #9875b6;
+  background: var(--roomie-surface-soft, #f7f8fa);
+  color: var(--roomie-text, #625d6b);
   font-size: 11px;
 }
 .shopping-item-status > span {
@@ -266,38 +320,46 @@
   background: currentColor;
 }
 .shopping-row--bought .shopping-item-status {
-  border-color: #c5e6d8;
-  background: #effaf4;
-  color: #4b967b;
+  border-color: var(--roomie-border, #c5e6d8);
+  background: var(--roomie-surface-soft, #effaf4);
+  color: var(--roomie-muted, #4b967b);
 }
 .shopping-delete-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 5px;
-  min-height: 36px;
-  padding: 7px 9px;
-  border: 1.5px solid #df9ab1;
+  min-height: 44px;
+  width: 44px;
+  padding: 9px;
+  border: 1px solid transparent;
   border-radius: 9px;
-  background: #fff6f8;
-  color: #a24768;
+  background: transparent;
+  color: var(--roomie-muted, #787280);
   font-size: 11px;
   transition:
     background 180ms,
     border-color 180ms;
 }
 .shopping-delete-button:hover {
-  border-color: #c97491;
-  background: #ffe7ee;
+  border-color: var(--roomie-border, #ecd6dd);
+  background: var(--roomie-surface, #fff3f5);
+  color: var(--roomie-accent-rose, #a24768);
 }
 .shopping-list-empty {
   padding: 20px;
 }
 
 @media (max-width: 900px) {
+  .shopping-add-fields {
+    grid-template-columns: minmax(0, 1fr) 85px 130px;
+  }
+  .shopping-add-fields .primary-button {
+    grid-column: 1 / -1;
+  }
   .shopping-list-columns,
   .shopping-row {
-    grid-template-columns: minmax(0, 1fr) 70px 85px 36px;
+    grid-template-columns: minmax(0, 1fr) 100px 85px 44px;
     gap: 14px;
   }
   .shopping-delete-button > span {
@@ -309,7 +371,7 @@
 }
 @media (max-width: 600px) {
   .shopping-page {
-    gap: 22px;
+    gap: 16px;
   }
   .shopping-page-header h1 {
     font-size: 30px;
@@ -341,9 +403,9 @@
     display: none;
   }
   .shopping-row {
-    grid-template-columns: minmax(0, 1fr) 36px;
-    gap: 12px;
-    padding: 16px;
+    grid-template-columns: minmax(0, 1fr) 44px;
+    gap: 8px;
+    padding: 10px 14px;
   }
   .shopping-item-name {
     grid-column: 1;
@@ -357,7 +419,7 @@
   .shopping-quantity {
     grid-column: 1;
     grid-row: 2;
-    margin-left: 41px;
+    margin-inline-start: 41px;
   }
   .shopping-item-status {
     grid-column: 1 / -1;

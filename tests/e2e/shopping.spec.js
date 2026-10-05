@@ -1,5 +1,7 @@
 import { test, expect } from "@playwright/test";
 
+test.use({ locale: "ar-SA" });
+
 test("shopping filters, purchase toggles, quantity limits and deletion persist", async ({
   page,
 }) => {
@@ -17,7 +19,9 @@ test("shopping filters, purchase toggles, quantity limits and deletion persist",
     ["bought", 2],
     ["all", 5],
   ]) {
-    const button = filters.getByRole("button", { name: status, exact: true });
+    const button = filters.getByRole("button", {
+      name: new RegExp(`^${status}\\b`, "i"),
+    });
     await button.click();
     await expect(button).toHaveAttribute("aria-pressed", "true");
     await expect(rows).toHaveCount(count);
@@ -39,17 +43,27 @@ test("shopping filters, purchase toggles, quantity limits and deletion persist",
   await expect(milk).toBeChecked();
   await page.reload();
   await expect(milk).toBeChecked();
-  await filters.getByRole("button", { name: "bought", exact: true }).click();
+  await filters.getByRole("button", { name: /^Bought\b/ }).click();
   await expect(rows).toHaveCount(3);
   await milk.click();
   await expect(rows).toHaveCount(2);
-  await filters.getByRole("button", { name: "all", exact: true }).click();
+  await filters.getByRole("button", { name: /^All\b/ }).click();
   const title =
     "Household cleaning supplies and reusable kitchen storage containers";
   await page.getByLabel("Shopping item", { exact: true }).fill(title);
   await page.getByLabel("Quantity", { exact: true }).fill("0");
   await page.getByRole("button", { name: "Add item", exact: true }).click();
   await expect(rows).toHaveCount(5);
+  const quantity = page.getByLabel("Quantity", { exact: true });
+  for (const invalidQuantity of ["10000", "1.5"]) {
+    await quantity.fill(invalidQuantity);
+    await page.getByRole("button", { name: "Add item", exact: true }).click();
+    await expect(rows).toHaveCount(5);
+  }
+  for (const localizedQuantity of ["١٢", "۱۲"]) {
+    await quantity.fill(localizedQuantity);
+    await expect(quantity).toHaveValue("12");
+  }
   await page.getByLabel("Quantity", { exact: true }).fill("9999");
   await page.getByRole("button", { name: "Add item", exact: true }).click();
   const added = rows.filter({ hasText: title });
