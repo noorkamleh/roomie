@@ -24,7 +24,12 @@ export function useHouseholdSettings() {
           name: state.name,
           currentUser: state.currentUser,
         };
-  const { name, currentUser } = fields;
+  const { name } = fields;
+  const currentUser = state.members.some(
+    (member) => member.name === fields.currentUser && !member.archived,
+  )
+    ? fields.currentUser
+    : state.currentUser;
 
   function save() {
     const success = perform(() =>
@@ -36,7 +41,7 @@ export function useHouseholdSettings() {
   return {
     name,
     currentUser,
-    members: state.members,
+    members: state.members.filter((member) => !member.archived),
     saved,
     error,
     save,

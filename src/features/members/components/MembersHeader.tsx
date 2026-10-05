@@ -1,3 +1,4 @@
+import { usePreferences } from "../../../shared/preferences/PreferencesContext";
 import { House, UsersRound } from "lucide-react";
 function MembersHeader({
   householdName,
@@ -6,16 +7,17 @@ function MembersHeader({
   householdName: string;
   count: number;
 }) {
+  const { t } = usePreferences();
   return (
     <header className="members-page-header">
       <div>
         <p className="members-eyebrow">
           <UsersRound size={14} aria-hidden="true" />
-          Your household
+          {t("Your household")}
         </p>
-        <h1>Household members</h1>
+        <h1>{t("Household members")}</h1>
         <p className="members-page-description">
-          Manage your housemates, shared balances, and home settings.
+          {t("Shared balances, repayments and household settings.")}
         </p>
       </div>
       <div className="members-household-label">
@@ -25,7 +27,12 @@ function MembersHeader({
         <div>
           <strong>{householdName}</strong>
           <p>
-            {count} {count === 1 ? "member" : "members"} sharing one home
+            {t(
+              count === 1
+                ? "{count} member sharing one home"
+                : "{count} members sharing one home",
+              { count },
+            )}
           </p>
         </div>
       </div>

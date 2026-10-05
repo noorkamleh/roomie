@@ -1,7 +1,9 @@
+import { usePreferences } from "../../../shared/preferences/PreferencesContext";
 import { Plus, UserPlus } from "lucide-react";
 import Field from "../../../shared/components/Field";
 import { useAddMember } from "../hooks/useAddMember";
 function AddMemberForm() {
+  const { t } = usePreferences();
   const { name, setName, error, add } = useAddMember();
   return (
     <form
@@ -17,17 +19,17 @@ function AddMemberForm() {
           <UserPlus size={19} aria-hidden="true" />
         </span>
         <div>
-          <h2 id="add-member-heading">Add a housemate</h2>
-          <p>Keep everyone in the loop.</p>
+          <h2 id="add-member-heading">{t("Add a housemate")}</h2>
+          <p>{t("Keep everyone in the loop.")}</p>
         </div>
       </div>
-      <Field label="New member name">
+      <Field label={t("New member name")}>
         <input
           required
           maxLength={200}
           value={name}
           onChange={(event) => setName(event.target.value)}
-          placeholder="Who is joining your home?"
+          placeholder={t("Who is joining your home?")}
         />
       </Field>
       {error && (
@@ -37,7 +39,7 @@ function AddMemberForm() {
       )}
       <button className="primary-button members-add-button" type="submit">
         <Plus size={17} aria-hidden="true" />
-        Add member
+        {t("Add member")}
       </button>
     </form>
   );

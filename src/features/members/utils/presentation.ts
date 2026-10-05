@@ -1,7 +1,5 @@
 import { ArrowDownLeft, ArrowUpRight, CircleCheck } from "lucide-react";
-
-export const memberTones = ["purple", "mint", "rose"] as const;
-export type MemberTone = (typeof memberTones)[number];
+export { formatDate as formatRepaymentDate } from "../../../shared/utils/dates";
 
 export function balanceAppearance(balance: number) {
   if (balance > 0)
@@ -24,14 +22,4 @@ export function balanceAppearance(balance: number) {
     description: "All settled",
     icon: CircleCheck,
   } as const;
-}
-
-const dateFormatter = new Intl.DateTimeFormat("en-US", {
-  month: "short",
-  day: "numeric",
-  year: "numeric",
-  timeZone: "UTC",
-});
-export function formatRepaymentDate(date: string) {
-  return dateFormatter.format(new Date(`${date}T00:00:00Z`));
 }

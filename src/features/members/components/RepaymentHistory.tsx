@@ -1,15 +1,17 @@
+import { usePreferences } from "../../../shared/preferences/PreferencesContext";
 import { ArrowRight, CircleCheck } from "lucide-react";
 import type { Settlement } from "../../../shared/types";
 import { formatCurrency } from "../../../shared/utils/formatCurrency";
 import { formatRepaymentDate } from "../utils/presentation";
 function RepaymentHistory({ payments }: { payments: Settlement[] }) {
+  const { t } = usePreferences();
   return (
     <div className="members-repayment-history">
       <div className="members-history-heading">
-        <h3>Repayment history</h3>
-        <span>{payments.length} recorded</span>
+        <h3>{t("Repayment history")}</h3>
+        <span>{t("{count} recorded", { count: payments.length })}</span>
       </div>
-      <ul aria-label="Repayment history">
+      <ul aria-label={t("Repayment history")}>
         {[...payments].reverse().map((payment) => (
           <li key={payment.id}>
             <span className="members-history-check">
