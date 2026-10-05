@@ -100,7 +100,7 @@ test("chores and shopping persist completed states", async ({ page }) => {
 test("members, household settings, and repayments update all views", async ({
   page,
 }) => {
-  await page.goto("/members");
+  await page.goto("/members?tab=household");
   await page.getByLabel("Household name").fill("Our test home");
   await page.getByLabel("View as").selectOption("Sara");
   await page.getByRole("button", { name: "Save", exact: true }).click();
@@ -109,6 +109,7 @@ test("members, household settings, and repayments update all views", async ({
   await expect(
     page.getByRole("heading", { name: "Lina", exact: true }),
   ).toBeVisible();
+  await page.getByRole("tab", { name: "Balances", exact: true }).click();
   page.once("dialog", (dialog) => dialog.accept());
   await page.getByRole("button", { name: "Record repayment" }).first().click();
   expect((await saved(page)).settlements).toHaveLength(1);
@@ -157,8 +158,7 @@ test("local clock changes the greeting at noon and the dashboard shows today's m
   const header = page.locator(".dashboard-header");
   await expect(header.getByText("Friday", { exact: true })).toBeVisible();
   await expect(header.getByText("11:59 AM", { exact: true })).toBeVisible();
-  await expect(header).not.toContainText("October");
-  await expect(header).not.toContainText("2026");
+  await expect(header).toContainText("October 2026");
   await expect(
     page.locator("section[aria-labelledby=spending-heading]"),
   ).toContainText("October 2026");

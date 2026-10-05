@@ -1,0 +1,73 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Validate and test production build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      CI: "true"
+      PLAYWRIGHT_HTML_OPEN: never
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          # Unit tests import .ts files using Node's native type stripping.
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies from lockfile
+        run: npm ci
+
+      - name: Check formatting
+        run: npm run format:check
+
+      - name: Lint source
+        run: npm run lint
+
+      - name: Run unit tests
+        run: npm test
+
+      - name: Build production application
+        run: npm run build
+
+      - name: Install Google Chrome and browser dependencies
+        # The existing Playwright configuration uses channel: chrome.
+        run: npx playwright install --with-deps chrome
+
+      - name: Run browser tests against production build
+        # Reuse dist from the build step; this configuration starts Vite preview.
+        run: >-
+          npx playwright test --config playwright.production.config.js
+          --workers=1 --forbid-only --reporter=line,html
+
+      - name: Upload failed browser test reports and traces
+        if: failure()
+        uses: actions/upload-artifact@v5
+        with:
+          name: playwright-failure-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            playwright-report/
+            test-results/
+          if-no-files-found: ignore
+          include-hidden-files: false
+          retention-days: 7
