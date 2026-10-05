@@ -1,74 +1,71 @@
-import { ArrowRight } from "lucide-react";
+import { ArrowDownLeft, CircleCheck } from "lucide-react";
 import { getExpenseAppearance } from "../../../shared/utils/expenseAppearance";
 import { useHousehold } from "../../household/hooks/HouseholdContext";
+import { useToday } from "../../../shared/hooks/useToday";
 import { Link } from "react-router-dom";
 import { formatCurrency } from "../../../shared/utils/formatCurrency";
+import { selectRecentActivity } from "../utils/activity";
+import { usePreferences } from "../../../shared/preferences/PreferencesContext";
 
 function RecentExpenses() {
+  const { t } = usePreferences();
   const { state } = useHousehold();
-  const { expenses } = state;
+  const today = useToday();
+  const entries = selectRecentActivity(state, today).slice(0, 5);
   return (
-    <section className="relative overflow-hidden rounded-[28px] border border-[var(--roomie-card-border)] bg-white/90 p-6 shadow-[0_8px_32px_rgba(109,91,180,0.04)]">
-      <div className="flex items-start justify-between">
+    <section
+      className="dashboard-panel"
+      aria-labelledby="recent-activity-heading"
+    >
+      <div className="dashboard-panel-heading">
         <div>
-          <p className="text-[13px] font-semibold text-[#7973A5]">
-            Recent Expenses
-          </p>
-          <h2 className="mt-1 text-xl font-bold text-[#141326]">
-            Latest spending
-          </h2>
+          <p className="dashboard-eyebrow">{t("Across your household")}</p>
+          <h2 id="recent-activity-heading">{t("Recent activity")}</h2>
         </div>
-        <Link
-          to="/expenses"
-          className="flex items-center gap-1 text-[12px] font-semibold text-[#8246FF] transition-all duration-300 hover:translate-x-1"
-        >
-          View all
-          <ArrowRight size={14} />
+        <Link to="/expenses" className="dashboard-text-link">
+          {t("View all expenses")}
         </Link>
       </div>
-      <div className="mt-6 space-y-3">
-        {expenses.length === 0 && (
-          <p className="text-sm text-[#69608D]">No expenses recorded yet.</p>
-        )}
-        {[...expenses]
-          .sort((a, b) => b.date.localeCompare(a.date))
-          .slice(0, 3)
-          .map((expense) => {
-            const { icon: Icon } = getExpenseAppearance(expense);
-            return (
-              <div
-                key={expense.id}
-                className="flex items-center justify-between rounded-2xl border border-[var(--roomie-card-border)] bg-white/75 p-3.5 transition-all duration-300 hover:bg-white hover:shadow-sm"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#F0E9FF]">
-                    <Icon
-                      size={18}
-                      className="text-[#8246FF]"
-                      strokeWidth={1.8}
-                    />
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold text-[#282443]">
-                      {expense.title}
-                    </p>
-                    <p className="mt-0.5 text-[11px] text-[#69608D]">
-                      {expense.paidBy} &#183; {expense.date}
-                    </p>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <p className="text-sm font-bold text-[#282443]">
-                    {formatCurrency(expense.amount)}
-                  </p>
-                  <p className="mt-0.5 text-[10px] font-medium text-[#69608D]">
-                    {expense.participants.length} people
-                  </p>
-                </div>
+      {entries.length === 0 && (
+        <p className="dashboard-empty">{t("No activity recorded yet.")}</p>
+      )}
+      <ul className="dashboard-action-list">
+        {entries.map((entry) => {
+          const Icon =
+            entry.type === "chore"
+              ? CircleCheck
+              : entry.type === "repayment"
+                ? ArrowDownLeft
+                : getExpenseAppearance({
+                    category: entry.category ?? "Household",
+                    utilityKind: entry.utilityKind,
+                  }).icon;
+          return (
+            <li className="dashboard-activity-row" key={entry.id}>
+              <span className="dashboard-row-icon">
+                <Icon size={18} aria-hidden="true" />
+              </span>
+              <div className="dashboard-row-copy">
+                <Link to={entry.to} className="dashboard-row-title">
+                  {entry.title}
+                </Link>
+                <p className="dashboard-row-detail">{entry.detail}</p>
               </div>
-            );
-          })}
-      </div>
+              {entry.amount !== undefined && (
+                <div className="dashboard-activity-amount">
+                  <p>{formatCurrency(entry.amount)}</p>
+                  {entry.participants !== undefined && (
+                    <p>
+                      {entry.participants}{" "}
+                      {t(entry.participants === 1 ? "person" : "people")}
+                    </p>
+                  )}
+                </div>
+              )}
+            </li>
+          );
+        })}
+      </ul>
     </section>
   );
 }

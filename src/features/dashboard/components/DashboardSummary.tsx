@@ -8,53 +8,55 @@ import SummaryCard from "./SummaryCard";
 import { useHousehold } from "../../household/hooks/HouseholdContext";
 import { useToday } from "../../../shared/hooks/useToday";
 import { formatCurrency } from "../../../shared/utils/formatCurrency";
+import { usePreferences } from "../../../shared/preferences/PreferencesContext";
 import {
-  calculateTotalExpenses,
   calculateYouAreOwed,
   calculateYouOwe,
 } from "../../expenses/utils/calculations";
-import { calculatePendingChores } from "../../chores/utils/calculations";
+import {
+  calculateMonthlySpending,
+  selectPersonalOpenChores,
+} from "../utils/overview";
 
 function DashboardSummary() {
+  const { t } = usePreferences();
   const { state } = useHousehold();
   const { expenses, chores, currentUser, settlements } = state;
   const today = useToday();
-  const totalExpenses = calculateTotalExpenses(
-    expenses.filter(
-      (expense) =>
-        expense.date.startsWith(today.slice(0, 7)) && expense.date <= today,
-    ),
-  );
-  const pendingChores = calculatePendingChores(chores);
+  const monthly = calculateMonthlySpending(expenses, currentUser, today);
+  const pendingChores = selectPersonalOpenChores(chores, currentUser).length;
   const youAreOwed = calculateYouAreOwed(expenses, currentUser, settlements);
   const youOwe = calculateYouOwe(expenses, currentUser, settlements);
   return (
     <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
       <SummaryCard
-        title="Total Expenses"
-        value={formatCurrency(totalExpenses)}
-        description="Spent this month"
+        title={t("Total Expenses")}
+        value={formatCurrency(monthly.total)}
+        description={t("Household total this month")}
+        detail={t("Your share: {amount}", {
+          amount: formatCurrency(monthly.yourShare),
+        })}
         icon={WalletCards}
         tone="purple"
       />
       <SummaryCard
-        title="You are owed"
+        title={t("You are owed")}
         value={formatCurrency(youAreOwed)}
-        description="From your roommates"
+        description={t("Your remaining balance to receive")}
         icon={ArrowDownLeft}
         tone="mint"
       />
       <SummaryCard
-        title="You owe"
+        title={t("You owe")}
         value={formatCurrency(youOwe)}
-        description="To your roommates"
+        description={t("Your remaining balance to pay")}
         icon={ArrowUpRight}
         tone="pink"
       />
       <SummaryCard
-        title="Pending Tasks"
+        title={t("Pending Tasks")}
         value={String(pendingChores)}
-        description="Tasks need attention"
+        description={t("Open tasks assigned to {name}", { name: currentUser })}
         icon={ListChecks}
         tone="blue"
       />

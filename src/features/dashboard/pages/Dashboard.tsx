@@ -2,25 +2,29 @@ import DashboardActions from "../components/DashboardActions";
 import DashboardHeader from "../components/DashboardHeader";
 import DashboardSummary from "../components/DashboardSummary";
 import SpendingOverview from "../components/SpendingOverview";
-import UpcomingBills from "../components/UpcomingBills";
 import RecentExpenses from "../components/RecentExpenses";
-import AttentionChores from "../components/AttentionChores";
+import NeedsAttention from "../components/NeedsAttention";
+import TasksToday from "../components/TasksToday";
+import ShoppingNeeded from "../components/ShoppingNeeded";
+import SpendingCategories from "../components/SpendingCategories";
 
 function Dashboard() {
   return (
-    <div className="space-y-5">
+    <div className="dashboard-page space-y-5">
       <DashboardHeader />
       <DashboardActions />
       <DashboardSummary />
-      <div className="grid items-start gap-5 xl:grid-cols-[1.65fr_1fr]">
-        <SpendingOverview />
-        <div className="grid gap-4 xl:col-start-2 xl:row-span-2">
-          <UpcomingBills />
-          <AttentionChores />
+      <div className="dashboard-actions-grid">
+        <NeedsAttention />
+        <div className="dashboard-personal-panels">
+          <TasksToday />
+          <ShoppingNeeded />
         </div>
-        <div className="min-w-0 xl:col-start-1 xl:row-start-2">
-          <RecentExpenses />
-        </div>
+      </div>
+      <SpendingOverview />
+      <div className="dashboard-bottom-grid">
+        <RecentExpenses />
+        <SpendingCategories />
       </div>
     </div>
   );

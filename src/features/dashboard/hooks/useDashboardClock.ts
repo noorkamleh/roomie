@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+import { usePreferences } from "../../../shared/preferences/PreferencesContext";
 
 export function useDashboardClock() {
+  const { t, locale } = usePreferences();
   const [now, setNow] = useState(() => new Date());
 
   useEffect(() => {
@@ -17,16 +19,21 @@ export function useDashboardClock() {
   }, []);
 
   const hour = now.getHours();
-  const greeting =
-    hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
-  const dayLabel = now.toLocaleDateString("en-US", {
+  const greeting = t(
+    hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening",
+  );
+  const dayLabel = now.toLocaleDateString(locale, {
     weekday: "long",
   });
-  const timeLabel = now.toLocaleTimeString("en-US", {
+  const timeLabel = now.toLocaleTimeString(locale, {
     hour: "2-digit",
     minute: "2-digit",
     hour12: true,
   });
 
-  return { greeting, dayLabel, timeLabel };
+  const monthLabel = now.toLocaleDateString(locale, {
+    month: "long",
+    year: "numeric",
+  });
+  return { greeting, dayLabel, timeLabel, monthLabel };
 }

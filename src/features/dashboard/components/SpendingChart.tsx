@@ -11,11 +11,7 @@ import {
 } from "recharts";
 import type { SpendingDay, SpendingPeriod } from "../utils/spending";
 import SpendingTooltip from "./SpendingTooltip";
-
-const axisAmount = new Intl.NumberFormat("en-US", {
-  notation: "compact",
-  maximumFractionDigits: 1,
-});
+import { usePreferences } from "../../../shared/preferences/PreferencesContext";
 
 interface SpendingChartProps {
   data: SpendingDay[];
@@ -23,6 +19,11 @@ interface SpendingChartProps {
 }
 
 function SpendingChart({ data, period }: SpendingChartProps) {
+  const { t, locale, language, currency, toDisplayAmount } = usePreferences();
+  const axisAmount = new Intl.NumberFormat(locale, {
+    notation: "compact",
+    maximumFractionDigits: 1,
+  });
   const gradientId = useId().replace(/:/g, "");
 
   return (
@@ -38,12 +39,19 @@ function SpendingChart({ data, period }: SpendingChartProps) {
             <stop offset="100%" stopColor="#8246FF" />
           </linearGradient>
         </defs>
-        <CartesianGrid vertical stroke="#E8E3EF" strokeDasharray="3 5" />
+        <CartesianGrid
+          vertical
+          stroke="var(--roomie-border,#E8E3EF)"
+          strokeDasharray="3 5"
+        />
         <XAxis
           dataKey="day"
+          tickFormatter={(value: string) =>
+            language === "ar" ? (value.match(/\d+/)?.[0] ?? value) : value
+          }
           axisLine={false}
           tickLine={false}
-          tick={{ fill: "#716A97", fontSize: 10 }}
+          tick={{ fill: "var(--roomie-muted,#716A97)", fontSize: 10 }}
           tickMargin={12}
           minTickGap={12}
           interval={period === "week" ? 0 : 4}
@@ -51,30 +59,34 @@ function SpendingChart({ data, period }: SpendingChartProps) {
         <YAxis
           axisLine={false}
           tickLine={false}
-          tick={{ fill: "#716A97", fontSize: 10 }}
-          tickFormatter={(value: number) => axisAmount.format(value)}
+          tick={{ fill: "var(--roomie-muted,#716A97)", fontSize: 10 }}
+          tickFormatter={(value: number) =>
+            `${currency === "USD" ? "$" : t("SAR")} ${axisAmount.format(toDisplayAmount(value))}`
+          }
           tickCount={4}
-          width={36}
+          width={64}
           domain={[0, "auto"]}
         />
         <Tooltip
-          cursor={{ fill: "#EEE8F8", radius: 6 }}
+          filterNull={false}
+          cursor={{ fill: "var(--roomie-surface-soft,#EEE8F8)", radius: 6 }}
           content={SpendingTooltip}
         />
         <Bar
           isAnimationActive={false}
           dataKey="amount"
-          name="Daily expenses"
+          name={t("Daily expenses")}
           fill={`url(#${gradientId})`}
           radius={[6, 6, 0, 0]}
           maxBarSize={36}
-          activeBar={{ fill: "#8246FF" }}
+          activeBar={{ fill: "var(--roomie-accent-purple,#8246FF)" }}
         />
         <Line
+          connectNulls={false}
           isAnimationActive={false}
           type="monotone"
           dataKey="average"
-          name="7-day average"
+          name={t("7-day average")}
           stroke="#9D78FF"
           strokeWidth={1.5}
           strokeDasharray="4 3"

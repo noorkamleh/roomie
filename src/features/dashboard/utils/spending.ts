@@ -1,11 +1,14 @@
 import type { Expense } from "../../../shared/types";
+import { getAmountCents } from "../../../shared/utils/money.ts";
+import { formatDate } from "../../../shared/utils/dates.ts";
 
 export type SpendingPeriod = "month" | "week" | "thirty-days";
 
 export interface SpendingDay {
   day: string;
   date: string;
-  amount: number;
+  amount: number | null;
+  future: boolean;
   transactions: number;
   average: number | null;
 }
@@ -14,11 +17,12 @@ export function calculateSpendingOverview(
   expenses: Expense[],
   period: SpendingPeriod,
   fallbackDate: Date,
+  locale = "en-US",
 ) {
   const endDate = fallbackDate;
   const year = endDate.getUTCFullYear();
   const month = endDate.getUTCMonth();
-  const monthLabel = new Intl.DateTimeFormat("en-US", {
+  const monthLabel = new Intl.DateTimeFormat(locale, {
     month: "long",
     year: "numeric",
     timeZone: "UTC",
@@ -42,22 +46,20 @@ export function calculateSpendingOverview(
       (expense) => expense.date === dateKey && index < elapsedDays,
     );
     return {
-      day: date.toLocaleDateString("en-US", {
+      day: date.toLocaleDateString(locale, {
         month: "short",
         day: "numeric",
         timeZone: "UTC",
       }),
-      date: date.toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-        year: "numeric",
-        timeZone: "UTC",
-      }),
+      date: formatDate(dateKey, locale),
+      future: index >= elapsedDays,
       amount:
-        dailyExpenses.reduce(
-          (total, expense) => total + Math.round(expense.amount * 100),
-          0,
-        ) / 100,
+        index >= elapsedDays
+          ? null
+          : dailyExpenses.reduce(
+              (total, expense) => total + getAmountCents(expense),
+              0,
+            ) / 100,
       transactions: dailyExpenses.length,
       average: null as number | null,
     };
@@ -68,7 +70,7 @@ export function calculateSpendingOverview(
     const window = spendingData.slice(Math.max(0, index - 6), index + 1);
     day.average =
       window.reduce(
-        (total, entry) => total + Math.round(entry.amount * 100),
+        (total, entry) => total + Math.round((entry.amount ?? 0) * 100),
         0,
       ) /
       100 /
@@ -76,7 +78,7 @@ export function calculateSpendingOverview(
   });
   const periodTotal =
     spendingData.reduce(
-      (total, day) => total + Math.round(day.amount * 100),
+      (total, day) => total + Math.round((day.amount ?? 0) * 100),
       0,
     ) / 100;
   const transactionCount = spendingData.reduce(
@@ -84,7 +86,8 @@ export function calculateSpendingOverview(
     0,
   );
   const highestDay = spendingData.reduce(
-    (highest, day) => (day.amount > highest.amount ? day : highest),
+    (highest, day) =>
+      (day.amount ?? 0) > (highest.amount ?? 0) ? day : highest,
     spendingData[0],
   );
   return {

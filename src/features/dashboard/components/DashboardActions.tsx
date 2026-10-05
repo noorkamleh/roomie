@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Plus, CalendarDays, ListChecks, ShoppingBasket } from "lucide-react";
+import { usePreferences } from "../../../shared/preferences/PreferencesContext";
 const actions = [
   { label: "Add expense", to: "/expenses?add=1", icon: Plus },
   { label: "Add bill", to: "/bills?add=1", icon: CalendarDays },
@@ -7,19 +8,23 @@ const actions = [
   { label: "Add item", to: "/shopping", icon: ShoppingBasket },
 ];
 function DashboardActions() {
+  const { t } = usePreferences();
   return (
-    <div className="relative flex flex-wrap gap-3">
+    <nav
+      aria-label={t("Quick actions")}
+      className="relative flex flex-wrap gap-3"
+    >
       {actions.map(({ label, to, icon: Icon }, index) => (
         <Link
           key={to}
           to={to}
           className={index === 0 ? "primary-button" : "secondary-button"}
         >
-          <Icon size={18} />
-          {label}
+          <Icon size={18} aria-hidden="true" />
+          {t(label)}
         </Link>
       ))}
-    </div>
+    </nav>
   );
 }
 export default DashboardActions;
