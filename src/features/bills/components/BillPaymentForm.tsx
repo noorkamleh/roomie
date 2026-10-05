@@ -3,8 +3,9 @@ import type { Bill } from "../../../shared/types";
 import Field from "../../../shared/components/Field";
 import { formatCurrency } from "../../../shared/utils/formatCurrency";
 import ExpenseSplitFields from "../../expenses/components/ExpenseSplitFields";
-import { formatBillDate } from "../utils/presentation";
+import { formatDate } from "../../../shared/utils/dates";
 import { useBillPayment } from "../hooks/useBillPayment";
+import { usePreferences } from "../../../shared/preferences/PreferencesContext";
 
 function BillPaymentForm({
   bill,
@@ -13,6 +14,7 @@ function BillPaymentForm({
   bill: Bill;
   onSaved: () => void;
 }) {
+  const { t } = usePreferences();
   const {
     members,
     paidBy,
@@ -21,6 +23,8 @@ function BillPaymentForm({
     setDate,
     participants,
     setParticipants,
+    split,
+    setSplit,
     error,
     confirmPayment,
   } = useBillPayment(bill);
@@ -32,21 +36,21 @@ function BillPaymentForm({
         if (confirmPayment()) onSaved();
       }}
     >
-      <div className="bill-payment-summary" aria-label="Bill details">
+      <div className="bill-payment-summary" aria-label={t("Bill details")}>
         <span className="bill-payment-icon">
           <ReceiptText size={23} aria-hidden="true" />
         </span>
         <div>
           <h3>{bill.title}</h3>
           <p>
-            Due{" "}
-            <time dateTime={bill.dueDate}>{formatBillDate(bill.dueDate)}</time>
+            {t("Due")}{" "}
+            <time dateTime={bill.dueDate}>{formatDate(bill.dueDate)}</time>
           </p>
         </div>
         <strong>{formatCurrency(bill.amount)}</strong>
       </div>
       <div className="bill-payment-fields">
-        <Field label="Paid by">
+        <Field label={t("Paid by")}>
           <select
             value={paidBy}
             onChange={(event) => setPaidBy(event.target.value)}
@@ -56,7 +60,7 @@ function BillPaymentForm({
             ))}
           </select>
         </Field>
-        <Field label="Payment date">
+        <Field label={t("Payment date")}>
           <input
             type="date"
             required
@@ -70,10 +74,12 @@ function BillPaymentForm({
         amount={bill.amount}
         participants={participants}
         onChange={setParticipants}
+        split={split}
+        onSplitChange={setSplit}
       />
       {participants.length === 0 && (
         <p role="alert" className="form-error">
-          Choose at least one member to split this bill.
+          {t("Choose at least one member to split this bill.")}
         </p>
       )}
       {error && (
@@ -86,7 +92,7 @@ function BillPaymentForm({
         type="submit"
         disabled={participants.length === 0}
       >
-        Confirm payment
+        {t("Confirm payment")}
       </button>
     </form>
   );

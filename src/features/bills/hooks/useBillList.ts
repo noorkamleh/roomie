@@ -25,6 +25,7 @@ export function useBillList() {
   return {
     counts: countBillStatuses(state.bills, today),
     entries,
+    expenses: state.expenses,
     today,
     filter,
     setFilter,

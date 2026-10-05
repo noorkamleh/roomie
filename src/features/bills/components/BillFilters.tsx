@@ -1,5 +1,6 @@
 import type { BillFilter } from "../hooks/useBillList";
 import StatusFilters from "../../../shared/components/StatusFilters";
+import { usePreferences } from "../../../shared/preferences/PreferencesContext";
 const options = [
   { value: "all", label: "All", tone: "purple" },
   { value: "pending", label: "Pending", tone: "purple" },
@@ -16,10 +17,11 @@ function BillFilters({
   counts: Record<BillFilter, number>;
   onChange: (filter: BillFilter) => void;
 }) {
+  const { t } = usePreferences();
   return (
     <StatusFilters
-      label="Filter bills"
-      options={options}
+      label={t("Filter bills")}
+      options={options.map((option) => ({ ...option, label: t(option.label) }))}
       value={filter}
       counts={counts}
       onChange={onChange}

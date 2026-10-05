@@ -1,17 +1,20 @@
 import { CalendarDays, Plus } from "lucide-react";
+import { usePreferences } from "../../../shared/preferences/PreferencesContext";
 
 function BillsHeader({ onAdd }: { onAdd: () => void }) {
+  const { t } = usePreferences();
   return (
     <header className="bills-page-header">
       <div>
         <p className="bills-eyebrow">
           <CalendarDays size={14} aria-hidden="true" />
-          Household finances
+          {t("Household finances")}
         </p>
-        <h1>Bills</h1>
+        <h1>{t("Bills")}</h1>
         <p className="bills-page-description">
-          Stay ahead of due dates. Record a payment to update expenses and
-          balances.
+          {t(
+            "Stay ahead of due dates. Record a payment to update expenses and balances.",
+          )}
         </p>
       </div>
       <button
@@ -22,7 +25,7 @@ function BillsHeader({ onAdd }: { onAdd: () => void }) {
         <span>
           <Plus size={19} aria-hidden="true" />
         </span>
-        Add bill
+        {t("Add bill")}
       </button>
     </header>
   );

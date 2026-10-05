@@ -7,10 +7,13 @@ import BillCard from "../components/BillCard";
 import BillFilters from "../components/BillFilters";
 import BillPaymentForm from "../components/BillPaymentForm";
 import { useBillList } from "../hooks/useBillList";
+import { usePreferences } from "../../../shared/preferences/PreferencesContext";
 
 function Bills() {
+  const { t } = usePreferences();
   const {
     entries,
+    expenses,
     counts,
     today,
     filter,
@@ -33,17 +36,25 @@ function Bills() {
             bill={bill}
             today={today}
             onPay={openPayment}
+            expense={expenses.find(
+              (expense) => expense.id === `bill-${bill.id}`,
+            )}
           />
         ))}
       </div>
-      {entries.length === 0 && <EmptyState message="No bills in this view." />}
+      {entries.length === 0 && (
+        <EmptyState message={t("No bills in this view.")} />
+      )}
       {adding && (
-        <Modal title="Add bill" onClose={closeAdd}>
+        <Modal title={t("Add bill")} onClose={closeAdd}>
           <BillForm onSaved={closeAdd} />
         </Modal>
       )}
       {paying && (
-        <Modal title={`Pay ${paying.title}`} onClose={closePayment}>
+        <Modal
+          title={t("Pay {title}", { title: paying.title })}
+          onClose={closePayment}
+        >
           <BillPaymentForm bill={paying} onSaved={closePayment} />
         </Modal>
       )}

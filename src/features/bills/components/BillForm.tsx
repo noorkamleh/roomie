@@ -3,11 +3,24 @@ import { useHousehold } from "../../household/hooks/HouseholdContext";
 import { useAction } from "../../../shared/hooks/useAction";
 import { localDate } from "../../../shared/utils/dates";
 import Field from "../../../shared/components/Field";
+import { usePreferences } from "../../../shared/preferences/PreferencesContext";
+import { toBaseAmount as convertToBaseAmount } from "../../../shared/preferences/model";
+import { maxDisplayInputAmount } from "../../expenses/utils/currencyAmounts";
 function BillForm({ onSaved }: { onSaved: () => void }) {
+  const { t, currency, toDisplayAmount } = usePreferences();
   const { commit } = useHousehold();
   const [title, setTitle] = useState("");
-  const [amount, setAmount] = useState("");
+  const [amountDraft, setAmountDraft] = useState({ value: "", currency });
+  const baseAmount = convertToBaseAmount(
+    Number(amountDraft.value),
+    amountDraft.currency,
+  );
+  const amount =
+    amountDraft.currency === currency || !amountDraft.value.trim()
+      ? amountDraft.value
+      : String(toDisplayAmount(baseAmount));
   const [dueDate, setDueDate] = useState(localDate);
+  const [monthly, setMonthly] = useState(false);
   const { error, perform } = useAction();
   return (
     <form
@@ -15,23 +28,33 @@ function BillForm({ onSaved }: { onSaved: () => void }) {
       onSubmit={(event) => {
         event.preventDefault();
         if (
-          perform(() =>
+          perform(() => {
+            const id = crypto.randomUUID();
             commit({
               type: "bill.add",
               bill: {
-                id: crypto.randomUUID(),
+                id,
                 title: title.trim(),
-                amount: Number(amount),
+                amount: baseAmount,
                 dueDate,
                 status: "pending",
+                ...(monthly
+                  ? {
+                      seriesId: id,
+                      recurrence: {
+                        frequency: "monthly",
+                        anchorDay: Number(dueDate.slice(-2)),
+                      },
+                    }
+                  : {}),
               },
-            }),
-          )
+            });
+          })
         )
           onSaved();
       }}
     >
-      <Field label="Bill title">
+      <Field label={t("Bill title")}>
         <input
           required
           maxLength={200}
@@ -39,18 +62,24 @@ function BillForm({ onSaved }: { onSaved: () => void }) {
           onChange={(event) => setTitle(event.target.value)}
         />
       </Field>
-      <Field label="Amount (SAR)">
+      <Field
+        label={t("Amount ({currency})", {
+          currency: currency === "SAR" ? t("SAR") : "$",
+        })}
+      >
         <input
           required
           type="number"
-          min="0.01"
-          max="100000000"
+          min={baseAmount > 0 && Number(amount) === 0 ? "0" : "0.01"}
+          max={maxDisplayInputAmount(currency)}
           step="0.01"
           value={amount}
-          onChange={(event) => setAmount(event.target.value)}
+          onChange={(event) =>
+            setAmountDraft({ value: event.target.value, currency })
+          }
         />
       </Field>
-      <Field label="Due date">
+      <Field label={t("Due date")}>
         <input
           type="date"
           required
@@ -58,13 +87,28 @@ function BillForm({ onSaved }: { onSaved: () => void }) {
           onChange={(event) => setDueDate(event.target.value)}
         />
       </Field>
+      <label className="bill-monthly-option">
+        <input
+          type="checkbox"
+          checked={monthly}
+          onChange={(event) => setMonthly(event.target.checked)}
+        />
+        {t("Repeat monthly")}
+      </label>
+      {monthly && (
+        <p className="bill-monthly-hint">
+          {t(
+            "Recording a payment adds next month's bill. Each payment stays in your history.",
+          )}
+        </p>
+      )}
       {error && (
         <p role="alert" className="form-error">
           {error}
         </p>
       )}
       <button type="submit" className="primary-button w-full">
-        Add bill
+        {t("Add bill")}
       </button>
     </form>
   );
