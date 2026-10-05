@@ -2,9 +2,9 @@
   --roomie-sidebar-width: 232px;
   background-image: linear-gradient(
     145deg,
-    #eeefff 0%,
-    #f2f6ff 52%,
-    #fafbff 100%
+    var(--roomie-surface-soft, #eeefff) 0%,
+    var(--roomie-surface-soft, #f2f6ff) 52%,
+    var(--roomie-surface, #fafbff) 100%
   );
 }
 
@@ -15,7 +15,12 @@
   height: 240px;
   pointer-events: none;
   background-image:
-    linear-gradient(90deg, #f2f3ffe6 0%, #f2f3ff99 35%, transparent 70%),
+    linear-gradient(
+      90deg,
+      var(--roomie-surface-soft, #f2f3ffe6) 0%,
+      #f2f3ff99 35%,
+      transparent 70%
+    ),
     url("../../assets/roomie-header.png");
   background-size: cover;
   background-position:
@@ -29,7 +34,47 @@
   width: var(--roomie-sidebar-width);
 }
 .roomie-main {
-  margin-left: var(--roomie-sidebar-width);
+  margin-inline-start: var(--roomie-sidebar-width);
+}
+.roomie-main--inner::before {
+  height: 145px;
+  opacity: 0.5;
+}
+.roomie-main--inner {
+  padding-top: 22px;
+}
+.roomie-main.roomie-main--inner h1 {
+  font-size: 30px;
+}
+.undo-notice {
+  position: fixed;
+  z-index: 40;
+  inset-inline-end: 24px;
+  bottom: 20px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  max-width: min(420px, calc(100vw - 108px));
+  padding: 10px 14px;
+  border: 1px solid var(--roomie-card-border);
+  border-radius: 12px;
+  background: var(--roomie-surface, #fff);
+  box-shadow: 0 6px 24px #2423311c;
+  color: var(--roomie-text, #454252);
+  font-size: 12px;
+}
+.undo-notice button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px;
+  color: var(--roomie-accent-purple, #754c9f);
+  font-weight: 600;
+}
+.undo-notice [role="alert"] {
+  flex-basis: 100%;
+  color: var(--roomie-accent-rose, #a13d61);
 }
 .roomie-home-illustration {
   display: block;
@@ -38,7 +83,7 @@
 }
 .roomie-home-art p {
   margin-top: 12px;
-  color: #69608d;
+  color: var(--roomie-muted, #69608d);
 }
 
 .roomie-main section {
@@ -46,6 +91,9 @@
 }
 
 @media (max-width: 767px) {
+  .roomie-main.roomie-main--inner h1 {
+    font-size: 26px;
+  }
   .roomie-sidebar {
     width: 76px;
   }
@@ -70,7 +118,7 @@
   }
 
   .roomie-main {
-    margin-left: 76px;
+    margin-inline-start: 76px;
     padding: 24px 16px;
   }
 
@@ -80,7 +128,82 @@
 
   .roomie-main::before {
     background-image:
-      linear-gradient(90deg, #f2f3fff2, #f2f3ffb3),
+      linear-gradient(90deg, var(--roomie-surface-soft, #f2f3fff2), #f2f3ffb3),
       url("../../assets/roomie-header.png");
+  }
+}
+
+.display-preferences-wrap {
+  position: relative;
+  z-index: 2;
+  margin-bottom: 20px;
+}
+.display-preferences {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.display-preference,
+.display-theme-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  border: 1px solid var(--roomie-card-border);
+  border-radius: 11px;
+  background: var(--roomie-surface, #ffffffdc);
+  color: var(--roomie-text, #62567e);
+}
+.display-preference {
+  padding-inline: 10px 4px;
+}
+.display-preference select {
+  min-width: 0;
+  max-width: 125px;
+  height: 100%;
+  padding-inline-end: 5px;
+  background: transparent;
+  color: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.display-theme-button {
+  justify-content: center;
+  width: 36px;
+  flex-shrink: 0;
+}
+.display-theme-button:hover {
+  background: var(--roomie-surface-soft, #f2ecff);
+}
+.display-preferences-wrap > .form-error {
+  margin-top: 10px;
+}
+[dir="rtl"] .roomie-sidebar p,
+[dir="rtl"] .eyebrow,
+[dir="rtl"] .dashboard-header h1 {
+  letter-spacing: normal;
+}
+[dir="rtl"] .roomie-main::before {
+  transform: scaleX(-1);
+}
+input[type="number"],
+input[type="date"],
+input[type="month"],
+.recharts-wrapper {
+  direction: ltr;
+}
+@media (max-width: 430px) {
+  .display-preferences {
+    gap: 5px;
+  }
+  .display-preference {
+    padding-inline: 6px 2px;
+    gap: 4px;
+  }
+  .display-preference select {
+    max-width: 103px;
+    font-size: 11px;
   }
 }
