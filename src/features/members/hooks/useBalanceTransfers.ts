@@ -2,28 +2,32 @@ import { useHousehold } from "../../household/hooks/HouseholdContext";
 import { useState } from "react";
 import { suggestedRepayments } from "../utils/repayments";
 import { useAction } from "../../../shared/hooks/useAction";
-import { formatCurrency } from "../../../shared/utils/formatCurrency";
 import { localDate } from "../../../shared/utils/dates";
 import type { Settlement } from "../../../shared/types";
 import { usePreferences } from "../../../shared/preferences/PreferencesContext";
+import { useConfirmation } from "../../../shared/confirmation/ConfirmationContext";
 
 export function useBalanceTransfers() {
   const { state, commit } = useHousehold();
-  const { t } = usePreferences();
+  const { formatCurrency } = usePreferences();
+  const confirm = useConfirmation();
   const { error, perform } = useAction();
   const [paying, setPaying] = useState<Omit<Settlement, "id" | "date"> | null>(
     null,
   );
   const transfers = suggestedRepayments(state);
-  function record(transfer: Omit<Settlement, "id" | "date">) {
+  async function record(transfer: Omit<Settlement, "id" | "date">) {
     if (
-      window.confirm(
-        t("Record that {from} has paid {to} {amount}?", {
+      await confirm({
+        title: "Record repayment",
+        message: "Record that {from} has paid {to} {amount}?",
+        params: {
           from: transfer.from,
           to: transfer.to,
           amount: formatCurrency(transfer.amount),
-        }),
-      )
+        },
+        confirmLabel: "Record repayment",
+      })
     ) {
       perform(() =>
         commit({

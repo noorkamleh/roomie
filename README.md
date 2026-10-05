@@ -21,7 +21,7 @@ Screenshots use sample data from the browser tests. Click a preview to see the o
 - **Recurring household work:** monthly bills create linked expenses when paid; recurring chores keep completion history, rotate assignments, and support swap requests.
 - **Shopping and members:** quantities and units, purchases recorded as shared expenses, and member archiving that preserves financial history.
 - **Display preferences:** English/Arabic with RTL, light/dark themes, and SAR/USD entry and display. Stored amounts stay in SAR.
-- **Reliability:** validated browser storage, protection against stale writes, Undo, tab synchronization, and a reload action when a page fails to download. Layouts are tested down to 320px.
+- **Reliability:** in-app confirmation dialogs, validated browser storage, protection against stale writes, Undo, tab synchronization, and a reload action when a page fails to download. Layouts are tested down to 320px.
 
 ## Run locally
 

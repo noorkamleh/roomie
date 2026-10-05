@@ -1,3 +1,4 @@
+import { respondToConfirmation } from "./helpers/confirmation.js";
 import { test, expect } from "@playwright/test";
 
 const runtimeErrors = new WeakMap();
@@ -44,8 +45,8 @@ test("expense sharing, editing, deletion, and persistence", async ({
     (await saved(page)).expenses.find((expense) => expense.id === entry.id)
       .amount,
   ).toBe(150);
-  page.once("dialog", (dialog) => dialog.accept());
   await page.getByRole("button", { name: "Delete Browser groceries" }).click();
+  await respondToConfirmation(page);
   expect(
     (await saved(page)).expenses.some((expense) => expense.id === entry.id),
   ).toBe(false);
@@ -110,8 +111,8 @@ test("members, household settings, and repayments update all views", async ({
     page.getByRole("heading", { name: "Lina", exact: true }),
   ).toBeVisible();
   await page.getByRole("tab", { name: "Balances", exact: true }).click();
-  page.once("dialog", (dialog) => dialog.accept());
   await page.getByRole("button", { name: "Record repayment" }).first().click();
+  await respondToConfirmation(page);
   expect((await saved(page)).settlements).toHaveLength(1);
   await page.goto("/dashboard");
   await expect(

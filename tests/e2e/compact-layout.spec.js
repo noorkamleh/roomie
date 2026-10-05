@@ -1,3 +1,4 @@
+import { respondToConfirmation } from "./helpers/confirmation.js";
 import { test, expect } from "@playwright/test";
 
 test("the richer demo keeps all six layouts usable on desktop and mobile", async ({
@@ -7,10 +8,10 @@ test("the richer demo keeps all six layouts usable on desktop and mobile", async
   page.on("pageerror", (error) => errors.push(error.message));
   await page.clock.install({ time: new Date("2026-10-04T09:00:00Z") });
   await page.goto("/members?tab=household");
-  page.once("dialog", (dialog) => dialog.accept());
   await page
     .getByRole("button", { name: "Load demo data", exact: true })
     .click();
+  await respondToConfirmation(page);
   await expect(page.locator(".members-household-label")).toContainText(
     "The Garden House",
   );

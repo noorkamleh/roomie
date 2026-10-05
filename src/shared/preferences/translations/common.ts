@@ -1,4 +1,7 @@
 export const commonTranslations: Record<string, string> = {
+  "Delete expense": "حذف المصروف",
+  "Delete shopping item": "حذف عنصر التسوق",
+  "Delete member": "حذف العضو",
   "Couldn't load this page.": "تعذّر تحميل هذه الصفحة.",
   "Check your connection, then reload the page.":
     "تحقق من اتصالك بالإنترنت، ثم أعد تحميل الصفحة.",

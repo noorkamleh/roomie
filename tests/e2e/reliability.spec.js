@@ -1,3 +1,4 @@
+import { respondToConfirmation } from "./helpers/confirmation.js";
 import { test, expect } from "@playwright/test";
 
 const routes = [
@@ -17,10 +18,10 @@ for (const language of ["en", "ar"]) {
     await page.clock.install({ time: new Date("2026-10-04T09:00:00Z") });
     await page.setViewportSize({ width: 320, height: 844 });
     await page.goto("/members?tab=household");
-    page.once("dialog", (dialog) => dialog.accept());
     await page
       .getByRole("button", { name: "Load demo data", exact: true })
       .click();
+    await respondToConfirmation(page);
     await page
       .getByRole("combobox", { name: "Language", exact: true })
       .selectOption(language);

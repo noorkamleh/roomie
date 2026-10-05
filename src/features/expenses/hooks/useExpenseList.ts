@@ -8,9 +8,11 @@ import { calculateTotalExpenses } from "../utils/calculations";
 import { filterExpenses, expenseMonthLabel } from "../utils/filterExpenses";
 import { useToday } from "../../../shared/hooks/useToday";
 import { usePreferences } from "../../../shared/preferences/PreferencesContext";
+import { useConfirmation } from "../../../shared/confirmation/ConfirmationContext";
 
 export function useExpenseList() {
   const { t, locale } = usePreferences();
+  const confirm = useConfirmation();
   const { state, commit } = useHousehold();
   const addDialog = useAddDialog();
   const [params, setParams] = useSearchParams();
@@ -35,13 +37,15 @@ export function useExpenseList() {
     setEditing(undefined);
     addDialog.close();
   }
-  function removeExpense(expense: Expense) {
+  async function removeExpense(expense: Expense) {
     if (
-      window.confirm(
-        t("Delete {title}? Balances will be recalculated.", {
-          title: expense.title,
-        }),
-      )
+      await confirm({
+        title: "Delete expense",
+        message: "Delete {title}? Balances will be recalculated.",
+        params: { title: expense.title },
+        confirmLabel: "Delete",
+        intent: "danger",
+      })
     )
       perform(() => commit({ type: "expense.delete", id: expense.id }));
   }

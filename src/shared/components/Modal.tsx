@@ -1,15 +1,19 @@
 import { useEffect, useId, useRef } from "react";
-import type { ReactNode } from "react";
+import type { ReactNode, RefObject } from "react";
 import { X } from "lucide-react";
 import { usePreferences } from "../preferences/PreferencesContext";
 function Modal({
   title,
   children,
   onClose,
+  descriptionId,
+  initialFocusRef,
 }: {
   title: string;
   children: ReactNode;
   onClose: () => void;
+  descriptionId?: string;
+  initialFocusRef?: RefObject<HTMLElement | null>;
 }) {
   const { t } = usePreferences();
   const ref = useRef<HTMLDialogElement>(null);
@@ -18,16 +22,18 @@ function Modal({
     const dialog = ref.current;
     const previous = document.activeElement;
     dialog?.showModal();
+    initialFocusRef?.current?.focus();
     return () => {
       dialog?.close();
       if (previous instanceof HTMLElement) previous.focus();
     };
-  }, []);
+  }, [initialFocusRef]);
   return (
     <dialog
       ref={ref}
       className="roomie-dialog"
       aria-labelledby={headingId}
+      aria-describedby={descriptionId}
       onCancel={(event) => {
         event.preventDefault();
         onClose();

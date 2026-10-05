@@ -1,19 +1,20 @@
 import { useAction } from "../../../shared/hooks/useAction";
 import { demoHousehold } from "../../household/utils/demo";
 import { useHousehold } from "../../household/hooks/HouseholdContext";
-import { usePreferences } from "../../../shared/preferences/PreferencesContext";
+import { useConfirmation } from "../../../shared/confirmation/ConfirmationContext";
 
 export function useDemoData() {
   const { commit } = useHousehold();
-  const { t } = usePreferences();
+  const confirm = useConfirmation();
   const { error, perform } = useAction();
-  function loadDemo() {
+  async function loadDemo() {
     if (
-      window.confirm(
-        t(
+      await confirm({
+        title: "Load demo data",
+        message:
           "Replace your current household with sample data? You can undo this immediately to restore your household.",
-        ),
-      )
+        confirmLabel: "Load demo data",
+      })
     )
       perform(() => commit({ type: "household.demo", state: demoHousehold() }));
   }

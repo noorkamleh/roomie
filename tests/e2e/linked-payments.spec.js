@@ -1,3 +1,4 @@
+import { respondToConfirmation } from "./helpers/confirmation.js";
 import { test, expect } from "@playwright/test";
 
 const runtimeErrors = new WeakMap();
@@ -191,10 +192,10 @@ test("debt simplification switches payment routes without changing balances or o
   await page.reload();
   await expect(simplify).toBeChecked();
   await expect(transfers.getByRole("listitem")).toHaveCount(1);
-  page.once("dialog", (dialog) => dialog.accept());
   await transfers
     .getByRole("button", { name: "Record repayment", exact: true })
     .click();
+  await respondToConfirmation(page);
   await expect(transfers.getByRole("listitem")).toHaveCount(0);
   await expect(page.locator(".member-card--settled")).toHaveCount(3);
   await simplify.uncheck();
@@ -386,10 +387,10 @@ test("one shopping purchase links selected items to its expense and keeps their 
     items.getByRole("checkbox", { name: "Bread (Qty 1)", exact: true }),
   ).toBeVisible();
   await page.keyboard.press("Escape");
-  page.once("dialog", (dialog) => dialog.accept());
   await shopping
     .getByRole("button", { name: "Delete Milk", exact: true })
     .click();
+  await respondToConfirmation(page);
   await expect(
     shopping.getByRole("checkbox", {
       name: "Mark Milk as bought",

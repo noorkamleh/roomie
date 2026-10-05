@@ -2,13 +2,13 @@ import { useState } from "react";
 import type { ShoppingItem } from "../../../shared/types";
 import { useAction } from "../../../shared/hooks/useAction";
 import { useHousehold } from "../../household/hooks/HouseholdContext";
-import { usePreferences } from "../../../shared/preferences/PreferencesContext";
+import { useConfirmation } from "../../../shared/confirmation/ConfirmationContext";
 
 export type ShoppingFilter = "all" | "needed" | "bought";
 
 export function useShoppingList() {
   const { state, commit } = useHousehold();
-  const { t } = usePreferences();
+  const confirm = useConfirmation();
   const [filter, setFilter] = useState<ShoppingFilter>("all");
   const [purchasing, setPurchasing] = useState(false);
   const { error, perform } = useAction();
@@ -24,8 +24,16 @@ export function useShoppingList() {
     perform(() => commit({ type: "shopping.toggle", id: item.id }));
   }
 
-  function removeItem(item: ShoppingItem) {
-    if (window.confirm(t("Remove {name} from the list?", { name: item.name })))
+  async function removeItem(item: ShoppingItem) {
+    if (
+      await confirm({
+        title: "Delete shopping item",
+        message: "Remove {name} from the list?",
+        params: { name: item.name },
+        confirmLabel: "Delete",
+        intent: "danger",
+      })
+    )
       perform(() => commit({ type: "shopping.delete", id: item.id }));
   }
 

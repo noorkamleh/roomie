@@ -1,3 +1,4 @@
+import { respondToConfirmation } from "./helpers/confirmation.js";
 import { test, expect } from "@playwright/test";
 
 const runtimeErrors = new WeakMap();
@@ -34,18 +35,16 @@ test("member deletion can be cancelled and confirmed on mobile, persists, and up
     exact: true,
   });
   await expect(deleteButton).toBeVisible();
-  let confirmation = "";
-  page.once("dialog", async (dialog) => {
-    confirmation = dialog.message();
-    await dialog.dismiss();
-  });
   await deleteButton.click();
-  expect(confirmation).toContain("Delete Lina from the household?");
+  await expect(
+    page.getByRole("dialog", { name: "Delete member", exact: true }),
+  ).toContainText("Delete Lina from the household?");
+  await respondToConfirmation(page, false);
   await expect(memberCard(page, "Lina")).toBeVisible();
   expect(await saved(page)).toEqual(before);
 
-  page.once("dialog", (dialog) => dialog.accept());
   await deleteButton.click();
+  await respondToConfirmation(page);
   await expect(memberCard(page, "Lina")).toHaveCount(0);
   await expect(page.locator(".member-card")).toHaveCount(3);
   await expect(page.getByLabel("View as")).toHaveValue("Noor");
@@ -106,10 +105,10 @@ test("deleting members synchronizes stale settings drafts and the active member 
   await memberCard(otherTab, "Lina")
     .getByRole("button", { name: "Member options for Lina" })
     .click();
-  otherTab.once("dialog", (dialog) => dialog.accept());
   await otherTab
     .getByRole("button", { name: "Delete member Lina", exact: true })
     .click();
+  await respondToConfirmation(otherTab);
   await expect(memberCard(page, "Lina")).toHaveCount(0);
   await expect(page.getByLabel("View as")).toHaveValue("Noor");
   await expect(page.getByLabel("Household name")).toHaveValue("Our draft home");
@@ -129,10 +128,10 @@ test("deleting members synchronizes stale settings drafts and the active member 
   await memberCard(page, "Maya")
     .getByRole("button", { name: "Member options for Maya" })
     .click();
-  page.once("dialog", (dialog) => dialog.accept());
   await page
     .getByRole("button", { name: "Delete member Maya", exact: true })
     .click();
+  await respondToConfirmation(page);
   for (const tab of [page, otherTab]) {
     await expect(memberCard(tab, "Maya")).toHaveCount(0);
     await expect(memberCard(tab, "Noor")).toContainText("Current view");
@@ -159,10 +158,10 @@ test("deleting a member linked to household records reports an error and preserv
   await memberCard(page, "Noor")
     .getByRole("button", { name: "Member options for Noor" })
     .click();
-  page.once("dialog", (dialog) => dialog.accept());
   await page
     .getByRole("button", { name: "Delete member Noor", exact: true })
     .click();
+  await respondToConfirmation(page);
   await expect(
     page.getByRole("region", { name: "Your housemates" }).getByRole("alert"),
   ).toContainText(/expense|chore|repayment|settlement|linked|associated/i);
@@ -191,10 +190,10 @@ test("the final household member cannot be deleted", async ({ page }) => {
   await memberCard(page, "Lina")
     .getByRole("button", { name: "Member options for Lina" })
     .click();
-  page.once("dialog", (dialog) => dialog.accept());
   await page
     .getByRole("button", { name: "Delete member Lina", exact: true })
     .click();
+  await respondToConfirmation(page);
   await expect(
     page.getByRole("region", { name: "Your housemates" }).getByRole("alert"),
   ).toContainText(/last|at least one|only member/i);
@@ -303,20 +302,20 @@ test("repayments can be cancelled and recorded without changing expenses, and hi
   const initialStorage = await page.evaluate(() =>
     localStorage.getItem("roomie.household.v1"),
   );
-  page.once("dialog", (dialog) => dialog.dismiss());
   await transfers
     .getByRole("button", { name: "Record repayment", exact: true })
     .first()
     .click();
+  await respondToConfirmation(page, false);
   await expect(transfers.getByRole("listitem")).toHaveCount(2);
   expect(
     await page.evaluate(() => localStorage.getItem("roomie.household.v1")),
   ).toBe(initialStorage);
-  page.once("dialog", (dialog) => dialog.accept());
   await transfers
     .getByRole("button", { name: "Record repayment", exact: true })
     .first()
     .click();
+  await respondToConfirmation(page);
   await expect(memberCard(page, "Noor")).toContainText("All settled");
   await expect(transfers.getByRole("listitem")).toHaveCount(1);
   const history = page.getByRole("list", {
@@ -336,10 +335,10 @@ test("repayments can be cancelled and recorded without changing expenses, and hi
     path: "test-results/members-repayments-desktop.png",
     fullPage: true,
   });
-  page.once("dialog", (dialog) => dialog.accept());
   await transfers
     .getByRole("button", { name: "Record repayment", exact: true })
     .click();
+  await respondToConfirmation(page);
   await expect(
     page.getByText("All balances are settled.", { exact: true }),
   ).toBeVisible();

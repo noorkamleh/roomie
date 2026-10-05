@@ -1,3 +1,4 @@
+import { respondToConfirmation } from "./helpers/confirmation.js";
 import { test, expect } from "@playwright/test";
 
 test.use({ locale: "ar-SA" });
@@ -84,11 +85,11 @@ test("shopping filters, purchase toggles, quantity limits and deletion persist",
     path: "test-results/shopping-mobile.png",
     fullPage: true,
   });
-  page.once("dialog", (dialog) => dialog.dismiss());
   await added.getByRole("button", { name: `Delete ${title}` }).click();
+  await respondToConfirmation(page, false);
   await expect(added).toBeVisible();
-  page.once("dialog", (dialog) => dialog.accept());
   await added.getByRole("button", { name: `Delete ${title}` }).click();
+  await respondToConfirmation(page);
   await expect(added).toHaveCount(0);
   await page.reload();
   await expect(rows).toHaveCount(5);

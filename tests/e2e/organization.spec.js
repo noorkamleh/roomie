@@ -1,3 +1,4 @@
+import { respondToConfirmation } from "./helpers/confirmation.js";
 import { test, expect } from "@playwright/test";
 
 const household = {
@@ -87,10 +88,10 @@ test("member tabs, stable colors, archived history and undo work together", asyn
   await card(page, "Noor")
     .getByRole("button", { name: "Member options for Noor" })
     .click();
-  page.once("dialog", (dialog) => dialog.accept());
   await card(page, "Noor")
     .getByRole("button", { name: "Archive member", exact: true })
     .click();
+  await respondToConfirmation(page);
   await expect(card(page, "Noor")).toContainText("Archived member");
   const archived = await saved(page);
   expect(
@@ -141,8 +142,8 @@ test("shopping units retain Latin quantities and delete can be undone", async ({
     .getByRole("listitem")
     .filter({ hasText: "Eggs" });
   await expect(eggs).toContainText("12 pcs");
-  page.once("dialog", (dialog) => dialog.accept());
   await eggs.getByRole("button", { name: "Delete Eggs", exact: true }).click();
+  await respondToConfirmation(page);
   await expect(eggs).toHaveCount(0);
   await page.getByRole("button", { name: "Undo", exact: true }).click();
   await expect(eggs).toContainText("12 pcs");
@@ -161,11 +162,11 @@ test("shopping units retain Latin quantities and delete can be undone", async ({
 
 test("demo data is optional, varied and reversible", async ({ page }) => {
   await page.goto("/members?tab=household");
-  page.once("dialog", (dialog) => dialog.dismiss());
   await page.getByRole("button", { name: "Load demo data" }).click();
+  await respondToConfirmation(page, false);
   expect(await saved(page)).toEqual(household);
-  page.once("dialog", (dialog) => dialog.accept());
   await page.getByRole("button", { name: "Load demo data" }).click();
+  await respondToConfirmation(page);
   const demo = await saved(page);
   expect(demo.name).toBe("The Garden House");
   expect(
@@ -200,8 +201,8 @@ test("an undo storage failure leaves the saved action intact and can be retried"
   page,
 }) => {
   await page.goto("/shopping");
-  page.once("dialog", (dialog) => dialog.accept());
   await page.getByRole("button", { name: "Delete Milk", exact: true }).click();
+  await respondToConfirmation(page);
   await expect(page.getByText("Milk", { exact: true })).toHaveCount(0);
   const deleted = await saved(page);
   await page.evaluate(() => {

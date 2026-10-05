@@ -1,3 +1,4 @@
+import { respondToConfirmation } from "./helpers/confirmation.js";
 import { test, expect } from "@playwright/test";
 
 const state = () => ({
@@ -237,11 +238,11 @@ test("task completion updates your count and recording repayment changes balance
     .getByRole("region", { name: "Needs your attention", exact: true })
     .getByRole("link", { name: "Review repayment", exact: true })
     .click();
-  page.once("dialog", (dialog) => dialog.accept());
   await page
     .getByRole("button", { name: "Record repayment", exact: true })
     .first()
     .click();
+  await respondToConfirmation(page);
   await page.goto("/dashboard");
   await expect(card(page, "You are owed")).toContainText("SAR 0.00");
   await expect(card(page, "Total Expenses")).toContainText("SAR 180.00");
