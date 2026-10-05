@@ -6,13 +6,4 @@ export const choreStatuses: Chore["status"][] = [
   "completed",
 ];
 
-const dateFormatter = new Intl.DateTimeFormat("en-US", {
-  month: "short",
-  day: "numeric",
-  year: "numeric",
-  timeZone: "UTC",
-});
-
-export function formatChoreDate(date: string) {
-  return dateFormatter.format(new Date(`${date}T00:00:00Z`));
-}
+export { formatDate as formatChoreDate } from "../../../shared/utils/dates";

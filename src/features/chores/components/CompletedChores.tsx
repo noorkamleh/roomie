@@ -1,7 +1,9 @@
+import { usePreferences } from "../../../shared/preferences/PreferencesContext";
 import { useState } from "react";
 import { ChevronDown, CircleCheck } from "lucide-react";
 import type { Chore } from "../../../shared/types";
 import ChoreRow from "./ChoreRow";
+import type { ChoreSwapProps } from "./ChoreSwapControls";
 
 function CompletedChores({
   title,
@@ -10,7 +12,8 @@ function CompletedChores({
   today,
   onStatusChange,
   showAssignee,
-}: {
+  ...swapProps
+}: ChoreSwapProps & {
   title: string;
   entries: Chore[];
   initiallyOpen: boolean;
@@ -18,6 +21,7 @@ function CompletedChores({
   onStatusChange: (chore: Chore, status: Chore["status"]) => void;
   showAssignee: boolean;
 }) {
+  const { t } = usePreferences();
   const [open, setOpen] = useState(initiallyOpen);
   return (
     <details
@@ -27,10 +31,11 @@ function CompletedChores({
     >
       <summary>
         <CircleCheck size={16} aria-hidden="true" />
-        Completed<span>{entries.length}</span>
+        {t("Completed")}
+        <span>{entries.length}</span>
         <ChevronDown size={16} aria-hidden="true" />
       </summary>
-      <ul aria-label={`Completed ${title.toLowerCase()}`}>
+      <ul aria-label={t("Completed {title}", { title: title.toLowerCase() })}>
         {entries.map((chore) => (
           <ChoreRow
             key={chore.id}
@@ -38,6 +43,7 @@ function CompletedChores({
             today={today}
             onStatusChange={onStatusChange}
             showAssignee={showAssignee}
+            {...swapProps}
           />
         ))}
       </ul>

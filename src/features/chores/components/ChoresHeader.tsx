@@ -1,17 +1,20 @@
+import { usePreferences } from "../../../shared/preferences/PreferencesContext";
 import { ListChecks, Plus } from "lucide-react";
 
 function ChoresHeader({ onAdd }: { onAdd: () => void }) {
+  const { t } = usePreferences();
   return (
     <header className="chores-page-header">
       <div>
         <p className="chores-eyebrow">
           <ListChecks size={14} aria-hidden="true" />
-          Household tasks
+          {t("Household tasks")}
         </p>
-        <h1>Chores</h1>
+        <h1>{t("Chores")}</h1>
         <p className="chores-page-description">
-          Share the work, assign responsibilities, and keep your home running
-          smoothly.
+          {t(
+            "Share the work, assign responsibilities, and keep your home running smoothly.",
+          )}
         </p>
       </div>
       <button
@@ -22,7 +25,7 @@ function ChoresHeader({ onAdd }: { onAdd: () => void }) {
         <span>
           <Plus size={19} aria-hidden="true" />
         </span>
-        Add chore
+        {t("Add chore")}
       </button>
     </header>
   );

@@ -1,9 +1,13 @@
+import { usePreferences } from "../../../shared/preferences/PreferencesContext";
 import { Check, CircleCheck, Clock3 } from "lucide-react";
 import type { Chore } from "../../../shared/types";
-import { daysUntil, dueLabel } from "../../../shared/utils/dates";
-import { choreStatuses, formatChoreDate } from "../utils/presentation";
+import { daysUntil, dueLabel, formatDate } from "../../../shared/utils/dates";
+import { memberTone } from "../../../shared/utils/memberTone";
+import { choreStatuses } from "../utils/presentation";
+import ChoreHistory from "./ChoreHistory";
+import ChoreSwapControls, { type ChoreSwapProps } from "./ChoreSwapControls";
 
-interface ChoreRowProps {
+interface ChoreRowProps extends ChoreSwapProps {
   showAssignee: boolean;
   chore: Chore;
   today: string;
@@ -15,14 +19,27 @@ function ChoreRow({
   today,
   showAssignee,
   onStatusChange,
+  currentUser,
+  members,
+  onSwapRequest,
+  onSwapResponse,
 }: ChoreRowProps) {
+  const { t, language } = usePreferences();
   const completed = chore.status === "completed";
+  const hasExtras =
+    !!chore.recurrence ||
+    !!chore.completedBy ||
+    !!chore.completionHistory?.length ||
+    !!chore.swapHistory?.length ||
+    (!completed &&
+      (!!chore.swapRequest ||
+        (currentUser === chore.assignedTo && members.length > 1)));
   const days = daysUntil(chore.dueDate, today);
   const overdue = !completed && days < 0;
   const timing = completed
-    ? "Task completed"
+    ? t("Task completed")
     : days === -1
-      ? "1 day overdue"
+      ? t("1 day overdue")
       : dueLabel(chore.dueDate, today);
   return (
     <li className={`chore-row chore-row--${chore.status}`}>
@@ -30,7 +47,7 @@ function ChoreRow({
         <label className="chore-completion">
           <input
             type="checkbox"
-            aria-label={`Complete ${chore.title}`}
+            aria-label={t("Complete {title}", { title: chore.title })}
             checked={completed}
             onChange={(event) =>
               onStatusChange(
@@ -47,9 +64,13 @@ function ChoreRow({
       </div>
       {showAssignee && (
         <div className="chore-row-assignee">
-          <span className="chore-cell-label">Assigned to</span>
+          <span className="chore-cell-label">{t("Assigned to")}</span>
           <span className="chore-person">
-            <span className="chore-assignee-avatar" aria-hidden="true">
+            <span
+              className="chore-assignee-avatar member-identity"
+              data-member-tone={memberTone(chore.assignedTo)}
+              aria-hidden="true"
+            >
               {chore.assignedTo.slice(0, 1).toUpperCase()}
             </span>
             <span>{chore.assignedTo}</span>
@@ -57,8 +78,8 @@ function ChoreRow({
         </div>
       )}
       <div className="chore-row-date">
-        <span className="chore-cell-label">Due date</span>
-        <time dateTime={chore.dueDate}>{formatChoreDate(chore.dueDate)}</time>
+        <span className="chore-cell-label">{t("Due date")}</span>
+        <time dateTime={chore.dueDate}>{formatDate(chore.dueDate)}</time>
         <p className={`chore-timing ${overdue ? "is-overdue" : ""}`}>
           {completed ? (
             <CircleCheck size={12} aria-hidden="true" />
@@ -69,9 +90,9 @@ function ChoreRow({
         </p>
       </div>
       <label className="chore-status-control">
-        <span className="chore-cell-label">Status</span>
+        <span className="chore-cell-label">{t("Status")}</span>
         <select
-          aria-label={`Status of ${chore.title}`}
+          aria-label={t("Status of {title}", { title: chore.title })}
           value={chore.status}
           onChange={(event) => {
             const status = choreStatuses.find(
@@ -82,11 +103,42 @@ function ChoreRow({
         >
           {choreStatuses.map((status) => (
             <option key={status} value={status}>
-              {status.replaceAll("-", " ")}
+              {t(
+                status === "in-progress"
+                  ? "In progress"
+                  : status === "completed"
+                    ? "Completed"
+                    : "Pending",
+              )}
             </option>
           ))}
         </select>
       </label>
+      {hasExtras && (
+        <div className="chore-row-extras">
+          {chore.recurrence && (
+            <p className="chore-recurrence">
+              {t(
+                chore.recurrence.frequency === "weekly" ? "Weekly" : "Monthly",
+              )}
+              {" · "}
+              {t("Rotation: {members}", {
+                members: chore.recurrence.rotation.join(
+                  language === "ar" ? " ← " : " → ",
+                ),
+              })}
+            </p>
+          )}
+          <ChoreHistory chore={chore} />
+          <ChoreSwapControls
+            chore={chore}
+            currentUser={currentUser}
+            members={members}
+            onSwapRequest={onSwapRequest}
+            onSwapResponse={onSwapResponse}
+          />
+        </div>
+      )}
     </li>
   );
 }

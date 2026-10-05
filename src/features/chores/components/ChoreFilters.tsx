@@ -1,3 +1,4 @@
+import { usePreferences } from "../../../shared/preferences/PreferencesContext";
 import type { ChoreFilter } from "../hooks/useChoreList";
 import StatusFilters from "../../../shared/components/StatusFilters";
 const options = [
@@ -15,10 +16,11 @@ function ChoreFilters({
   counts: Record<ChoreFilter, number>;
   onChange: (filter: ChoreFilter) => void;
 }) {
+  const { t } = usePreferences();
   return (
     <StatusFilters
-      label="Filter chores"
-      options={options}
+      label={t("Filter chores")}
+      options={options.map((option) => ({ ...option, label: t(option.label) }))}
       value={filter}
       counts={counts}
       onChange={onChange}

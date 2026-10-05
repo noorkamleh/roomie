@@ -4,6 +4,7 @@ import { useAddDialog } from "../../../shared/hooks/useAddDialog";
 import { useAction } from "../../../shared/hooks/useAction";
 import { useToday } from "../../../shared/hooks/useToday";
 import { useHousehold } from "../../household/hooks/HouseholdContext";
+import { localDate } from "../../../shared/utils/dates";
 
 export type ChoreFilter = "all" | Chore["status"];
 
@@ -25,7 +26,40 @@ export function useChoreList() {
   );
 
   function changeStatus(chore: Chore, status: Chore["status"]) {
-    perform(() => commit({ type: "chore.status", id: chore.id, status }));
+    perform(() =>
+      commit({
+        type: "chore.status",
+        id: chore.id,
+        status,
+        ...(status === "completed"
+          ? { completedBy: state.currentUser, date: localDate() }
+          : {}),
+      }),
+    );
+  }
+
+  function requestSwap(chore: Chore, to: string) {
+    return perform(() =>
+      commit({
+        type: "chore.swap.request",
+        id: chore.id,
+        to,
+        requestedBy: state.currentUser,
+        date: localDate(),
+      }),
+    );
+  }
+
+  function respondToSwap(chore: Chore, accepted: boolean) {
+    perform(() =>
+      commit({
+        type: "chore.swap.respond",
+        id: chore.id,
+        accepted,
+        respondedBy: state.currentUser,
+        date: localDate(),
+      }),
+    );
   }
 
   return {
@@ -41,7 +75,12 @@ export function useChoreList() {
     },
     entries,
     personalEntries,
+    personalOpenCount: state.chores.filter(
+      (chore) =>
+        chore.assignedTo === state.currentUser && chore.status !== "completed",
+    ).length,
     currentUser: state.currentUser,
+    members: state.members,
     today,
     filter,
     setFilter,
@@ -50,5 +89,7 @@ export function useChoreList() {
     openAdd,
     closeAdd,
     changeStatus,
+    requestSwap,
+    respondToSwap,
   };
 }

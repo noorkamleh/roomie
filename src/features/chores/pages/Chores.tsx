@@ -1,3 +1,4 @@
+import { usePreferences } from "../../../shared/preferences/PreferencesContext";
 import "../styles/chores.css";
 import ChoresHeader from "../components/ChoresHeader";
 import Modal from "../../../shared/components/Modal";
@@ -7,11 +8,14 @@ import ChoreFilters from "../components/ChoreFilters";
 import { useChoreList } from "../hooks/useChoreList";
 
 function Chores() {
+  const { t } = usePreferences();
   const {
     entries,
     counts,
     personalEntries,
+    personalOpenCount,
     currentUser,
+    members,
     today,
     filter,
     setFilter,
@@ -20,6 +24,8 @@ function Chores() {
     openAdd,
     closeAdd,
     changeStatus,
+    requestSwap,
+    respondToSwap,
   } = useChoreList();
   return (
     <div className="chores-page">
@@ -35,9 +41,14 @@ function Chores() {
         showCompleted={filter === "completed"}
         variant="personal"
         owner={currentUser}
+        openCount={personalOpenCount}
         entries={personalEntries}
         today={today}
         onStatusChange={changeStatus}
+        currentUser={currentUser}
+        members={members}
+        onSwapRequest={requestSwap}
+        onSwapResponse={respondToSwap}
       />
       <ChoreList
         key={`household-${filter}`}
@@ -46,9 +57,13 @@ function Chores() {
         entries={entries}
         today={today}
         onStatusChange={changeStatus}
+        currentUser={currentUser}
+        members={members}
+        onSwapRequest={requestSwap}
+        onSwapResponse={respondToSwap}
       />
       {adding && (
-        <Modal title="Add chore" onClose={closeAdd}>
+        <Modal title={t("Add chore")} onClose={closeAdd}>
           <ChoreForm onSaved={closeAdd} />
         </Modal>
       )}

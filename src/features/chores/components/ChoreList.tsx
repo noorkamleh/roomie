@@ -1,13 +1,16 @@
+import { usePreferences } from "../../../shared/preferences/PreferencesContext";
 import type { Chore } from "../../../shared/types";
 import { useId } from "react";
-import { UserRound } from "lucide-react";
+import { CircleCheck, UserRound } from "lucide-react";
 import EmptyState from "../../../shared/components/EmptyState";
 import ChoreRow from "./ChoreRow";
 import CompletedChores from "./CompletedChores";
+import type { ChoreSwapProps } from "./ChoreSwapControls";
 
-interface ChoreListProps {
+interface ChoreListProps extends ChoreSwapProps {
   variant: "personal" | "household";
   owner?: string;
+  openCount?: number;
   entries: Chore[];
   showCompleted: boolean;
   today: string;
@@ -17,16 +20,20 @@ interface ChoreListProps {
 function ChoreList({
   variant,
   owner,
+  openCount,
   entries,
   showCompleted,
   today,
   onStatusChange,
+  ...swapProps
 }: ChoreListProps) {
+  const { t } = usePreferences();
   const headingId = useId();
   const personal = variant === "personal";
-  const title = personal ? "My chores" : "Household chores";
+  const title = t(personal ? "My chores" : "Household chores");
   const active = entries.filter((chore) => chore.status !== "completed");
   const completed = entries.filter((chore) => chore.status === "completed");
+  const allDone = personal && openCount === 0;
   return (
     <section
       className={`chore-list chore-list--${variant}`}
@@ -35,7 +42,9 @@ function ChoreList({
       <div className="chore-list-heading">
         <h2 id={headingId}>{title}</h2>
         <span>
-          {entries.length} {entries.length === 1 ? "task" : "tasks"}
+          {t(entries.length === 1 ? "{count} task" : "{count} tasks", {
+            count: entries.length,
+          })}
         </span>
         {personal && (
           <p className="chore-list-owner">
@@ -44,12 +53,14 @@ function ChoreList({
           </p>
         )}
       </div>
-      <div className="chore-list-columns" aria-hidden="true">
-        <span>Task</span>
-        {!personal && <span>Assigned to</span>}
-        <span>Due date</span>
-        <span>Status</span>
-      </div>
+      {active.length > 0 && (
+        <div className="chore-list-columns" aria-hidden="true">
+          <span>{t("Task")}</span>
+          {!personal && <span>{t("Assigned to")}</span>}
+          <span>{t("Due date")}</span>
+          <span>{t("Status")}</span>
+        </div>
+      )}
       <ul aria-label={title}>
         {active.map((chore) => (
           <ChoreRow
@@ -58,9 +69,25 @@ function ChoreList({
             today={today}
             onStatusChange={onStatusChange}
             showAssignee={!personal}
+            {...swapProps}
           />
         ))}
       </ul>
+      {allDone && (
+        <div className="chore-list-done">
+          <CircleCheck size={23} aria-hidden="true" />
+          <div>
+            <h3>{t("All your tasks are done")}</h3>
+            <p>
+              {t(
+                completed.length > 0
+                  ? "Completed chores stay below for your records."
+                  : "You have no open tasks in this household.",
+              )}
+            </p>
+          </div>
+        </div>
+      )}
       {completed.length > 0 && (
         <CompletedChores
           title={title}
@@ -69,16 +96,17 @@ function ChoreList({
           today={today}
           onStatusChange={onStatusChange}
           showAssignee={!personal}
+          {...swapProps}
         />
       )}
-      {entries.length === 0 && (
+      {entries.length === 0 && !allDone && (
         <div className="chore-list-empty">
           <EmptyState
-            message={
+            message={t(
               personal
                 ? "No chores assigned to you in this view."
-                : "No chores in this view."
-            }
+                : "No chores in this view.",
+            )}
           />
         </div>
       )}
