@@ -1,10 +1,15 @@
 import { useState } from "react";
 import { useHousehold } from "../../household/hooks/HouseholdContext";
-import type { Expense } from "../../../shared/types";
+import type { Expense, ExpenseSplit } from "../../../shared/types";
 import { localDate } from "../../../shared/utils/dates";
 import ExpenseSplitFields from "./ExpenseSplitFields";
 import Field from "../../../shared/components/Field";
 import { useAction } from "../../../shared/hooks/useAction";
+import { getAmountCents, toCents } from "../../../shared/utils/money";
+import { splitExpense } from "../utils/calculations";
+import { usePreferences } from "../../../shared/preferences/PreferencesContext";
+import { toBaseAmount as convertToBaseAmount } from "../../../shared/preferences/model";
+import { maxDisplayInputAmount } from "../utils/currencyAmounts";
 
 function ExpenseForm({
   expense,
@@ -13,15 +18,37 @@ function ExpenseForm({
   expense?: Expense;
   onSaved: () => void;
 }) {
+  const { t, currency, toDisplayAmount } = usePreferences();
   const { state, commit } = useHousehold();
+  const historicalNames = expense
+    ? [expense.paidBy, ...expense.participants]
+    : [];
+  const formMembers = state.members.filter(
+    (member) => !member.archived || historicalNames.includes(member.name),
+  );
   const [title, setTitle] = useState(expense?.title ?? "");
-  const [amount, setAmount] = useState(String(expense?.amount ?? ""));
+  const [amountDraft, setAmountDraft] = useState({
+    value: expense
+      ? String(toDisplayAmount(getAmountCents(expense) / 100))
+      : "",
+    currency,
+  });
+  const [amountChanged, setAmountChanged] = useState(false);
+  const baseAmount =
+    expense && !amountChanged
+      ? getAmountCents(expense) / 100
+      : convertToBaseAmount(Number(amountDraft.value), amountDraft.currency);
+  const amount =
+    amountDraft.currency === currency || !amountDraft.value.trim()
+      ? amountDraft.value
+      : String(toDisplayAmount(baseAmount));
   const [paidBy, setPaidBy] = useState(expense?.paidBy ?? state.currentUser);
   const [date, setDate] = useState(expense?.date ?? localDate());
   const [category, setCategory] = useState(expense?.category ?? "Groceries");
   const [participants, setParticipants] = useState(
-    expense?.participants ?? state.members.map((member) => member.name),
+    expense?.participants ?? formMembers.map((member) => member.name),
   );
+  const [split, setSplit] = useState<ExpenseSplit | undefined>(expense?.split);
   const { error, perform } = useAction();
 
   return (
@@ -32,21 +59,25 @@ function ExpenseForm({
         if (
           perform(() => {
             const entry: Expense = {
+              ...expense,
               id: expense?.id ?? crypto.randomUUID(),
               title: title.trim(),
-              amount: Number(amount),
+              amount: baseAmount,
+              amountCents: toCents(baseAmount),
               paidBy,
               participants,
               date,
               category,
+              split,
             };
+            splitExpense(entry);
             commit({ type: "expense.save", expense: entry });
           })
         )
           onSaved();
       }}
     >
-      <Field label="Title">
+      <Field label={t("Title")}>
         <input
           required
           maxLength={200}
@@ -55,30 +86,45 @@ function ExpenseForm({
         />
       </Field>
       <div className="grid gap-4 sm:grid-cols-2">
-        <Field label="Amount (SAR)">
+        <Field
+          label={t("Amount ({currency})", {
+            currency: currency === "SAR" ? t("SAR") : "$",
+          })}
+        >
           <input
             type="number"
             required
-            min="0.01"
-            max="100000000"
+            min={baseAmount > 0 && Number(amount) === 0 ? "0" : "0.01"}
+            max={maxDisplayInputAmount(
+              currency,
+              expense && !amountChanged
+                ? getAmountCents(expense) / 100
+                : undefined,
+            )}
             step="0.01"
             value={amount}
-            onChange={(event) => setAmount(event.target.value)}
+            onChange={(event) => {
+              setAmountDraft({ value: event.target.value, currency });
+              setAmountChanged(true);
+            }}
           />
         </Field>
-        <Field label="Paid by">
+        <Field label={t("Paid by")}>
           <select
             value={paidBy}
             onChange={(event) => setPaidBy(event.target.value)}
           >
-            {state.members.map((member) => (
-              <option key={member.id}>{member.name}</option>
+            {formMembers.map((member) => (
+              <option key={member.id} value={member.name}>
+                {member.name}
+                {member.archived ? t(" (Archived)") : ""}
+              </option>
             ))}
           </select>
         </Field>
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
-        <Field label="Date">
+        <Field label={t("Date")}>
           <input
             type="date"
             required
@@ -86,24 +132,28 @@ function ExpenseForm({
             onChange={(event) => setDate(event.target.value)}
           />
         </Field>
-        <Field label="Category">
+        <Field label={t("Category")}>
           <select
             value={category}
             onChange={(event) => setCategory(event.target.value)}
           >
             {["Groceries", "Bills", "Household", "Food", "Other"].map(
               (item) => (
-                <option key={item}>{item}</option>
+                <option key={item} value={item}>
+                  {t(item)}
+                </option>
               ),
             )}
           </select>
         </Field>
       </div>
       <ExpenseSplitFields
-        members={state.members}
-        amount={Number(amount)}
+        members={formMembers}
+        amount={baseAmount}
         participants={participants}
         onChange={setParticipants}
+        split={split}
+        onSplitChange={setSplit}
       />
       {error && (
         <p role="alert" className="form-error">
@@ -111,7 +161,7 @@ function ExpenseForm({
         </p>
       )}
       <button className="primary-button w-full" type="submit">
-        {expense ? "Save changes" : "Add expense"}
+        {expense ? t("Save changes") : t("Add expense")}
       </button>
     </form>
   );

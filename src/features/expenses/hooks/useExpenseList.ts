@@ -1,23 +1,35 @@
 import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useHousehold } from "../../household/hooks/HouseholdContext";
 import { useAddDialog } from "../../../shared/hooks/useAddDialog";
 import { useAction } from "../../../shared/hooks/useAction";
 import type { Expense } from "../../../shared/types";
 import { calculateTotalExpenses } from "../utils/calculations";
+import { filterExpenses, expenseMonthLabel } from "../utils/filterExpenses";
+import { useToday } from "../../../shared/hooks/useToday";
+import { usePreferences } from "../../../shared/preferences/PreferencesContext";
 
 export function useExpenseList() {
+  const { t, locale } = usePreferences();
   const { state, commit } = useHousehold();
   const addDialog = useAddDialog();
+  const [params, setParams] = useSearchParams();
+  const detailExpense = state.expenses.find(
+    (expense) => expense.id === params.get("expense"),
+  );
   const [editing, setEditing] = useState<Expense | null | undefined>(undefined);
   const [query, setQuery] = useState("");
+  const [month, setMonth] = useState("");
+  const [category, setCategory] = useState("");
+  const [payer, setPayer] = useState("");
+  const [view, setView] = useState<"cards" | "list">("cards");
+  const today = useToday();
   const { error, perform } = useAction();
-  const entries = [...state.expenses]
-    .sort((a, b) => b.date.localeCompare(a.date))
-    .filter((expense) =>
-      `${expense.title} ${expense.paidBy} ${expense.category}`
-        .toLowerCase()
-        .includes(query.toLowerCase()),
-    );
+  const entries = filterExpenses(
+    state.expenses,
+    { query, month, category, payer },
+    t,
+  );
 
   function closeDialog() {
     setEditing(undefined);
@@ -25,7 +37,11 @@ export function useExpenseList() {
   }
   function removeExpense(expense: Expense) {
     if (
-      window.confirm(`Delete ${expense.title}? Balances will be recalculated.`)
+      window.confirm(
+        t("Delete {title}? Balances will be recalculated.", {
+          title: expense.title,
+        }),
+      )
     )
       perform(() => commit({ type: "expense.delete", id: expense.id }));
   }
@@ -37,12 +53,47 @@ export function useExpenseList() {
     currentUser: state.currentUser,
     members: state.members,
     entries,
-    total: calculateTotalExpenses(state.expenses),
+    total: calculateTotalExpenses(entries),
+    periodLabel: month ? expenseMonthLabel(month, locale) : t("All time"),
+    includesFuture: entries.some((expense) => expense.date > today),
+    filtered: Boolean(query.trim() || month || category || payer),
+    month,
+    setMonth,
+    category,
+    setCategory,
+    payer,
+    setPayer,
+    view,
+    setView,
+    months: [
+      ...new Set([
+        today.slice(0, 7),
+        ...state.expenses.map((expense) => expense.date.slice(0, 7)),
+      ]),
+    ]
+      .sort()
+      .reverse(),
+    categories: [
+      ...new Set(state.expenses.map((expense) => expense.category)),
+    ].sort(),
+    payers: [
+      ...new Set(state.expenses.map((expense) => expense.paidBy)),
+    ].sort(),
     query,
     setQuery,
     error,
     editing,
-    isDialogOpen: editing !== undefined || addDialog.isOpen,
+    detailExpense,
+    closeDetails: () =>
+      setParams(
+        (current) => {
+          const next = new URLSearchParams(current);
+          next.delete("expense");
+          return next;
+        },
+        { replace: true },
+      ),
+    isDialogOpen: !detailExpense && (editing !== undefined || addDialog.isOpen),
     openNew: () => setEditing(null),
     openEdit: (expense: Expense) => setEditing(expense),
     closeDialog,

@@ -1,15 +1,17 @@
 import { Plus, ReceiptText } from "lucide-react";
+import { usePreferences } from "../../../shared/preferences/PreferencesContext";
 function ExpensesHeader({ onAdd }: { onAdd: () => void }) {
+  const { t } = usePreferences();
   return (
     <header className="expense-page-header">
       <div>
         <p className="expense-eyebrow">
           <ReceiptText size={14} aria-hidden="true" />
-          Household finances
+          {t("Household finances")}
         </p>
-        <h1>Expenses</h1>
+        <h1>{t("Expenses")}</h1>
         <p className="expense-page-description">
-          Track what was paid, who paid it, and everyone's share.
+          {t("Track what was paid, who paid it, and everyone's share.")}
         </p>
       </div>
       <button
@@ -20,7 +22,7 @@ function ExpensesHeader({ onAdd }: { onAdd: () => void }) {
         <span>
           <Plus size={19} />
         </span>
-        Add expense
+        {t("Add expense")}
       </button>
     </header>
   );

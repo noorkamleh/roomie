@@ -1,56 +1,50 @@
-import ExpenseParticipants from "./ExpenseParticipants";
-import { CalendarDays, Pencil, Trash2, UsersRound } from "lucide-react";
 import { useState } from "react";
-import Modal from "../../../shared/components/Modal";
-import ExpenseSplitDetails from "./ExpenseSplitDetails";
+import { Pencil, Trash2, UsersRound } from "lucide-react";
 import type { Expense, Member } from "../../../shared/types";
 import { formatCurrency } from "../../../shared/utils/formatCurrency";
-import { splitExpense } from "../utils/calculations";
-import { formatExpenseDate } from "./expensePresentation";
-import { getExpenseAppearance } from "../../../shared/utils/expenseAppearance";
-import { getAmountCents } from "../../../shared/utils/money";
+import { formatDate } from "../../../shared/utils/dates";
 import { memberTone } from "../../../shared/utils/memberTone";
+import { getAmountCents } from "../../../shared/utils/money";
+import { splitExpense } from "../utils/calculations";
+import { getExpenseAppearance } from "../../../shared/utils/expenseAppearance";
+import Modal from "../../../shared/components/Modal";
+import ExpenseSplitDetails from "./ExpenseSplitDetails";
+import ExpenseParticipants from "./ExpenseParticipants";
 import { usePreferences } from "../../../shared/preferences/PreferencesContext";
 
-interface ExpenseCardProps {
-  expense: Expense;
-  currentUser: string;
-  members: Member[];
-  linked: boolean;
-  onEdit: (expense: Expense) => void;
-  onDelete: (expense: Expense) => void;
-}
-function ExpenseCard({
+function ExpenseListRow({
   expense,
   currentUser,
   members,
   linked,
   onEdit,
   onDelete,
-}: ExpenseCardProps) {
-  const { t, currency, locale, toDisplayAmount } = usePreferences();
+}: {
+  expense: Expense;
+  currentUser: string;
+  members: Member[];
+  linked: boolean;
+  onEdit: (expense: Expense) => void;
+  onDelete: (expense: Expense) => void;
+}) {
+  const { t } = usePreferences();
   const [showSplit, setShowSplit] = useState(false);
   const { icon: Icon, tone } = getExpenseAppearance(expense);
-  const shares = splitExpense(expense);
-  const ownShare = shares.find((share) => share.member === currentUser);
+  const ownShare = splitExpense(expense).find(
+    (share) => share.member === currentUser,
+  );
   return (
-    <article className={`expense-card expense-tone-${tone}`}>
-      <div className="expense-card-topline">
-        <span className="expense-category">
-          <Icon size={13} aria-hidden="true" />
-          {t(expense.category)}
+    <li className={`expense-list-row expense-tone-${tone}`}>
+      <div className="expense-list-main">
+        <span className="expense-category-icon">
+          <Icon size={19} aria-hidden="true" />
         </span>
-        <time dateTime={expense.date}>
-          <CalendarDays size={12} aria-hidden="true" />
-          {formatExpenseDate(expense.date)}
-        </time>
-      </div>
-      <div className="expense-card-main">
-        <div className="expense-category-icon">
-          <Icon size={23} strokeWidth={1.7} aria-hidden="true" />
-        </div>
-        <div className="expense-card-title">
+        <div className="expense-list-title">
           <h3>{expense.title}</h3>
+          <p>
+            {t(expense.category)} ·{" "}
+            <time dateTime={expense.date}>{formatDate(expense.date)}</time>
+          </p>
           <p>
             <span
               className="expense-payer-avatar member-identity"
@@ -59,30 +53,22 @@ function ExpenseCard({
             >
               {expense.paidBy.slice(0, 1).toUpperCase()}
             </span>
-            {t("Paid by")} <strong>{expense.paidBy}</strong>
+            {t("Paid by {member}", { member: expense.paidBy })}
           </p>
         </div>
-        <p className="expense-amount">
-          <span>{currency === "SAR" ? t("SAR") : "$"}</span>
-          {new Intl.NumberFormat(locale, {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          }).format(toDisplayAmount(getAmountCents(expense) / 100))}
-        </p>
+        <div className="expense-list-amount">
+          <strong>{formatCurrency(getAmountCents(expense) / 100)}</strong>
+          <p>
+            {ownShare ? t("Your share") : t("You're not in this split")}:{" "}
+            {formatCurrency((ownShare?.cents ?? 0) / 100)}
+          </p>
+        </div>
       </div>
-      <div className="expense-share-summary">
-        <p className="expense-own-share">
-          <span>
-            {ownShare ? t("Your share") : t("You're not in this split")}
-          </span>
-          <strong>{formatCurrency((ownShare?.cents ?? 0) / 100)}</strong>
-        </p>
+      <div className="expense-list-footer">
         <ExpenseParticipants
           participants={expense.participants}
           members={members}
         />
-      </div>
-      <div className="expense-card-footer">
         <button
           type="button"
           className="expense-view-split"
@@ -114,7 +100,7 @@ function ExpenseCard({
               onClick={() => onDelete(expense)}
             >
               <Trash2 size={14} aria-hidden="true" />
-              <span>{t("Delete")}</span>
+              {t("Delete")}
             </button>
           </div>
         )}
@@ -127,7 +113,8 @@ function ExpenseCard({
           <ExpenseSplitDetails expense={expense} currentUser={currentUser} />
         </Modal>
       )}
-    </article>
+    </li>
   );
 }
-export default ExpenseCard;
+
+export default ExpenseListRow;

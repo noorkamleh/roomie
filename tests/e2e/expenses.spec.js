@@ -52,7 +52,7 @@ test("expense design preserves search and fits desktop and mobile screens", asyn
 });
 
 test("expense shares follow the active member and exclude nonparticipants", async ({ page }) => {
-  await page.goto("/members");
+  await page.goto("/members?tab=household");
   await page.getByLabel("View as").selectOption("Reem");
   await page.getByRole("button", { name: "Save", exact: true }).click();
   await page.goto("/expenses");
